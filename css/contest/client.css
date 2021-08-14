@@ -1,0 +1,29 @@
+@font-face {
+	font-family: 'Consolas';
+	src: url('../fonts/Consolas.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Verdana';
+	src: url('../fonts/Verdana.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'VerdanaBold';
+	src: url('../fonts/VerdanaBold.ttf') format('truetype');
+}
+body{
+	transition: background-color 0.3s, color 0.3s;
+	overflow: hidden;
+	margin: 0px;
+}
+:root{
+	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
+}
+.HtmlContainer{
+	margin: 0px;
+	user-select:none;
+	font-size: 14px;
+	font-family: var(--font-family);
+	-webkit-app-region: drag;
+	transition: background-color 0.3s, color 0.3s;
+	border-radius: 5px;
+}

@@ -36,10 +36,10 @@
 				<div class="ToolListTitle" info="title"></div>
 				<div style="position: absolute; top: -8px; right: 0px; display: flex; flex-direction: row">
 					<div class="ToolListButton ToolListMinimize">
-						<i class="far fa-window-minimize"></i>
+						<i class="fas fa-minus"></i>
 					</div>
 					<div class="ToolListButton ToolListClose">
-						<i class="far fa-window-close"></i>
+						<i class="fas fa-times"></i>
 					</div>
 				</div>
 			</div>
@@ -448,6 +448,16 @@
 											<div class="settingsSelectPartRight"><i class="fas fa-angle-right"></i></div>
 										</div>
 									</div>
+									<div class="settingsUI settingsRadio" for="virtualFilter">
+										<div class="settingsRadioInfo">
+											<div class="settingsRadioInfoMain">Radio Name</div>
+											<div class="settingsRadioInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsRadioButton">
+											<i class="far fa-square"></i>
+											<i class="fas fa-check-square"></i>
+										</div>
+									</div>
 									<div class="settingsUI settingsSelect" for="problemSubmissionDirection">
 										<div class="settingsSelectInfo">
 											<div class="settingsSelectInfoMain">Radio Name</div>
@@ -536,25 +546,6 @@
 		    if(navigator.userAgent.indexOf("Chrome")>0){
 		    	element = document.body;
 		    }
-		    document.addEventListener('DOMMouseScroll',handler,false);
-		    document.addEventListener('mousewheel',handler,false);
-		    var scrollAnimation = false;
-		    function handler(event){
-		    	if(scrollAnimation)
-		    		return;
-				var detail = event.wheelDelta || event.detail;
-				var moveForwardStep = 50;
-				var moveBackStep = -50;
-				var step = 0;
-				if(detail < 0)	step = moveForwardStep;
-				else	step = moveBackStep;
-				scrollAnimation = true;
-				$(".ProblemList").each(function(){
-					$(this).animate({'scrollLeft': $(this).scrollLeft() + step}, 100, "swing", function(){
-						scrollAnimation = false;
-					});
-				});
-			}
 			if(DarkMode)
 				$('.ThemeButton').html('<span class="fa fa-moon"></span> ');
 			function ChangeTheme(){

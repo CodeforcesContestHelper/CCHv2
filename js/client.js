@@ -643,7 +643,6 @@ function ratingToGrade(x){
 var singleContestType, singleContestUnrated;
 var contestEndTime, contestStartTime;
 var contestHacks, contestStandingList;
-var contestRanks = [0, 0], contestRankLast = [0, 0], contestRankInfo = [[], []], contestCalculatingRank = [false, false], contestRankChosen = 0;
 var contestStandingsIndex = 0, contestStandingLoader = 0;
 var contestStangingLoadTime = new Date(0);
 var contestRunningStatus, contestRunningType;
@@ -962,7 +961,8 @@ function getPredictedRank(points, penalty, time, sl, hl, uno){
 		var _points = 0, _penalty = 0;
 		for(var j=0;j<sl[i].problemResults.length;j++){
 			if(sl[i].party.participantType != "CONTESTANT" &&
-				(!uno || sl[i].party.participantType != "OUT_OF_COMPETITION"))	continue;
+				(!uno || sl[i].party.participantType != "OUT_OF_COMPETITION") &&
+				(!uno || settings.virtualFilter != false || sl[i].party.participantType != "VIRTUAL"))	continue;
 			if(sl[i].problemResults[j].bestSubmissionTimeSeconds!=undefined
 			&& sl[i].problemResults[j].bestSubmissionTimeSeconds<=time){
 				_points += sl[i].problemResults[j].points;
@@ -1027,6 +1027,7 @@ function loadStandingsService(un, ci, forced){
 		g(function(json){
 			contestRankInfo[0] = json;
 			contestCalculatingRank[0] = false;
+			contestRanks[0] = json[json.length - 1][1];
 			flushRankDisplayer();
 		});
 	}
@@ -1040,6 +1041,7 @@ function loadStandingsService(un, ci, forced){
 		g(function(json){
 			contestRankInfo[1] = json;
 			contestCalculatingRank[1] = false;
+			contestRanks[1] = json[json.length - 1][1];
 			flushRankDisplayer();
 		})
 	}

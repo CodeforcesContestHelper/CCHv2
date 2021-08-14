@@ -918,6 +918,9 @@ img[src=""],img:not([src]){opacity:0;}
 	font-family: var(--font-family);
 	transition: 0.2s;
 }
+.bigButton:focus{
+	outline: 0;
+} 
 .bigButton>i{
 	width: 24px;
 	margin-right: 18px;

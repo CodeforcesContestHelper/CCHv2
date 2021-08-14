@@ -2,54 +2,8 @@ var settings = localStorage.getItem("CCH_Settings");
 function saveSettings(){
 	localStorage.setItem("CCH_Settings", JSON.stringify(settings));
 }
-function setAsDefault(){
-	if(settings == undefined)
-		settings = {
-			language: "en",
-			smallTimeLimit: 10000,
-			largeTimeLimit: 30000,
-			reloadTime: 30000,
-			smallReloadTime: 5000,
-			standingsLoadingGap: 120000,
-			openRankPredict: 2,
-			openStandings: 1,
-			mainURL: "https://codeforces.com",
-			predictorURL: "https://cf-predictor-frontend.codeforces.ml/GetNextRatingServlet",
-			problemSubmissionDirection: "Descending",
-			problemEventDirection: "Ascending",
-			fontFamily: "",
-			styleSelection: 0,
-		};
-	else{
-		var L = settings.language;
-		var D = settings.styleSelection;
-		var F = settings.fontFamily;
-		settings = {
-			language: L,
-			smallTimeLimit: 10000,
-			largeTimeLimit: 30000,
-			reloadTime: 30000,
-			smallReloadTime: 5000,
-			standingsLoadingGap: 120000,
-			openRankPredict: 2,
-			openStandings: 1,
-			mainURL: "https://codeforces.com",
-			predictorURL: "https://cf-predictor-frontend.codeforces.ml/GetNextRatingServlet",
-			problemSubmissionDirection: "Descending",
-			problemEventDirection: "Ascending",
-			fontFamily: F,
-			styleSelection: D,
-		};
-	}
-	saveSettings();
-	initSettingsPage();
-	initLanguage();
-	initStyle();
-}
-if(settings == undefined)
-	setAsDefault();
-else settings = JSON.parse(settings);
-saveSettings();
+console.log(settings);
+var contestRanks = [0, 0], contestRankLast = [0, 0], contestRankInfo = [[], []], contestCalculatingRank = [false, false], contestRankChosen = 0;
 var lang_list = ["English", "简体中文"];
 var lang_attr = ["en", "zh_cn"];
 var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
@@ -181,6 +135,10 @@ var lang_en = {
 		styleSelection: [
 			"Style",
 			"Select favourite style."
+		],
+		virtualFilter: [
+			"Open Virtual Filter",
+			"Choose how history rank calculator deal with virtual information. Open this to remove them."
 		]
 	}
 };
@@ -306,79 +264,18 @@ var lang_zh = {
 		],
 		language: [
 			"语言",
-			"语言无需重启就即可更换。"
+			"语言无需重启即可更换。"
 		],
 		styleSelection: [
 			"样式",
 			"选择你喜欢的样式。"
+		],
+		virtualFilter: [
+			"打开虚拟赛过滤",
+			"选择历史排名计算器如何处理虚拟赛数据。打开此设置以去除它们。"
 		]
 	}
 };
-function getLanguage(lang){
-	if(lang == "en")	return lang_en;
-	if(lang == "zh_cn")	return lang_zh;
-	return lang_en;
-}
-String.prototype.format = function() {
-	for (var a = this, b = 0; b < arguments.length; b++)
-		a = a.replace(RegExp("\\{" + (b) + "\\}", "ig"), arguments[b]);
-	return a;
-};
-var languageOption;
-function initStyle(){
-	if(settings.styleSelection == 2){
-		if(!DarkMode)	ChangeTheme();
-	}
-	else if(settings.styleSelection == 1){
-		if(DarkMode)	ChangeTheme();
-	}
-	else{
-		if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
-			if(window.matchMedia('(prefers-color-scheme: dark)').matches){
-				if(!DarkMode)	ChangeTheme();
-			}
-			else if(DarkMode)	ChangeTheme();
-		}
-	}
-	if(contestRankInfo[contestRankChosen].length == 0)	return;
-	if(contestCalculatingRank[contestRankChosen])
-		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
-	else generateRankGraph(contestRankInfo[contestRankChosen]);
-}
-function initLanguage(){
-	languageOption = getLanguage(settings.language);
-	for(var name in languageOption.general)
-		if(languageOption.general.hasOwnProperty(name)){
-			if(languageOption.general[name].format("") != languageOption.general[name] && $(`[info=${name}]`).attr("argv") != undefined)
-				$(`[info=${name}]`).html(languageOption.general[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
-			else	$(`[info=${name}]`).html(languageOption.general[name]);
-		}
-	for(var name in languageOption.error)
-		if(languageOption.error.hasOwnProperty(name)){
-			if(languageOption.error[name].format("") != languageOption.error[name] && $(`[info=${name}]`).attr("argv") != undefined)
-				$(`[info=${name}]`).html(languageOption.error[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
-			else	$(`[info=${name}]`).html(languageOption.error[name]);
-		}
-	for(var name in languageOption.input)
-		if(languageOption.input.hasOwnProperty(name))
-			$(`[info=${name}]`).attr("placeholder", languageOption.input[name]);
-	for(var name in languageOption.tip)
-		if(languageOption.tip.hasOwnProperty(name)){
-			console.log($(`[info=${name}]`).attr("argv"));
-			if(languageOption.tip[name].format("") != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
-				$(`[info=${name}]`).html(languageOption.tip[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
-			else	$(`[info=${name}]`).html(languageOption.tip[name]);
-		}
-	for(var name in languageOption.settings)
-		if(languageOption.settings.hasOwnProperty(name)){
-			$(`.settingsUI[for=${name}] > div:first-child > div:first-child`).html(languageOption.settings[name][0]);
-			$(`.settingsUI[for=${name}] > div:first-child > div:last-child`).html(languageOption.settings[name][1]);
-		}
-}
-initLanguage();
-function localize(x){
-	return `<span info="${x}">${languageOption.general[x]}</span>`;
-}
 var settingsFunctions = {
 	language: {
 		initial: function(){
@@ -606,7 +503,129 @@ var settingsFunctions = {
 			initStyle(); saveSettings();
 			return [localize(styleSelectionList[settings.styleSelection]), true, true];
 		},
+	},
+	virtualFilter: {
+		initial: function(){
+			return settings.virtualFilter;
+		},
+		change: function(){
+			settings.virtualFilter = !settings.virtualFilter;
+			saveSettings();
+			return settings.virtualFilter;
+		}
 	}
+};
+String.prototype.format = function() {
+	for (var a = this, b = 0; b < arguments.length; b++)
+		a = a.replace(RegExp("\\{" + (b) + "\\}", "ig"), arguments[b]);
+	return a;
+};
+var currentDefaultSettings = {
+	language: "en",
+	smallTimeLimit: 10000,
+	largeTimeLimit: 30000,
+	reloadTime: 30000,
+	smallReloadTime: 5000,
+	standingsLoadingGap: 120000,
+	openRankPredict: 2,
+	openStandings: 1,
+	mainURL: "https://codeforces.com",
+	predictorURL: "https://cf-predictor-frontend.codeforces.ml/GetNextRatingServlet",
+	problemSubmissionDirection: "Descending",
+	problemEventDirection: "Ascending",
+	fontFamily: "",
+	styleSelection: 0,
+	virtualFilter: true,
+};
+function setAsDefault(){
+	if(settings == undefined)
+		settings = currentDefaultSettings;
+	else{
+		var L = settings.language;
+		var D = settings.styleSelection;
+		var F = settings.fontFamily;
+		if(L == undefined)	L = currentDefaultSettings.language;
+		if(D == undefined)	D = currentDefaultSettings.styleSelection;
+		if(F == undefined)	F = currentDefaultSettings.fontFamily;
+		settings = JSON.parse(JSON.stringify(currentDefaultSettings));
+		settings.language = L;
+		settings.styleSelection = D;
+		settings.fontFamily = F;
+		console.log(settings);
+	}
+	saveSettings();
+	initSettingsPage();
+	initLanguage();
+	initStyle();
+}
+function getLanguage(lang){
+	if(lang == "en")	return lang_en;
+	if(lang == "zh_cn")	return lang_zh;
+	return lang_en;
+}
+function initLanguage(){
+	if(settings == undefined)
+		languageOption = getLanguage(currentDefaultSettings.language);
+	else
+		languageOption = getLanguage(settings.language);
+	for(var name in languageOption.general)
+		if(languageOption.general.hasOwnProperty(name)){
+			if(languageOption.general[name].format("") != languageOption.general[name] && $(`[info=${name}]`).attr("argv") != undefined)
+				$(`[info=${name}]`).html(languageOption.general[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+			else	$(`[info=${name}]`).html(languageOption.general[name]);
+		}
+	for(var name in languageOption.error)
+		if(languageOption.error.hasOwnProperty(name)){
+			if(languageOption.error[name].format("") != languageOption.error[name] && $(`[info=${name}]`).attr("argv") != undefined)
+				$(`[info=${name}]`).html(languageOption.error[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+			else	$(`[info=${name}]`).html(languageOption.error[name]);
+		}
+	for(var name in languageOption.input)
+		if(languageOption.input.hasOwnProperty(name))
+			$(`[info=${name}]`).attr("placeholder", languageOption.input[name]);
+	for(var name in languageOption.tip)
+		if(languageOption.tip.hasOwnProperty(name)){
+			console.log($(`[info=${name}]`).attr("argv"));
+			if(languageOption.tip[name].format("") != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
+				$(`[info=${name}]`).html(languageOption.tip[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+			else	$(`[info=${name}]`).html(languageOption.tip[name]);
+		}
+	for(var name in languageOption.settings)
+		if(languageOption.settings.hasOwnProperty(name)){
+			$(`.settingsUI[for=${name}] > div:first-child > div:first-child`).html(languageOption.settings[name][0]);
+			$(`.settingsUI[for=${name}] > div:first-child > div:last-child`).html(languageOption.settings[name][1]);
+		}
+}
+initLanguage();
+if(settings == undefined)	settings = {};
+else
+	settings = JSON.parse(settings);
+if(Object.keys(settings).length != Object.keys(currentDefaultSettings).length)
+	setAsDefault();
+saveSettings();
+var languageOption;
+function initStyle(){
+	if(settings.styleSelection == 2){
+		if(!DarkMode)	ChangeTheme();
+	}
+	else if(settings.styleSelection == 1){
+		if(DarkMode)	ChangeTheme();
+	}
+	else{
+		if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+			if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+				if(!DarkMode)	ChangeTheme();
+			}
+			else if(DarkMode)	ChangeTheme();
+		}
+	}
+	if(contestRankInfo == undefined || contestRankInfo[contestRankChosen].length == 0)	return;
+	if(contestCalculatingRank[contestRankChosen])
+		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
+	else generateRankGraph(contestRankInfo[contestRankChosen]);
+}
+function localize(x){
+	return `<span info="${x}">${languageOption.general[x]}</span>`;
 }
 
 function initSettingsPage(){

@@ -17,7 +17,7 @@ body{
 	border-bottom: 2px solid #ccc;
 }
 .NavBarCurr{
-	;
+	background: #999;
 }
 .DividerLine{
 	background: #aaa;
@@ -213,7 +213,7 @@ body{
     font-weight: 600;
 }
 .user-legendary:first-letter{
-    color: white;
+    color: black;
 }
 .user-master, .user-imaster {
     color: rgb(255, 152, 26);
@@ -228,7 +228,7 @@ body{
     font-weight: 600;
 }
 .user-specialist {
-    color: rgb(87, 252, 242);
+    color: #00cec1;
     font-weight: 600;
 }
 .user-pupil {

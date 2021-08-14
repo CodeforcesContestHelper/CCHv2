@@ -1,0 +1,82 @@
+<!DOCTYPE>
+<html>
+	<head lang="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="./js/json3.min.js"></script>
+		<script src="./js/jquery.min.js"></script>
+		<meta name="referrer" content="never">
+		<link rel="stylesheet" href="./css/contest/client.css">
+		<link class="ThemeTypeIf" rel="stylesheet" href="./css/contest/default.css">
+		<link rel="stylesheet" href="./css/all.min.css">
+		<title>Codeforces Contest Helper</title>
+		<script>
+			var RunInNwjs = true;
+			try{
+				var win = nw.Window.get();
+				setTimeout(function(){win.show();},300);
+			}
+			catch(error){
+				document.title = 'Codeforces Contest Helper (Website Mode)';
+				console.log('Switched to Website Mode');
+				RunInNwjs = false;
+			}
+			var DarkMode = false;
+			if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+				if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+					DarkMode = true, $('.ThemeTypeIf').attr('href','./css/contest/dark.css');
+				}
+			}
+		</script>
+		<script class="cssControler"></script>
+	</head>
+	<body>
+		<div class="HtmlContainer">
+			
+		</div>
+	</body>
+	<footer>
+		<script src="./js/settings.js"></script>
+		<script>
+			if(!RunInNwjs){
+				if(!DarkMode)
+					$('body').css('background','#b7b7b7');
+				else
+					$('body').css('background','#484848');
+				$(".HtmlContainer").css('margin','0 auto');
+				$(".HtmlContainer").css('margin-top','20px');
+			}
+		    var element =  document.documentElement;
+		    if(navigator.userAgent.indexOf("Chrome")>0){
+		    	element = document.body;
+		    }
+			function ChangeTheme(){
+				if(!DarkMode){
+					$(".ThemeTypeIf").attr("href", "./css/contest/dark.css");
+					if(!RunInNwjs)
+						$('body').css('background','#222');
+				}
+				else{
+					$(".ThemeTypeIf").attr("href", "./css/contest/default.css");
+					if(!RunInNwjs)
+						$('body').css('background','#bbb');
+				}
+				DarkMode = !DarkMode;
+			}
+			if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+				var listeners={
+				    dark: function(mediaQueryList ){
+				        if(mediaQueryList.matches && !DarkMode && (settings == undefined || settings.styleSelection == 0))
+				        	ChangeTheme();
+				    },
+				    light: function(mediaQueryList){
+				        if(mediaQueryList.matches && DarkMode && (settings == undefined || settings.styleSelection == 0))
+				        	ChangeTheme();
+				    }
+				}
+				window.matchMedia('(prefers-color-scheme: dark)').addListener(listeners.dark)
+				window.matchMedia('(prefers-color-scheme: light)').addListener(listeners.light)
+			}
+			initStyle();
+		</script>
+	</footer>
+</html>
