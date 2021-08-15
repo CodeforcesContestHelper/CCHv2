@@ -6,7 +6,6 @@
 		<script src="./js/jquery.min.js"></script>
 		<meta name="referrer" content="never">
 		<link rel="stylesheet" href="./css/contest/client.css">
-		<link class="ThemeTypeIf" rel="stylesheet" href="./css/contest/default.css">
 		<link rel="stylesheet" href="./css/all.min.css">
 		<title>Codeforces Contest Helper</title>
 		<script>
@@ -27,11 +26,35 @@
 				}
 			}
 		</script>
-		<script class="cssControler"></script>
 	</head>
 	<body>
+		<link class="ThemeTypeIf" rel="stylesheet" href="./css/contest/dark.css">
+		<script class="cssControler"></script>
 		<div class="HtmlContainer">
-			
+			<div class="mainWrapper">
+				<img alt="User Avatar" class="singleUserAvatar">
+				<div style="flex: 1; display: flex; flex-direction: column;">
+					<div class="singleContestProgressBarDisplayer">
+						<div class="singleContestProgressBackground">
+						</div>
+						<div class="singleContestProgressInfo">
+						</div>
+					</div>
+					<div class="singleContestRunningType"></div>
+				</div>
+			</div>
+			<div class="mainWrapper">
+				<div class="styleBlock rankDisplayer" style="margin-right: 10px; width: calc(55%)">
+					<div>
+						<div class="currentRank"><span class="currentRankDelta"></span></div>
+						<div class="ratingChanges">...</div>
+					</div>
+				</div>
+				<div class="styleBlock problemDisplayer" style="width: calc(45% - 10px)">
+					<!-- <div class="smallSubmissionInfo"><span>F2</span></div> -->
+					<div style="position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);">...</div>
+				</div>
+			</div>
 		</div>
 	</body>
 	<footer>
@@ -42,41 +65,7 @@
 					$('body').css('background','#b7b7b7');
 				else
 					$('body').css('background','#484848');
-				$(".HtmlContainer").css('margin','0 auto');
-				$(".HtmlContainer").css('margin-top','20px');
 			}
-		    var element =  document.documentElement;
-		    if(navigator.userAgent.indexOf("Chrome")>0){
-		    	element = document.body;
-		    }
-			function ChangeTheme(){
-				if(!DarkMode){
-					$(".ThemeTypeIf").attr("href", "./css/contest/dark.css");
-					if(!RunInNwjs)
-						$('body').css('background','#222');
-				}
-				else{
-					$(".ThemeTypeIf").attr("href", "./css/contest/default.css");
-					if(!RunInNwjs)
-						$('body').css('background','#bbb');
-				}
-				DarkMode = !DarkMode;
-			}
-			if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
-				var listeners={
-				    dark: function(mediaQueryList ){
-				        if(mediaQueryList.matches && !DarkMode && (settings == undefined || settings.styleSelection == 0))
-				        	ChangeTheme();
-				    },
-				    light: function(mediaQueryList){
-				        if(mediaQueryList.matches && DarkMode && (settings == undefined || settings.styleSelection == 0))
-				        	ChangeTheme();
-				    }
-				}
-				window.matchMedia('(prefers-color-scheme: dark)').addListener(listeners.dark)
-				window.matchMedia('(prefers-color-scheme: light)').addListener(listeners.light)
-			}
-			initStyle();
 		</script>
 	</footer>
 </html>

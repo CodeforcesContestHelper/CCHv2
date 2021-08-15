@@ -2,8 +2,8 @@ var settings = localStorage.getItem("CCH_Settings");
 function saveSettings(){
 	localStorage.setItem("CCH_Settings", JSON.stringify(settings));
 }
-console.log(settings);
 var contestRanks = [0, 0], contestRankLast = [0, 0], contestRankInfo = [[], []], contestCalculatingRank = [false, false], contestRankChosen = 0;
+var contestNewWinJQ, contestNewWin, contestNewWinOpened = false, contestNewWinLoaded = false;
 var lang_list = ["English", "简体中文"];
 var lang_attr = ["en", "zh_cn"];
 var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
@@ -27,6 +27,7 @@ var lang_en = {
 		singleCheckExist: "Checking Existance...",
 		singleHeadBack: "Back to select page",
 		singleSmallWindow: "Open small window",
+		singleSmallWindowClose: "Close small window",
 		alertLoadSuccess: "Load Success!",
 		Rank: "Rank",
 		Problem: "Problem",
@@ -160,6 +161,7 @@ var lang_zh = {
 		singleCheckExist: "检查合法性......",
 		singleHeadBack: "返回选择界面",
 		singleSmallWindow: "打开小窗口",
+		singleSmallWindowClose: "关闭小窗口",
 		alertLoadSuccess: "加载成功！",
 		Rank: "排名",
 		Problem: "题目",
@@ -325,17 +327,17 @@ var settingsFunctions = {
 	},
 	reloadTime: {
 		initial: function(){
-			return [getTimeLength3(settings.reloadTime), settings.reloadTime != 30000, settings.reloadTime != 120000];
+			return [getTimeLength3(settings.reloadTime), settings.reloadTime != 30000, settings.reloadTime != 90000];
 		},
 		next: function(){
-			settings.reloadTime *= 2;
+			settings.reloadTime += 30000;
 			saveSettings();
-			return [getTimeLength3(settings.reloadTime), settings.reloadTime != 30000, settings.reloadTime != 120000];
+			return [getTimeLength3(settings.reloadTime), settings.reloadTime != 30000, settings.reloadTime != 90000];
 		},
 		previous: function(){
-			settings.reloadTime /= 2;
+			settings.reloadTime -= 30000;
 			saveSettings();
-			return [getTimeLength3(settings.reloadTime), settings.reloadTime != 30000, settings.reloadTime != 120000];
+			return [getTimeLength3(settings.reloadTime), settings.reloadTime != 30000, settings.reloadTime != 90000];
 		}
 	},
 	standingsLoadingGap: {
@@ -473,6 +475,12 @@ var settingsFunctions = {
 				document.documentElement.style.setProperty("--font-family", settings.fontFamily);
 			else
 				document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+			if(contestNewWinLoaded){
+				if(settings.fontFamily != "")
+					contestNewWin.window.document.documentElement.style.setProperty("--font-family", settings.fontFamily);
+				else
+					contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+			}
 			return settings.fontFamily;
 		},
 		change: function(str){
@@ -483,6 +491,12 @@ var settingsFunctions = {
 				document.documentElement.style.setProperty("--font-family", str);
 			else
 				document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+			if(contestNewWinLoaded){
+				if(str != "")
+					contestNewWin.window.document.documentElement.style.setProperty("--font-family", str);
+				else
+					contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+			}
 		}
 	},
 	styleSelection: {
@@ -551,7 +565,6 @@ function setAsDefault(){
 		settings.language = L;
 		settings.styleSelection = D;
 		settings.fontFamily = F;
-		console.log(settings);
 	}
 	saveSettings();
 	initSettingsPage();
@@ -585,7 +598,6 @@ function initLanguage(){
 			$(`[info=${name}]`).attr("placeholder", languageOption.input[name]);
 	for(var name in languageOption.tip)
 		if(languageOption.tip.hasOwnProperty(name)){
-			console.log($(`[info=${name}]`).attr("argv"));
 			if(languageOption.tip[name].format("") != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
 				$(`[info=${name}]`).html(languageOption.tip[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
 			else	$(`[info=${name}]`).html(languageOption.tip[name]);
@@ -595,6 +607,29 @@ function initLanguage(){
 			$(`.settingsUI[for=${name}] > div:first-child > div:first-child`).html(languageOption.settings[name][0]);
 			$(`.settingsUI[for=${name}] > div:first-child > div:last-child`).html(languageOption.settings[name][1]);
 		}
+	if(contestNewWinOpened){
+		for(var name in languageOption.general)
+			if(languageOption.general.hasOwnProperty(name)){
+				if(languageOption.general[name].format("") != languageOption.general[name] && $(`[info=${name}]`).attr("argv") != undefined)
+					contestNewWinJQ.find(`[info=${name}]`).html(languageOption.general[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.general[name]);
+			}
+		for(var name in languageOption.error)
+			if(languageOption.error.hasOwnProperty(name)){
+				if(languageOption.error[name].format("") != languageOption.error[name] && $(`[info=${name}]`).attr("argv") != undefined)
+					contestNewWinJQ.find(`[info=${name}]`).html(languageOption.error[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.error[name]);
+			}
+		for(var name in languageOption.input)
+			if(languageOption.input.hasOwnProperty(name))
+				contestNewWinJQ.find(`[info=${name}]`).attr("placeholder", languageOption.input[name]);
+		for(var name in languageOption.tip)
+			if(languageOption.tip.hasOwnProperty(name)){
+				if(languageOption.tip[name].format("") != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
+					contestNewWinJQ.find(`[info=${name}]`).html(languageOption.tip[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.tip[name]);
+			}
+	}
 }
 initLanguage();
 if(settings == undefined)	settings = {};
@@ -603,6 +638,7 @@ else
 if(Object.keys(settings).length != Object.keys(currentDefaultSettings).length)
 	setAsDefault();
 saveSettings();
+initLanguage();
 var languageOption;
 function initStyle(){
 	if(settings.styleSelection == 2){
@@ -619,6 +655,8 @@ function initStyle(){
 			else if(DarkMode)	ChangeTheme();
 		}
 	}
+	if(contestNewWinLoaded)
+		contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
 	if(contestRankInfo == undefined || contestRankInfo[contestRankChosen].length == 0)	return;
 	if(contestCalculatingRank[contestRankChosen])
 		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
@@ -840,6 +878,7 @@ function judgeToClass(x){
 	if(x == "OK")	return "successColor";
 	if(x == "COMPILATION_ERROR")	return "warningColor";
 	if(x == "TESTING")	return "loadingColor";
+	if(x == "PARTIAL")	return "warningColor";
 	return "dangerColor";
 }
 function getSubmissionIcon(x){

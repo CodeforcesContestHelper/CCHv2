@@ -4,8 +4,18 @@ body{
 .HtmlContainer{
 	background: #fff;
 }
-
-
+.singleContestProgressBarDisplayer{
+    background: #eee;
+}
+.singleContestProgressBackground{
+    background: #ccc;
+}
+.styleBlock{
+    background: #ddd;
+}
+.idleColor{
+    border: 1px solid #888;
+}
 
 
 ::-webkit-scrollbar:hover{

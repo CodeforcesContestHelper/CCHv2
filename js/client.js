@@ -307,6 +307,7 @@ function generateRankGraph(rankData){
 var singleLastTimeUpdate = new Date(0);
 var singleMemoryUsed = 0, singleLoadTypeLast;
 var singleLoadType;
+var contestUsername, contestContestId;
 var loadTypeReaction = [
 	"",
 	" <i class='fas fa-spin fa-sync-alt'></i>",
@@ -320,6 +321,59 @@ function reloadSingleMemoryUsed(){
 	else
 		$(".singleMemoryUsed").html(`<span><span>`+ toMemoryInfo(singleMemoryUsed) + '</span>' + loadTypeReaction[singleLoadType]+`</span>`);
 	singleLoadTypeLast = singleLoadType;
+}
+
+function initContestNewWinPage(){
+	if(settings.fontFamily != "")
+		contestNewWin.window.document.documentElement.style.setProperty("--font-family", settings.fontFamily);
+	else
+		contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+	contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
+	function loadAvatar(){
+		$.ajax({
+			url: "https://codeforces.com/api/user.info",
+			type: "GET",
+			data: {handles: contestUsername},
+			success: function(json){
+				contestNewWinJQ.find(".singleUserAvatar").attr("src", json.result[0].titlePhoto);
+			},
+			error: function(){
+				setTimeout(loadAvatar, 10000);
+			}
+		});
+	}
+	loadAvatar();
+	if(contestStartTime.getTime() == 0)	return;
+	if(contestStartTime.getTime() >= (new Date()).getTime())
+		contestNewWinJQ.find(".singleContestRunningType").html(`<span info="errorContestNotStarted">${languageOption.error.errorContestNotStarted}</span>`);
+	else{
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		if(contestJsonProblems.length != 0){
+			contestNewWinJQ.find(".problemDisplayer").html("");
+			for(var i=0; i<contestJsonProblems.length; i++){
+				var q = "";
+				if(contestProblemResult.length == 0)
+					q = "idleColor";
+				else{
+					if(contestProblemResult[i].points != 0)	q = "successColor";
+					else if(contestProblemResult[i].rejectedAttemptCount)	q = "dangerColor";
+					else q = "idleColor";
+				}
+				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
+			}
+		}
+		contestNewWinJQ.find(".currentRank").html('#' + (contestRanks[contestRankChosen] == 0 ? '?' : contestRanks[contestRankChosen]));
+		if(contestRankLast[contestRankChosen] != 0){
+			var q = contestRankLast[contestRankChosen] - contestRanks[contestRankChosen];
+			var ic = "fa-sort", col = "";
+			if(q > 0)	ic = "fa-caret-up", col = "red";
+			if(q < 0)	ic = "fa-caret-down", col = "green";
+			contestNewWinJQ.find(".currentRank").append(`<span class="currentRankDelta ${col}"><i class="fas ${ic}"></i>${Math.abs(q)}</span>`);
+		}
+		contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
+		contestNewWinJQ.find(".singleContestProgressBarDisplayer").html($(".singleContestProgressBarDisplayer").html());
+		contestNewWinJQ.find(".singleContestProgressBarDisplayer > .singleContestPoptip").remove();
+	}
 }
 
 function initSinglePage(){
@@ -343,12 +397,7 @@ function initSinglePage(){
 	$(".singleProblemlistBottom").html("");
 }
 function flushsingleProblemlistDisplayGrid(json, prob){
-	if(prob.length == 0){
-		prob = [];
-		for(var i=0; i<sz; i++)
-			prob.push({points: 0, rejectedAttemptCount: 0});
-	}
-	console.log("GRID", json, prob);
+	if(json.length == 0)	return;
 	$(".singleProblemlistlistDisplayGrid").html("");
 	for(var i=0; i<json.length; i++){
 		var q = $("<div class='singleProblemlistDisplayerGridItem'></div>");
@@ -394,10 +443,8 @@ function flushsingleProblemlistDisplayList(sub, prob, pb){
 		for(var i=0; i<sz; i++)
 			prob.push({points: 0, rejectedAttemptCount: 0});
 	}
-	console.log("LIST", sub, prob, pb);
 	$(".singleProblemlistDisplayList").html("");
 	$(".singleProblemlistDisplayEvent").html("");
-	console.log("LIST", sub, prob, pb);
 	for(var i=0; i<sz; i++)
 		indexToId[pb[i].index] = i;
 	var jq = [], len = [];
@@ -407,7 +454,7 @@ function flushsingleProblemlistDisplayList(sub, prob, pb){
 		else if(prob[i].rejectedAttemptCount)	typ = "red";
 		var q = $(`<div class="singleProblemlistDisplayListItem closed"><div class="singleProblemlistDisplayListItemInfo"><div class="singleProblemlistDisplayListItemInfoIndex">${pb[i].index}</div><div class="singleProblemlistDisplayListItemInfoVerdict"><div class="${typ}">${typ==""?"-":(typ=="green"?'+':'-')+(prob[i].rejectedAttemptCount?prob[i].rejectedAttemptCount:'')} (${prob[i].points})</div></div><div class="singleProblemlistDisplayListItemInfoTime"><i class="fa fa-clock"></i> ${prob[i].bestSubmissionTimeSeconds==undefined?"--:--":getTimeLength(prob[i].bestSubmissionTimeSeconds*1000)}</div><div class="singleProblemlistDisplayListItemInfoTimeAttempt"><div class="singleProblemlistVerdictBlock loadingColor">NAN</div></div></div><div class="singleProblemlistDisplayListItemProgress"></div><div class="singleProblemlistDisplayListItemStatus"></div></div>`);
 		if(typ == "green")	q.children(".singleProblemlistDisplayListItemProgress").append(`<span class="successColor" style="width:100%"></span>`);
-		if(typ == "red")	q.children(".singleProblemlistDisplayListItemProgress").append(`<span class="errorColor" style="width:100%"></span>`);
+		if(typ == "red")	q.children(".singleProblemlistDisplayListItemProgress").append(`<span class="dangerColor" style="width:100%"></span>`);
 		$(".singleProblemlistDisplayList").append(q);
 		jq.push(q); len.push(0);
 	}
@@ -418,7 +465,6 @@ function flushsingleProblemlistDisplayList(sub, prob, pb){
 		var qM = q.memoryConsumedBytes;
 		var qR = q.timeConsumedMillis;
 		var t = $(`<div class="singleProblemlistDisplayListItemStatusInfo"><div class="singleProblemlistDisplayListItemInfoIndex">${q.problem.index}</div><div class="singleProblemlistDisplayListItemInfoVerdictBlock"><div subId="${q.id}" subContestId="${q.contestId}" subLink="true" class="singleProblemlistVerdictBlock ${judgeToClass(q.verdict)}">${toSmallInfo(q.verdict)}</div></div><div class="singleProblemlistDisplayListItemInfoRuntime">${qR}ms</div><div class="singleProblemlistDisplayListItemInfoMemory">${toMemoryInfo(qM)}</div><div class="singleProblemlistDisplayListItemInfoTimeLarge">${getTimeLength2(qT)}</div></div>`);
-		console.log(q.problem.index, indexToId);
 		if(settings.problemSubmissionDirection == "Ascending")
 			jq[indexToId[q.problem.index]].children(".singleProblemlistDisplayListItemStatus").prepend(t);
 		else
@@ -449,6 +495,7 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 	if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
 	if(singleContestUnrated == "Unrated"){
 		$(".singleContestProgressRatingChangesDisplayer > span:last-child").html(localize("Unrated"));
+		if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
 		return;
 	}
 	var reloadIf = function(url, callbacks){
@@ -462,19 +509,19 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 			success: function(json){
 				if(typeof(json) == "string")
 					json = JSON.parse(json);
-				console.log(json);
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
 				json = json.result;
 				for(var i=0; i<json.length; i++) if(json[i].handle == un){
 					$(".singleContestProgressRatingChangesDisplayer > span:last-child")
 						.html(`<span class="${ratingToClass(json[i].oldRating)}">${json[i].oldRating}</span> <span class="${json[i].newRating>=json[i].oldRating?"green":"red"}">${json[i].newRating>=json[i].oldRating?'+':'-'}${Math.abs(Number(json[i].newRating)-Number(json[i].oldRating))}</span> <i class="fas fa-angle-double-right"></i> <span class="${ratingToClass(json[i].newRating)}">${json[i].newRating}</span>`)
+					if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
 					return;
 				}
 				$(".singleContestProgressRatingChangesDisplayer > span:last-child").html(localize("Unrated"));
+				if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
 			},
 			error: function(jqXHR, status, errorThrown){
-				console.log(jqXHR, status, errorThrown);
 				if(status == "timeout"){
 					//Network Timeout
 					singleLoadType = 2;
@@ -497,8 +544,8 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 			xhr: function() {
 				var xhr = new XMLHttpRequest();
 				var q = 0;
+				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
-					 console.log(toMemoryInfo(e.loaded), q);
 					 singleMemoryUsed += (e.loaded - q);
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
@@ -510,11 +557,11 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 	reloadIf("https://codeforces.com/api/contest.ratingChanges", function(){
 		reloadIf(settings.predictorURL, function(){
 			$(".singleContestProgressRatingChangesDisplayer > span:last-child").html("<i class='fas fa-unlink red'></i>");
+			if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
 		});
 	})
 }
 function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, error, S, E, loadStandings){
-	console.log(loadStandings, "???");
 	var s = 0, e = 0, c = 4;
 	var Q = 0;
 	function loadInfo(u, d, q, id, er){
@@ -527,7 +574,6 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 			timeout : id == 5 ? settings.largeTimeLimit : settings.smallTimeLimit,
 			data: d,
 			success: function(json){
-				console.log(json);
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
 				for(var i=0; i<q.length; i++)
@@ -537,7 +583,6 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 				if(s + e == c)	(s == c) ? S() : E();
 			},
 			error: function(jqXHR, status, errorThrown){
-				console.log(jqXHR, status, errorThrown);
 				if(status == "timeout"){
 					//Network Timeout
 					singleLoadType = 2;
@@ -580,8 +625,8 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 			xhr: function() {
 				var xhr = new XMLHttpRequest();
 				var q = 0;
+				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
-					 console.log(toMemoryInfo(e.loaded), q);
 					 singleMemoryUsed += (e.loaded - q);
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
@@ -598,9 +643,10 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 		setTimeout(function(){
 			getSingleRatingChanges(currSingleLastTimeUpdate, un, ci);
 		}, 2000);
-	else
+	else{
 		$(".singleContestProgressRatingChangesDisplayer > span:last-child").html(localize("Unrated"));
-	console.log(contestStandingLoader, contestStangingLoadTime.getTime() < (new Date()).getTime() - settings.standingsLoadingGap);
+		if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
+	}
 	setTimeout(function(){
 		loadStandings = loadStandings || (settings.openStandings == 2 || (settings.openStandings == 1 && getContestType($(".singleContestName").html()) == "Div. 1"));
 		if(loadStandings && contestStangingLoadTime.getTime() < (new Date()).getTime() - settings.standingsLoadingGap){
@@ -669,6 +715,16 @@ function flushRankDisplayer(){
 	if(contestCalculatingRank[contestRankChosen])
 		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
 	else generateRankGraph(contestRankInfo[contestRankChosen]);
+	if(contestNewWinLoaded){
+		contestNewWinJQ.find(".currentRank").html('#' + (contestRanks[contestRankChosen] == 0 ? '?' : contestRanks[contestRankChosen]));
+		if(contestRankLast[contestRankChosen] != 0){
+			var q = contestRankLast[contestRankChosen] - contestRanks[contestRankChosen];
+			var ic = "fa-sort", col = "";
+			if(q > 0)	ic = "fa-caret-up", col = "red";
+			if(q < 0)	ic = "fa-caret-down", col = "green";
+			contestNewWinJQ.find(".currentRank").append(`<span class="currentRankDelta ${col}"><i class="fas ${ic}"></i>${Math.abs(q)}</span>`);
+		}
+	}
 }
 function flushContestantProgressBarInner(){
 	$(".singleContestProgressInfo").html("");
@@ -694,7 +750,10 @@ function flushContestantProgressBarInner(){
 	$(".singleContestProgressPart").unbind("mouseout").mouseout(function(){
 		$(".singleContestPoptip").addClass("closed");
 	});
-
+	if(contestNewWinLoaded){
+		contestNewWinJQ.find(".singleContestProgressBarDisplayer").html($(".singleContestProgressBarDisplayer").html());
+		contestNewWinJQ.find(".singleContestProgressBarDisplayer > .singleContestPoptip").remove();
+	}
 }
 
 function getContestType(x){
@@ -712,12 +771,17 @@ function singleContestantTimeCountdown(){
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 		.attr("info", "contestRunning").attr("argv", `['${d}']`)
 		.html(languageOption.general.contestRunning.format(d));
+	if(contestNewWinLoaded)
+		contestNewWinJQ.find(".singleContestRunningType")
+		.attr("info", "contestRunning").attr("argv", `['${d}']`)
+		.html(languageOption.general.contestRunning.format(d));
 	var p = (new Date()).getTime() - contestStartTime.getTime();
 	var q = contestEndTime.getTime() - contestStartTime.getTime();
 	$(".singleContestProgressBackground").css("width", `${p/q*100}%`);
+	if(contestNewWinLoaded)
+		contestNewWinJQ.find(".singleContestProgressBackground").css("width", `${p/q*100}%`);
 }
 function singleContestantSyncOfficialSettings(un, ci, json, p){
-	console.log("Official", json);
 	$(".singleContestTags").html("");
 	var nam = $(`<div class="singleContestTag primaryColor"><i class="fas fa-calendar"></i>#${ci}</div>`);
 	$(".singleContestTags").append(nam);
@@ -743,7 +807,6 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 	}
 	else{
 		flushsingleProblemlistDisplayGrid([], json.problems);
-		flushsingleProblemlistBottom([]);
 	}
 	flushRankDisplayer();
 	if(json.contest.phase == "CODING"){singleContestantTimeCountdown();}
@@ -770,9 +833,25 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
 		$(".singleContestTags").append(unk);
 	}
+	if(contestNewWinLoaded)
+		if(contestJsonProblems.length != 0){
+			contestNewWinJQ.find(".problemDisplayer").html("");
+			for(var i=0; i<contestJsonProblems.length; i++){
+				var q = "";
+				if(contestProblemResult.length == 0)
+					q = "idleColor";
+				else{
+					if(contestProblemResult[i].points != 0)	q = "successColor";
+					else if(contestProblemResult[i].rejectedAttemptCount)	q = "dangerColor";
+					else q = "idleColor";
+				}
+				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
+			}
+		}
+	if(contestNewWinLoaded)
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
 }
 function singleContestantSyncUnofficialSettings(un, ci, json, p){
-	console.log("Unofficial", json);
 	$(".singleContestTags").html("");
 	var nam = $(`<div class="singleContestTag primaryColor"><i class="fas fa-calendar"></i>#${ci}</div>`);
 	$(".singleContestTags").append(nam);
@@ -834,7 +913,6 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 		}
 	if(!inContest){
 		flushsingleProblemlistDisplayList(contestSubmissionList, [], contestJsonProblems);
-		flushsingleProblemlistBottom([]);
 		flushsingleProblemlistDisplayGrid([], json.problems);
 	}
 	flushRankDisplayer();
@@ -842,9 +920,25 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
 		$(".singleContestTags").append(unk);
 	}
+	if(contestNewWinLoaded)
+		if(contestJsonProblems.length != 0){
+			contestNewWinJQ.find(".problemDisplayer").html("");
+			for(var i=0; i<contestJsonProblems.length; i++){
+				var q = "";
+				if(contestProblemResult.length == 0)
+					q = "idleColor";
+				else{
+					if(contestProblemResult[i].points != 0)	q = "successColor";
+					else if(contestProblemResult[i].rejectedAttemptCount)	q = "dangerColor";
+					else q = "idleColor";
+				}
+				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
+			}
+		}
+	if(contestNewWinLoaded)
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
 }
 function singleVirtualSyncUnofficialSettings(un, ci, json, p){
-	console.log("Unofficial - Virtual", json);
 	$(".singleContestTags").html("");
 	var nam = $(`<div class="singleContestTag primaryColor"><i class="fas fa-calendar"></i>#${ci}</div>`);
 	$(".singleContestTags").append(nam);
@@ -873,7 +967,6 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	inContes = false;
 	for(var i=0; i<json.rows.length; i++){
 		if(json.rows[i].party.participantType == "VIRTUAL" && json.rows[i].party.startTimeSeconds * 1000 == virtualProvidedStartTime.getTime()){
-			console.log("VIRTUAL INFO", json.rows[i]);
 			contestProblemResult = json.rows[i].problemResults;
 			flushsingleProblemlistDisplayList(contestSubmissionList, contestProblemResult, contestJsonProblems);
 			contestRankLast[0] = contestRanks[0];
@@ -898,7 +991,6 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 			contestRankInfo[1].push([(new Date).getTime(), contestRanks[1]]);
 		inContest = 1;
 		flushsingleProblemlistDisplayList(contestSubmissionList, [], contestJsonProblems);
-		flushsingleProblemlistBottom([]);
 		flushsingleProblemlistDisplayGrid([], json.problems);
 	}
 	flushRankDisplayer();
@@ -906,9 +998,25 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
 		$(".singleContestTags").append(unk);
 	}
+	if(contestNewWinLoaded)
+		if(contestJsonProblems.length != 0){
+			contestNewWinJQ.find(".problemDisplayer").html("");
+			for(var i=0; i<contestJsonProblems.length; i++){
+				var q = "";
+				if(contestProblemResult.length == 0)
+					q = "idleColor";
+				else{
+					if(contestProblemResult[i].points != 0)	q = "successColor";
+					else if(contestProblemResult[i].rejectedAttemptCount)	q = "dangerColor";
+					else q = "idleColor";
+				}
+				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
+			}
+		}
+	if(contestNewWinLoaded)
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
 }
 function singleContestantSyncUserInfo(un, ci, json, p){
-	console.log("User", json);
 	var c = ratingToClass(json.rating);
 	$(".singleUserAvatar").attr("src", json.titlePhoto);
 	$(".singleUsernameDisplayer").attr("class", "singleUsernameDisplayer");
@@ -947,10 +1055,11 @@ function singleVirtualSyncProblemStatus(un, ci, json, p){
 function hlMask(hl){
 	var ret = {};
 	for(var i=0; i<hl.length; i++)
-		if(hl[i].creationTimeSeconds * 1000 <= contestEndTime){
+		if(hl[i].creationTimeSeconds * 1000 <= contestEndTime
+		&& (hl[i].verdict == "HACK_SUCCESSFUL" || hl[i].verdict == "HACK_UNSUCCESSFUL")){
 			var from = hl[i].hacker.members[0].handle;
 			if(ret[from] == undefined)	ret[from] = [];
-			ret[from].push([(hl[i].creationTimeSeconds*1000)-(contestStartTime).getTime(), hl[i].verdict == "HACK_SUCCESSFUL" ? 100 : -50]);
+			ret[from].push([(hl[i].creationTimeSeconds)-(contestStartTime).getTime()/1000, hl[i].verdict == "HACK_SUCCESSFUL" ? 100 : -50]);
 		}
 	return ret;
 }
@@ -959,10 +1068,10 @@ function getPredictedRank(points, penalty, time, sl, hl, uno){
 	var returnValue = 1;
 	for(var i=0;i<sl.length;i++){
 		var _points = 0, _penalty = 0;
+		if(sl[i].party.participantType != "CONTESTANT" &&
+			(!uno || sl[i].party.participantType != "OUT_OF_COMPETITION") &&
+			(!uno || settings.virtualFilter != false || sl[i].party.participantType != "VIRTUAL"))	continue;
 		for(var j=0;j<sl[i].problemResults.length;j++){
-			if(sl[i].party.participantType != "CONTESTANT" &&
-				(!uno || sl[i].party.participantType != "OUT_OF_COMPETITION") &&
-				(!uno || settings.virtualFilter != false || sl[i].party.participantType != "VIRTUAL"))	continue;
 			if(sl[i].problemResults[j].bestSubmissionTimeSeconds!=undefined
 			&& sl[i].problemResults[j].bestSubmissionTimeSeconds<=time){
 				_points += sl[i].problemResults[j].points;
@@ -987,32 +1096,68 @@ function getPredictedRank(points, penalty, time, sl, hl, uno){
 function getOverallPredictedRank(pr, sl, un, hl, uno){
 	var currT = contestStartTime;
 	var Step = settings.reloadTime;
-	var returnValue = [];
+	var returnValue = [[(contestStartTime).getTime(), 1]];
 	var p = new Date();
 	var NoteNumber = (contestEndTime).getTime() - (contestStartTime).getTime();
-	NoteNumber = Math.floor(NoteNumber / Step) + 1;
+	NoteNumber = Math.ceil(NoteNumber / Step);
+	Step /= 1000;
 	var T = 0;
-	while(currT <= contestEndTime){
-		var currS = 0, currP = 0;
-		var time = (currT.getTime()-contestStartTime.getTime())/1000;
-		for(var j=0;j<pr.length;j++){
-			if(pr[j].bestSubmissionTimeSeconds!=undefined
-			&& pr[j].bestSubmissionTimeSeconds<=time){
-				currS += pr[j].points;
-				var _dalta = pr[j].penalty;
+	var eventList = [];
+	for(var i=0; i<NoteNumber; i++)
+		eventList.push([]);
+	var nameToId = {}, curr = -1;
+	var scores = [];
+	// Load All Person
+	for(var i=0;i<sl.length;i++){
+		var _points = 0, _penalty = 0;
+		if(sl[i].party.participantType != "CONTESTANT" &&
+			(!uno || sl[i].party.participantType != "OUT_OF_COMPETITION") &&
+			(!uno || settings.virtualFilter != false || sl[i].party.participantType != "VIRTUAL"))	continue;
+		nameToId[sl[i].party.members[0].handle] = ++curr;
+		scores.push([0, 0]);
+		for(var j=0;j<sl[i].problemResults.length;j++){
+			if(sl[i].problemResults[j].bestSubmissionTimeSeconds != undefined){
+				var q = [sl[i].problemResults[j].points, 0];
 				if(contestRunningType == "ICPC")
-					_dalta = Math.floor(pr[j].bestSubmissionTimeSeconds/60)+pr[j].rejectedAttemptCount*10;
-				currP += (_dalta == undefined ? 0 : _dalta);
+					q[1] = Math.floor(sl[i].problemResults[j].bestSubmissionTimeSeconds / 60)
+						+sl[i].problemResults[j].rejectedAttemptCount*10;
+				eventList[Math.floor(sl[i].problemResults[j].bestSubmissionTimeSeconds / Step)].push([curr, q]);
 			}
 		}
-		if(contestRunningType == "CF" && hl != undefined){
-			for(var j=0;j<hl.length;j++){
-				if(hl[un][j][0]>time)	break;
-				currS += hl[un][j][1];
-			}
+		if(contestRunningType == "CF" && hl[sl[i].party.members[0].handle]!=undefined){
+			for(var j=0;j<hl[sl[i].party.members[0].handle].length;j++)
+				if(hl[sl[i].party.members[0].handle][j][0] <= (contestEndTime.getTime()) / 1000)
+					eventList[Math.floor(hl[sl[i].party.members[0].handle][j][0] / Step)].push([curr, [hl[sl[i].party.members[0].handle][j][1], 0]]);
 		}
-		returnValue.push([(currT).getTime(),  getPredictedRank(currS, currP, time, sl, hl, uno)]);
-		currT = new Date((currT).getTime() + Step);
+	}
+	var thisPerson = nameToId[un];
+	var currentRank = 1;
+	var currTime = contestStartTime.getTime();
+	function chk(x, y){
+		if(x[0] != y[0])	return x[0] > y[0];
+		return x[1] < y[1];
+	}
+	for(var t = 0; t < eventList.length; t++){
+		var recalc = false;
+		var y = eventList[t];
+		for(var i=0; i<y.length; i++){
+			if(chk(scores[y[i][0]], scores[thisPerson]))
+				--currentRank;
+			scores[y[i][0]][0] += y[i][1][0];
+			scores[y[i][0]][1] += y[i][1][1];
+			if(chk(scores[y[i][0]], scores[thisPerson]))
+				++currentRank;
+			if(y[i][0] == thisPerson)	recalc = true;
+		}
+		if(recalc){
+			currentRank = 1;
+			for(var i=0; i<=curr; i++)
+				if(chk(scores[i], scores[thisPerson]))
+					++currentRank;
+		}
+		currTime += Step * 1000;
+		currTime = Math.min(currTime, contestEndTime.getTime());
+		returnValue.push([currTime, currentRank]);
 	}
 	return returnValue;
 }
@@ -1065,7 +1210,7 @@ function singleContestantSyncStandings(un, ci, json, p){
 }
 function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 	contestRanks = [0, 0];
-	contestRankDelta = [0, 0];
+	contestRankLast = [0, 0];
 	contestRankInfo = [[], []];
 	contestStangingLoadTime = new Date(0);
 	contestProblemResult = [];
@@ -1123,7 +1268,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 	virtualProvidedStartTime = tm;
 	contestRanks = [0, 0];
-	contestRankDelta = [0, 0];
+	contestRankLast = [0, 0];
 	contestRankInfo = [[], []];
 	contestStangingLoadTime = new Date(0);
 	contestProblemResult = [];
@@ -1208,11 +1353,14 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 	var startTime = undefined;
 	var u;
 	var reloadTimeCount = function(){
+		if(currLastTimeUpdate != singleLastTimeUpdate)	return;
 		if(startTime <= (new Date()).getTime()){
 			singleContestantMainTrack(currLastTimeUpdate, un, ci);
 			return;
 		}
 		q.html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
+		if(contestNewWinLoaded)
+			contestNewWinJQ.find(".singleContestRunningType").html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
 		u = setTimeout(reloadTimeCount, 500);
 	}
 	var reloadMonitor = function(){
@@ -1233,7 +1381,6 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 			timeout : settings.smallTimeLimit,
 			data: {gym: ci >= 100000},
 			success: function(json){
-				console.log(json);
 				singleLoadType = 4;
 				setTimeout(reloadStartTime, settings.reloadTime);
 				reloadSingleMemoryUsed();
@@ -1242,10 +1389,10 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 						if(startTime == undefined)
 							reloadMonitor();
 						startTime = json.result[i].startTimeSeconds * 1000;
+						contestStartTime = (new Date(startTime));
 					}
 			},
 			error: function(jqXHR, status, errorThrown){
-				console.log(jqXHR, status, errorThrown);
 				if(status == "timeout"){
 					//Network Timeout
 					singleLoadType = 2;
@@ -1269,8 +1416,8 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 			xhr: function() {
 				var xhr = new XMLHttpRequest();
 				var q = 0;
+				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
-					 console.log(toMemoryInfo(e.loaded), q);
 					 singleMemoryUsed += (e.loaded - q);
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
@@ -1299,13 +1446,12 @@ function loadSingleContestantAll(un, ci){
 			timeout : settings.smallTimeLimit,
 			data: {contestId: ci, from: 1, count: 1, showUnofficial: true},
 			success: function(json){
-				console.log(json);
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
 				singleContestantMainTrack(currLastTimeUpdate, un, ci);
 			},
 			error: function(jqXHR, status, errorThrown){
-				console.log(jqXHR, status, errorThrown);
+
 				if(status == "timeout"){
 					//Network Timeout
 					singleLoadType = 2;
@@ -1336,8 +1482,8 @@ function loadSingleContestantAll(un, ci){
 			xhr: function() {
 				var xhr = new XMLHttpRequest();
 				var q = 0;
+				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
-					 console.log(toMemoryInfo(e.loaded), q);
 					 singleMemoryUsed += (e.loaded - q);
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
@@ -1423,7 +1569,7 @@ function loadSingleVirtualAll(un, ci, tm){
 			data: D,
 			success: C,
 			error: function(jqXHR, status, errorThrown){
-				console.log(jqXHR, status, errorThrown);
+
 				if(status == "timeout"){
 					//Network Timeout
 					singleLoadType = 2;
@@ -1447,8 +1593,8 @@ function loadSingleVirtualAll(un, ci, tm){
 			xhr: function() {
 				var xhr = new XMLHttpRequest();
 				var q = 0;
+				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
-					 console.log(toMemoryInfo(e.loaded), q);
 					 singleMemoryUsed += (e.loaded - q);
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
@@ -1459,7 +1605,6 @@ function loadSingleVirtualAll(un, ci, tm){
 	}
 	reloadIf("https://codeforces.com/api/contest.standings"
 		, {contestId: ci, showUnofficial: true}, function(json){
-		console.log(json);
 		contestStandingList = json.result;
 		singleLoadType = 4;
 		reloadSingleMemoryUsed();
@@ -1469,7 +1614,6 @@ function loadSingleVirtualAll(un, ci, tm){
 			r.removeClass("closed");
 			reloadIf("https://codeforces.com/api/contest.hacks"
 				, {contestId: ci}, function(json){
-				console.log(json);
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
 				contestHacks = hlMask(json.result);
@@ -1489,8 +1633,26 @@ function loadSingleVirtualAll(un, ci, tm){
 
 
 function loadSingleInformation(type, un, ci, tm, started){
+	contestUsername = un;
+	contestContestId = ci;
 	singleLastTimeUpdate = new Date();
-	console.log(type, un, ci, tm, started);
+	contestRanks = [0, 0];
+	contestRankLast = [0, 0];
+	contestRankInfo = [[], []];
+	contestStangingLoadTime = new Date(0);
+	contestProblemResult = [];
+	contestSubmissionList = [];
+	contestJsonProblems = [];
+	contestStartTime = contestEndTime = new Date(0);
+	singleContestUnrated = undefined;
+	singleContestType = "";
+	contestHacks = contestStandingList = undefined;
+	contestCalculatingRank = [false, false];
+	contestStandingsIndex = 0, contestStandingLoader = 0;
+	contestStangingLoadTime = new Date(0);
+	contestRunningStatus = "", contestRunningType = "";
+	contestSubmissionList = [];
+	inContest = false;
 	$(".contentRowInfo").eq(0).css("left", "-620px");
 	$(".singleTypeChosen").removeClass("singleTypeChosen");
 	initSinglePage();
@@ -1508,7 +1670,6 @@ function verifySingleInformation(type, un, ci, tm){
 		timeout : settings.smallTimeLimit,
 		data: {handles: un},
 		success: function(json){
-			console.log(json);
 			var isGym = Number(ci) >= 100000;
 			$.ajax({
 				url: "https://codeforces.com/api/contest.standings",
@@ -1599,7 +1760,6 @@ function verifySingleInformation(type, un, ci, tm){
 					return;
 				},
 				error: function(jqXHR, status, errorThrown){
-					console.log(jqXHR, status, errorThrown);
 					if(status == "timeout"){
 						$(forButton).html(`<i class="fas fa-exclamation-triangle"></i><span info="errorLoadTimeout">${languageOption.error.errorLoadTimeout}</span>`);
 						$(forButton).removeClass("primaryColor").addClass("dangerColor").attr("disabled", true);
@@ -1645,18 +1805,10 @@ function verifySingleInformation(type, un, ci, tm){
 							$(forButton).addClass("primaryColor").removeClass("dangerColor").attr("disabled", false);
 						}, 1000);
 					}
-				},
-				xhr: function() {
-						var xhr = new XMLHttpRequest();
-						xhr.addEventListener('progress', function (e) {
-							 console.log(toMemoryInfo(e.loaded));
-						});
-						return xhr;
-				  }
+				}
 			 });
 		},
 		error: function(jqXHR, status, errorThrown){
-			console.log(jqXHR, status, errorThrown);
 			if(status == "timeout"){
 				$(forButton).html(`<i class="fas fa-exclamation-triangle"></i><span info="errorLoadTimeout">${languageOption.error.errorLoadTimeout}</span>`);
 				$(forButton).removeClass("primaryColor").addClass("dangerColor").attr("disabled", true);
@@ -1681,14 +1833,7 @@ function verifySingleInformation(type, un, ci, tm){
 				$(forButton).html(`<i class="fas fa-paper-plane"></i><span info="singleContestantButton">${languageOption.general.singleContestantButton}</span>`);
 				$(forButton).addClass("primaryColor").removeClass("dangerColor").attr("disabled", false);
 			}, 1000);
-		},
-		xhr: function() {
-				var xhr = new XMLHttpRequest();
-				xhr.addEventListener('progress', function (e) {
-					 console.log(toMemoryInfo(e.loaded));
-				});
-				return xhr;
-		  }
+		}
 	 });
 }
 
@@ -1750,7 +1895,6 @@ $(".singleVirtualButton").click(function(){
 		return;
 	}
 	q1 = queryTime.exec(q1);
-	console.log(q1);
 	if(q1 == null){
 		$(".singleVirtualButton").html(`<i class="fas fa-exclamation-triangle"></i><span info="errorTimeFormatError">${languageOption.error.errorTimeFormatError}</span>`);
 		$(".singleVirtualButton").removeClass("primaryColor").addClass("dangerColor").attr("disabled", true);
@@ -1835,7 +1979,6 @@ function openURL(x){
 }
 var timeLoader, ifInObserve;
 $(".singleHeadBack > span").mousedown(function(e){
-	console.log("YES!!");
 	$(".singleHeadBackProgress").addClass("selected");
 	timeStart = new Date();
 	ifInObserve = true;
@@ -1856,6 +1999,10 @@ $(".singleHeadBack > span").mousedown(function(e){
 			$("body").attr("onmouseup", "");
 			ifInObserve = false;
 			singleLastTimeUpdate = new Date();
+			if(contestNewWinOpened){
+				contestNewWinOpened = contestNewWinLoaded = false;
+				contestNewWin.close();
+			}
 			setTimeout(function(){
 				if(!ifInObserve)	window.onmousemove = function(){}
 			}, 300);
@@ -1865,7 +2012,6 @@ $(".singleHeadBack > span").mousedown(function(e){
 });
 function singleButtonMouseUp(){
 	 clearInterval(timeLoader);
-	 console.log("NO!!");
 	 ifInObserve = false;
 	 $("body").attr("onmouseup", "");
 	 $(".singleHeadBackProgress").removeClass("selected");
@@ -1873,3 +2019,48 @@ function singleButtonMouseUp(){
 		if(!ifInObserve)	window.onmousemove = function(){}
 	}, 300);
 }
+
+$(".singleOpenSmallWindow").click(function(){
+	if(!RunInNwjs)	return;
+	if(!contestNewWinOpened){
+		contestNewWinOpened = true;
+		nw.Window.open("contest.html",{
+		    "title": "Codeforces Contest Helper", 
+		    "icon": "favicon.png",
+		    "width": 340,
+		    "height": 160, 
+		    "position": "center",
+		    "resizable": false,
+		    "fullscreen":false,
+		    "show_in_taskbar":false,
+		    "show":true, 
+		    "kiosk":false,
+		    "always_on_top":true,
+		    "frame":false,
+		    "transparent":true
+		}, function(x){
+			contestNewWin = x;
+			setTimeout(function(){
+				contestNewWinJQ = $(contestNewWin.window.document.body);
+				contestNewWinLoaded = true;
+				initContestNewWinPage();
+			}, 100);
+		});
+		$(".singleOpenSmallWindow").html(`<span info="singleSmallWindowClose">${languageOption.general.singleSmallWindowClose}</span> <i class="fas fa-angle-right"></i>`);
+	}
+	else{
+		contestNewWinOpened = contestNewWinLoaded = false;
+		contestNewWin.close();
+		$(".singleOpenSmallWindow").html(`<span info="singleSmallWindow">${languageOption.general.singleSmallWindow}</span> <i class="fas fa-angle-right"></i>`);
+	}
+})
+if(RunInNwjs)
+	win.on("close", function(){
+		this.hide();
+		if(contestNewWinOpened){
+			contestNewWinOpened = contestNewWinLoaded = false;
+			try{contestNewWin.close(true);}
+			catch(e){}
+		}
+		this.close(true);
+	})
