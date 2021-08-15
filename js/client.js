@@ -964,7 +964,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 		$(".singleContestTags").append(sct);
 	}
 	singleContestUnrated = "Virtual";
-	inContes = false;
+	inContest = false;
 	for(var i=0; i<json.rows.length; i++){
 		if(json.rows[i].party.participantType == "VIRTUAL" && json.rows[i].party.startTimeSeconds * 1000 == virtualProvidedStartTime.getTime()){
 			contestProblemResult = json.rows[i].problemResults;
