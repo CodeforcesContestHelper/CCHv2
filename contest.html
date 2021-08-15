@@ -1,0 +1,71 @@
+<!DOCTYPE>
+<html>
+	<head lang="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="./js/json3.min.js"></script>
+		<script src="./js/jquery.min.js"></script>
+		<meta name="referrer" content="never">
+		<link rel="stylesheet" href="./css/contest/client.css">
+		<link rel="stylesheet" href="./css/all.min.css">
+		<title>Codeforces Contest Helper</title>
+		<script>
+			var RunInNwjs = true;
+			try{
+				var win = nw.Window.get();
+				setTimeout(function(){win.show();},300);
+			}
+			catch(error){
+				document.title = 'Codeforces Contest Helper (Website Mode)';
+				console.log('Switched to Website Mode');
+				RunInNwjs = false;
+			}
+			var DarkMode = false;
+			if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+				if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+					DarkMode = true, $('.ThemeTypeIf').attr('href','./css/contest/dark.css');
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<link class="ThemeTypeIf" rel="stylesheet" href="./css/contest/dark.css">
+		<script class="cssControler"></script>
+		<div class="HtmlContainer">
+			<div class="mainWrapper">
+				<img alt="User Avatar" class="singleUserAvatar">
+				<div style="flex: 1; display: flex; flex-direction: column;">
+					<div class="singleContestProgressBarDisplayer">
+						<div class="singleContestProgressBackground">
+						</div>
+						<div class="singleContestProgressInfo">
+						</div>
+					</div>
+					<div class="singleContestRunningType"></div>
+				</div>
+			</div>
+			<div class="mainWrapper">
+				<div class="styleBlock rankDisplayer" style="margin-right: 10px; width: calc(55%)">
+					<div>
+						<div class="currentRank"><span class="currentRankDelta"></span></div>
+						<div class="ratingChanges">...</div>
+					</div>
+				</div>
+				<div class="styleBlock problemDisplayer" style="width: calc(45% - 10px)">
+					<!-- <div class="smallSubmissionInfo"><span>F2</span></div> -->
+					<div style="position: absolute; top:50%; left:50%; transform: translate(-50%, -50%);">...</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<footer>
+		<script src="./js/settings.js"></script>
+		<script>
+			if(!RunInNwjs){
+				if(!DarkMode)
+					$('body').css('background','#b7b7b7');
+				else
+					$('body').css('background','#484848');
+			}
+		</script>
+	</footer>
+</html>

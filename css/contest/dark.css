@@ -1,0 +1,112 @@
+body{
+	color: #fff;
+}
+.HtmlContainer{
+	background: #333;
+}
+.singleContestProgressBarDisplayer{
+    background: #555;
+}
+.singleContestProgressBackground{
+    background: #777;
+}
+.styleBlock{
+    background: #555;
+}
+.idleColor{
+    border: 1px solid #888;
+}
+
+
+
+::-webkit-scrollbar:hover{
+    background-color: #666;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #888;
+}
+.primaryColor{
+    background: rgb(38, 103, 157);
+    transition: 0.2s;
+    color: white;
+}
+.primaryColor:hover{
+    background: rgb(26, 85, 134);
+}
+.dangerColor{
+    background: rgb(158, 12, 41);
+    transition: 0.2s;
+    color: white;
+}
+.dangerColor:hover{
+    background: rgb(136, 4, 31);
+}
+.warningColor{
+    background: rgb(175, 142, 52);
+    transition: 0.2s;
+    color: white;
+}
+.warningColor:hover{
+    background: rgb(146, 117, 37);
+}
+.successColor{
+    background: #2ace96;
+    transition: 0.2s;
+    color: white;
+}
+.successColor:hover{
+    background: rgb(26, 123, 90);
+}
+.loadingColor{
+    background: rgb(175, 175, 175);
+    transition: 0.2s;
+    color: white;
+}
+.loadingColor:hover{
+    background: rgb(150, 150, 150);
+}
+.red{
+    color: #ff456b;
+}
+.green{
+    color: #36c292;
+}
+
+.user-legendary, .user-igramdmaster, .user-grandmaster {
+    color: rgb(255, 26, 26);
+    font-weight: 600;
+}
+.user-legendary:first-letter{
+    color: white;
+}
+.user-master, .user-imaster {
+    color: rgb(255, 152, 26);
+    font-weight: 600;
+}
+.user-cmaster {
+    color: rgb(255, 85, 255);
+    font-weight: 600;
+}
+.user-expert {
+    color: rgb(51, 125, 255);
+    font-weight: 600;
+}
+.user-specialist {
+    color: rgb(87, 252, 242);
+    font-weight: 600;
+}
+.user-pupil {
+    color: rgb(114, 255, 114);
+    font-weight: 600;
+}
+.user-newbie {
+    color: rgb(152, 143, 129);
+    font-weight: 600;
+}
+.user-unrated {
+    color: white;
+}
+
+.highcharts-background{
+    background: #555 !important;
+}

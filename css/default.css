@@ -1,0 +1,248 @@
+body{
+	color: #000;
+}
+.HtmlContainer{
+	background: #fff;
+}
+.NavBarContent:hover{
+	background: #ddd;
+}
+.NavBarChosen, .InnerContent{
+	background: #ddd;
+}
+.ToolListMinimize:hover{
+	background: #bbb;
+}
+.ToolList{
+	border-bottom: 2px solid #ccc;
+}
+.NavBarCurr{
+	background: #999;
+}
+.DividerLine{
+	background: #aaa;
+}
+.singleUsernameDisplayer{
+    border-bottom: 1px solid #aaa;
+}
+.singleContestProgressBarDisplayer{
+    background: #fff;
+}
+.singleContestProgressInfoDisplayer{
+    background: #999;
+}
+.singleMemoryUsed > span{
+    border-bottom: 1px solid #aaa;
+}
+.selectButton{
+    background: #ccc;
+}
+.selectButton:hover{
+    background: #aaa;
+}
+.selectButton.selected{
+    background: #999;
+}
+.singleRankChangesDisplayer{
+    background: #ccc;
+}
+.singleContestProgressBackground{
+    background: #ccc;
+}
+.singleContestPoptip{
+    background: #aaa;
+}
+.singleContestPoptipTail{
+     border-color: #aaa transparent transparent transparent;
+}
+.singleProblemlistDisplayerGridItem{
+    background: #ccc;
+}
+.singleProblemlistDisplayerGridItemIndex{
+    background: #ddd;
+}
+.singleProblemlistBottom{
+    background: #ddd;
+}
+.singleProblemlistDisplayListItemInfo, .singleProblemlistDisplayListItemStatus, .singleProblemlistDisplayEventItem{
+    background: #ccc;
+}
+.singleProblemlistDisplayListItemInfo:hover, 
+.singleProblemlistDisplayListItemStatus:hover, 
+.singleProblemlistDisplayEventItem:hover{
+    background: #bbb;
+}
+.singleProblemlistDisplayListItemProgress{
+    background: #aaa;
+}
+.singleHeadBackProgress {
+    background-color:   rgba(125, 125, 125, 0.5);
+    border: 15px solid #fff;
+}
+.singleHeadBackProgress.selected{
+    border: 0 solid rgba(255, 255, 255, 0.5);
+}
+.settingsRadioInfoAddition, .settingsSelectInfoAddition, .settingsInputInfoAddition, .pageSmallTip{
+    color: #888;
+}
+.settingsSelectPart > div:first-child:hover, .settingsSelectPart > div:last-child:hover{
+    background: #aaa;
+}
+.settingsSelectPartLeft.closed, .settingsSelectPartRight.closed{
+    color: #888;
+    cursor: default;
+}
+.settingsInputPartContent{
+    background: #ddd;
+    border: 0;
+    border-bottom: 1px solid #777;
+    color: black;
+    outline: none;
+}
+.loadingInterface{
+	background: rgba(200, 200, 200, 0.9);
+	color: black;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.blockManager{
+    background: #eee;
+}
+.blockManagerTitle{
+    background: #d5d5d5;
+}
+.folderButton{
+    background: #ccc;
+}
+.folderButton:hover{
+    background: #aaa;
+}
+
+
+
+
+
+
+
+
+
+
+.bigInputArea>input{
+	background: transparent;
+    border: 1px solid #777;
+    color: black;
+}
+.bigButton{
+    border: 1px solid #777;
+    color: white;
+}
+::-webkit-scrollbar:hover{
+    background-color: #ccc;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #aaa;
+}
+
+
+.primaryColor{
+    background: rgb(27, 124, 206);
+    transition: 0.2s;
+    color: white;
+}
+.primaryColor:hover{
+    background: rgb(38, 103, 157);
+}
+.dangerColor{
+    background: rgb(214, 18, 57);
+    transition: 0.2s;
+    color: white;
+}
+.dangerColor:hover{
+    background: rgb(158, 12, 41);
+}
+.warningColor{
+    background: rgb(228, 175, 30);
+    transition: 0.2s;
+    color: white;
+}
+.warningColor:hover{
+    background: rgb(175, 142, 52);
+}
+.successColor{
+    background: #36c292;
+    transition: 0.2s;
+    color: white;
+}
+.successColor:hover{
+    background: #25a579;
+}
+.loadingColor{
+    background: rgb(105, 105, 105);
+    transition: 0.2s;
+    color: white;
+}
+.loadingColor:hover{
+    background: rgb(120, 120, 120);
+}
+.red{
+    color: rgb(214, 18, 57);
+}
+.green{
+    color: #279e75;
+}
+
+.user-legendary, .user-igramdmaster, .user-grandmaster {
+    color: rgb(255, 26, 26);
+    font-weight: 600;
+}
+.user-legendary:first-letter{
+    color: black;
+}
+.user-master, .user-imaster {
+    color: rgb(255, 152, 26);
+    font-weight: 600;
+}
+.user-cmaster {
+    color: rgb(255, 85, 255);
+    font-weight: 600;
+}
+.user-expert {
+    color: rgb(51, 125, 255);
+    font-weight: 600;
+}
+.user-specialist {
+    color: #00cec1;
+    font-weight: 600;
+}
+.user-pupil {
+    color: rgb(114, 255, 114);
+    font-weight: 600;
+}
+.user-newbie {
+    color: rgb(152, 143, 129);
+    font-weight: 600;
+}
+.user-unrated {
+    color: white;
+}
+
+.highcharts-background{
+    background: #ddd !important;
+}
