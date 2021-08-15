@@ -649,6 +649,7 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 	}
 	setTimeout(function(){
 		loadStandings = loadStandings || (settings.openStandings == 2 || (settings.openStandings == 1 && getContestType($(".singleContestName").html()) == "Div. 1"));
+		if(success.length == 4)	loadStandings = false;
 		if(loadStandings && contestStangingLoadTime.getTime() < (new Date()).getTime() - settings.standingsLoadingGap){
 			Q = ++contestStandingsIndex;
 			contestStandingLoader = 0;
@@ -914,6 +915,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	if(!inContest){
 		flushsingleProblemlistDisplayList(contestSubmissionList, [], contestJsonProblems);
 		flushsingleProblemlistDisplayGrid([], json.problems);
+		flushsingleProblemlistBottom([]);
 	}
 	flushRankDisplayer();
 	if(singleContestUnrated != undefined){
@@ -992,6 +994,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 		inContest = 1;
 		flushsingleProblemlistDisplayList(contestSubmissionList, [], contestJsonProblems);
 		flushsingleProblemlistDisplayGrid([], json.problems);
+		flushsingleProblemlistBottom([]);
 	}
 	flushRankDisplayer();
 	if(singleContestUnrated != undefined){
@@ -1107,14 +1110,17 @@ function getOverallPredictedRank(pr, sl, un, hl, uno){
 		eventList.push([]);
 	var nameToId = {}, curr = -1;
 	var scores = [];
+	var thisPerson = -1;
 	// Load All Person
 	for(var i=0;i<sl.length;i++){
+		var op = (un == sl[i].party.members[0].handle && contestStartTime.getTime() / 1000 == sl[i].party.startTimeSeconds);
 		var _points = 0, _penalty = 0;
 		if(sl[i].party.participantType != "CONTESTANT" &&
 			(!uno || sl[i].party.participantType != "OUT_OF_COMPETITION") &&
-			(!uno || settings.virtualFilter != false || sl[i].party.participantType != "VIRTUAL"))	continue;
-		nameToId[sl[i].party.members[0].handle] = ++curr;
-		scores.push([0, 0]);
+			(!uno || settings.virtualFilter != false || sl[i].party.participantType != "VIRTUAL") && !op)	continue;
+		++curr; scores.push([0, 0]);
+		if(un == sl[i].party.members[0].handle && contestStartTime.getTime() / 1000 == sl[i].party.startTimeSeconds)
+			thisPerson = curr;
 		for(var j=0;j<sl[i].problemResults.length;j++){
 			if(sl[i].problemResults[j].bestSubmissionTimeSeconds != undefined){
 				var q = [sl[i].problemResults[j].points, 0];
@@ -1130,7 +1136,10 @@ function getOverallPredictedRank(pr, sl, un, hl, uno){
 					eventList[Math.floor(hl[sl[i].party.members[0].handle][j][0] / Step)].push([curr, [hl[sl[i].party.members[0].handle][j][1], 0]]);
 		}
 	}
-	var thisPerson = nameToId[un];
+	if(thisPerson == -1){
+		thisPerson = ++curr;
+		scores.push([0, 0]);
+	}
 	var currentRank = 1;
 	var currTime = contestStartTime.getTime();
 	function chk(x, y){
@@ -1302,6 +1311,7 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 	setTimeout(function(){
 		q.removeClass("closed");
 	}, 1100);
+	var H = false;
 	function func(){
 		if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
 		getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, [function(){}, singleVirtualSyncUnofficialSettings, singleContestantSyncUserInfo, singleVirtualSyncProblemStatus], [function(){}, function(){}, function(){}, function(){}]
@@ -1312,10 +1322,13 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 				setTimeout(function(){
 					$(".singleContent > div > div > .loadingInterface").css("display", "none");
 				}, 200);
-				if(contestRunningStatus == "FINISHED")
-					setTimeout(function(){loadStandingsService(un, ci, true);}, 1000);
+				if(contestRunningStatus == "FINISHED"){
+					if(!H)
+						setTimeout(function(){loadStandingsService(un, ci, true);}, 1000);
+				}
 				if(contestRunningStatus == "CODING")
 					setTimeout(func, settings.reloadTime);
+				H = true;
 			}, function(){
 				if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
 				setTimeout(func, settings.smallReloadTime);
