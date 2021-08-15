@@ -770,11 +770,11 @@ function singleContestantTimeCountdown(){
 	if(d < 0)	return;
 	d = getTimeLength2(d);
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
-		.attr("info", "contestRunning").attr("argv", `['${d}']`)
+		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
 		.html(languageOption.general.contestRunning.format(d));
 	if(contestNewWinLoaded)
 		contestNewWinJQ.find(".singleContestRunningType")
-		.attr("info", "contestRunning").attr("argv", `['${d}']`)
+		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
 		.html(languageOption.general.contestRunning.format(d));
 	var p = (new Date()).getTime() - contestStartTime.getTime();
 	var q = contestEndTime.getTime() - contestStartTime.getTime();
