@@ -31,7 +31,7 @@ var lang_en = {
 		alertLoadSuccess: "Load Success!",
 		Rank: "Rank",
 		Problem: "Problem",
-		contestRunning: "Finished in {0}",
+		contestRunning: "Contest Ends in {0}",
 		contestPendingSystemTest: "Pending System Test",
 		contestSystemTest: "System Testing",
 		contestFinished: "Finished",
@@ -76,7 +76,7 @@ var lang_en = {
 		tipInitializing: "Initializing...",
 		tipContestNotStarted: "Contest has not started.",
 		tipHaveARest: "Take a deep breath and have a rest.",
-		tipContestStartIn: "Contest start in {0}",
+		tipContestStartIn: "Contest starts in {0}",
 		tipLoading: "Loading...",
 		tipCalculatingRankGraph: "Loading rank graph...",
 		tipNoSubmissionFound: "No submission found",
@@ -584,13 +584,17 @@ function initLanguage(){
 	for(var name in languageOption.general)
 		if(languageOption.general.hasOwnProperty(name)){
 			if(languageOption.general[name].format("") != languageOption.general[name] && $(`[info=${name}]`).attr("argv") != undefined)
-				$(`[info=${name}]`).html(languageOption.general[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+				$(`[info=${name}]`).each(function(){
+					$(this).html(languageOption.general[name].format(JSON.parse($(this).attr("argv"))));
+				})
 			else	$(`[info=${name}]`).html(languageOption.general[name]);
 		}
 	for(var name in languageOption.error)
 		if(languageOption.error.hasOwnProperty(name)){
 			if(languageOption.error[name].format("") != languageOption.error[name] && $(`[info=${name}]`).attr("argv") != undefined)
-				$(`[info=${name}]`).html(languageOption.error[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+				$(`[info=${name}]`).each(function(){
+					$(this).html(languageOption.error[name].format(JSON.parse($(this).attr("argv"))));
+				})
 			else	$(`[info=${name}]`).html(languageOption.error[name]);
 		}
 	for(var name in languageOption.input)
@@ -599,7 +603,9 @@ function initLanguage(){
 	for(var name in languageOption.tip)
 		if(languageOption.tip.hasOwnProperty(name)){
 			if(languageOption.tip[name].format("") != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
-				$(`[info=${name}]`).html(languageOption.tip[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+				$(`[info=${name}]`).each(function(){
+					$(this).html(languageOption.tip[name].format(JSON.parse($(this).attr("argv"))));
+				})
 			else	$(`[info=${name}]`).html(languageOption.tip[name]);
 		}
 	for(var name in languageOption.settings)
@@ -611,13 +617,17 @@ function initLanguage(){
 		for(var name in languageOption.general)
 			if(languageOption.general.hasOwnProperty(name)){
 				if(languageOption.general[name].format("") != languageOption.general[name] && $(`[info=${name}]`).attr("argv") != undefined)
-					contestNewWinJQ.find(`[info=${name}]`).html(languageOption.general[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+					contestNewWinJQ.find(`[info=${name}]`).each(function(){
+						$(this).html(languageOption.general[name].format(JSON.parse($(this).attr("argv"))));
+					})
 				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.general[name]);
 			}
 		for(var name in languageOption.error)
 			if(languageOption.error.hasOwnProperty(name)){
 				if(languageOption.error[name].format("") != languageOption.error[name] && $(`[info=${name}]`).attr("argv") != undefined)
-					contestNewWinJQ.find(`[info=${name}]`).html(languageOption.error[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+					contestNewWinJQ.find(`[info=${name}]`).each(function(){
+						$(this).html(languageOption.error[name].format(JSON.parse($(this).attr("argv"))));
+					})
 				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.error[name]);
 			}
 		for(var name in languageOption.input)
@@ -626,7 +636,9 @@ function initLanguage(){
 		for(var name in languageOption.tip)
 			if(languageOption.tip.hasOwnProperty(name)){
 				if(languageOption.tip[name].format("") != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
-					contestNewWinJQ.find(`[info=${name}]`).html(languageOption.tip[name].format(JSON.parse($(`[info=${name}]`).attr("argv"))));
+					contestNewWinJQ.find(`[info=${name}]`).each(function(){
+						$(this).html(languageOption.tip[name].format(JSON.parse($(this).attr("argv"))));
+					})
 				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.tip[name]);
 			}
 	}
