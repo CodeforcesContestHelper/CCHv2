@@ -63,14 +63,10 @@ body{
 .singleContestProgressPart{
 	position: absolute;
 	top: 0px;
-	width: 5px;
+	width: 4px;
 	height: 100%;
 	left: 0px;
 	transform: translate(-50%, 0%);
-}
-.singleContestProgressPart:hover{
-	width: 10px;
-	z-index: 4;
 }
 .styleBlock{
 	position: relative;

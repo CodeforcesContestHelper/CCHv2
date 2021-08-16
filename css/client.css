@@ -617,6 +617,7 @@ img[src=""],img:not([src]){opacity:0;}
 }
 .singleProblemlistDisplayerGridItemVerdict{
 	font-size: 15px;
+	font-weight: bold;
 }
 .singleProblemlistDisplayerGridItemIndex{
 	position: absolute;
@@ -698,6 +699,7 @@ img[src=""],img:not([src]){opacity:0;}
 	border-bottom-right-radius: 5px;
 	border-bottom-left-radius: 5px;
 	margin: 0px 10px 3px 10px;
+	overflow: hidden;
 }
 .singleProblemlistDisplayListItemProgress > span{
 	display: inline-block;
