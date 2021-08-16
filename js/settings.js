@@ -140,6 +140,14 @@ var lang_en = {
 		virtualFilter: [
 			"Open Virtual Filter",
 			"Choose how history rank calculator deal with virtual information. Open this to remove them."
+		],
+		codeforcesApiUrl: [
+			"Codeforces API URL", 
+			"Set the address of Codeforces APIs."
+		],
+		showProblemStatus: [
+			"Show Problem Status Bar",
+			"View problem status percentage under Problem mode. <span class='red'>Standings Required.</span>"
 		]
 	}
 };
@@ -275,6 +283,14 @@ var lang_zh = {
 		virtualFilter: [
 			"打开虚拟赛过滤",
 			"选择历史排名计算器如何处理虚拟赛数据。打开此设置以去除它们。"
+		],
+		codeforcesApiUrl: [
+			"Codeforces API 地址", 
+			"设置获取 Codeforces API 的地址。"
+		],
+		showProblemStatus: [
+			"显示题目状态",
+			"在题目状态中显示每道题的状态比例。<span class='red'>需要排行榜信息。</span>"
 		]
 	}
 };
@@ -418,6 +434,15 @@ var settingsFunctions = {
 			saveSettings();
 		}
 	},
+	codeforcesApiUrl: {
+		initial: function(){
+			return settings.codeforcesApiUrl;
+		},
+		change: function(str){
+			settings.codeforcesApiUrl = str;
+			saveSettings();
+		}
+	},
 	predictorURL: {
 		initial: function(){
 			return settings.predictorURL;
@@ -527,6 +552,16 @@ var settingsFunctions = {
 			saveSettings();
 			return settings.virtualFilter;
 		}
+	},
+	showProblemStatus: {
+		initial: function(){
+			return settings.showProblemStatus;
+		},
+		change: function(){
+			settings.showProblemStatus = !settings.showProblemStatus;
+			saveSettings();
+			return settings.showProblemStatus;
+		}
 	}
 };
 String.prototype.format = function() {
@@ -550,6 +585,8 @@ var currentDefaultSettings = {
 	fontFamily: "",
 	styleSelection: 0,
 	virtualFilter: true,
+	codeforcesApiUrl: "https://codeforces.com",
+	showProblemStatus: true,
 };
 function setAsDefault(){
 	if(settings == undefined)
@@ -887,6 +924,7 @@ function toSmallInfo(x){
 	return "";
 }
 function judgeToClass(x){
+	if(x == undefined)	return "loadingColor";
 	if(x == "OK")	return "successColor";
 	if(x == "COMPILATION_ERROR")	return "warningColor";
 	if(x == "TESTING")	return "loadingColor";

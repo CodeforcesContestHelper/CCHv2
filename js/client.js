@@ -331,7 +331,7 @@ function initContestNewWinPage(){
 	contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
 	function loadAvatar(){
 		$.ajax({
-			url: "https://codeforces.com/api/user.info",
+			url: settings.codeforcesApiUrl + "/api/user.info",
 			type: "GET",
 			data: {handles: contestUsername},
 			success: function(json){
@@ -551,10 +551,12 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 					 q = e.loaded;
 				});
 				return xhr;
-			}
+			},
+			xhrFields:
+      			{'Access-Control-Allow-Origin': '*'}
 		});
 	}
-	reloadIf("https://codeforces.com/api/contest.ratingChanges", function(){
+	reloadIf(settings.codeforcesApiUrl + "/api/contest.ratingChanges", function(){
 		reloadIf(settings.predictorURL, function(){
 			$(".singleContestProgressRatingChangesDisplayer > span:last-child").html("<i class='fas fa-unlink red'></i>");
 			if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
@@ -635,10 +637,10 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 			}
 		});
 	}
-	loadInfo("https://codeforces.com/api/contest.standings", {contestId: ci, handles: un, showUnofficial: false}, ["result"], 0, false);
-	loadInfo("https://codeforces.com/api/contest.standings", {contestId: ci, handles: un, showUnofficial: true}, ["result"], 1, false);
-	loadInfo("https://codeforces.com/api/user.info", {handles: un}, ["result", "0"], 2, false);
-	loadInfo("https://codeforces.com/api/contest.status", {contestId: ci, handle: un}, ["result"], 3, false);
+	loadInfo(settings.codeforcesApiUrl + "/api/contest.standings", {contestId: ci, handles: un, showUnofficial: false}, ["result"], 0, false);
+	loadInfo(settings.codeforcesApiUrl + "/api/contest.standings", {contestId: ci, handles: un, showUnofficial: true}, ["result"], 1, false);
+	loadInfo(settings.codeforcesApiUrl + "/api/user.info", {handles: un}, ["result", "0"], 2, false);
+	loadInfo(settings.codeforcesApiUrl + "/api/contest.status", {contestId: ci, handle: un}, ["result"], 3, false);
 	if(success.length != 4)
 		setTimeout(function(){
 			getSingleRatingChanges(currSingleLastTimeUpdate, un, ci);
@@ -654,9 +656,9 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 			Q = ++contestStandingsIndex;
 			contestStandingLoader = 0;
 			contestStangingLoadTime = new Date();
-			loadInfo("https://codeforces.com/api/contest.hacks", {contestId: ci}, ["result"], 4, true);
+			loadInfo(settings.codeforcesApiUrl + "/api/contest.hacks", {contestId: ci}, ["result"], 4, true);
 			if((inContest == 2 && settings.openRankPredict >= 1) || (inContest >= 1 && settings.openRankPredict == 2))
-				setTimeout(function(){loadInfo("https://codeforces.com/api/contest.standings", {contestId: ci, showUnofficial: settings.openRankPredict == 2}, ["result"], 5, false);}, 500);
+				setTimeout(function(){loadInfo(settings.codeforcesApiUrl + "/api/contest.standings", {contestId: ci, showUnofficial: settings.openRankPredict == 2}, ["result"], 5, false);}, 500);
 	}}, 3000);
 }
 function ratingToClass(x){
@@ -698,6 +700,19 @@ var inContest;
 var contestProblemResult;
 
 var contesRealStartTime, contestRealEndTime, virtualProvidedStartTime;
+var contestProblemStatusBarInfo = [[], []];
+
+function flushProblemStatusBar(){
+	var curr = contestProblemStatusBarInfo[contestRankChosen];
+	if(curr.length == 0)	return;
+	$(".singleProblemlistDisplayListItemProgress").each(function(index){
+		$(this).html("");
+		var g = curr[index][0], r = curr[index][1], m = curr[index][2];
+		$(this).append(`<span class="successColor" style="width:${g / (g + r + m) * 100}%"></span>`);
+		$(this).append(`<span class="dangerColor" style="width:${r / (g + r + m) * 100}%"></span>`);
+		$(this).append(`<span style="width:${m / (g + r + m) * 100}%"></span>`);
+	})
+}
 
 function flushRankDisplayer(){
 	$(".singleRankLetters").html(contestRanks[contestRankChosen] == 0 ? "?" : contestRanks[contestRankChosen]);
@@ -726,6 +741,7 @@ function flushRankDisplayer(){
 			contestNewWinJQ.find(".currentRank").append(`<span class="currentRankDelta ${col}"><i class="fas ${ic}"></i>${Math.abs(q)}</span>`);
 		}
 	}
+	flushProblemStatusBar();
 }
 function flushContestantProgressBarInner(){
 	$(".singleContestProgressInfo").html("");
@@ -1058,7 +1074,7 @@ function singleVirtualSyncProblemStatus(un, ci, json, p){
 function hlMask(hl){
 	var ret = {};
 	for(var i=0; i<hl.length; i++)
-		if(hl[i].creationTimeSeconds * 1000 <= contestEndTime
+		if(hl[i].creationTimeSeconds * 1000 <= contestEndTime.getTime()
 		&& (hl[i].verdict == "HACK_SUCCESSFUL" || hl[i].verdict == "HACK_UNSUCCESSFUL")){
 			var from = hl[i].hacker.members[0].handle;
 			if(ret[from] == undefined)	ret[from] = [];
@@ -1113,7 +1129,7 @@ function getOverallPredictedRank(pr, sl, un, hl, uno){
 	var thisPerson = -1;
 	// Load All Person
 	for(var i=0;i<sl.length;i++){
-		var op = (un == sl[i].party.members[0].handle && contestStartTime.getTime() / 1000 == sl[i].party.startTimeSeconds);
+		var op = (un == sl[i].party.members[0].handle && contestStartTime.getTime() / 1000 == sl[i].party.startTimeSeconds && sl[i].party.participantType != "PRACTICE");
 		var _points = 0, _penalty = 0;
 		if(sl[i].party.participantType != "CONTESTANT" &&
 			(!uno || sl[i].party.participantType != "OUT_OF_COMPETITION") &&
@@ -1170,6 +1186,27 @@ function getOverallPredictedRank(pr, sl, un, hl, uno){
 	}
 	return returnValue;
 }
+function loadProblemStatusBar(uno){
+	var jq = $(".singleProblemlistDisplayListItemProgress");
+	jq.html("");
+	var T = (new Date().getTime() - contestStartTime.getTime()) / 1000;
+	var ret = [];
+	jq.each(function(index){
+		var g = 0, r = 0, m = 0;
+		for(var i=0; i<contestStandingList.rows.length; i++){
+			if(contestStandingList.rows[i].party.participantType == "VIRTUAL"
+			|| contestStandingList.rows[i].party.participantType == "PRACTICE"
+			|| (!uno && contestStandingList.rows[i].party.participantType == "OUT_OF_COMPETITION"))	continue;
+			if(contestStandingList.rows[i].problemResults[index].bestSubmissionTimeSeconds <= T)
+				++g;
+			else if((singleContestUnrated != "Virtual" || (new Date().getTime()) >= contestEndTime.getTime())
+				&& contestStandingList.rows[i].problemResults[index].rejectedAttemptCount != 0)	++r;
+			else ++m;
+		}
+		ret.push([g, r, m]);
+	})
+	return ret;
+}
 function loadStandingsService(un, ci, forced){
 	if(forced == true || (settings.openRankPredict >= 1 && inContest == 2)){
 		contestCalculatingRank[0] = true;
@@ -1199,7 +1236,11 @@ function loadStandingsService(un, ci, forced){
 			flushRankDisplayer();
 		})
 	}
-
+	if(settings.showProblemStatus){
+		contestProblemStatusBarInfo[0] = loadProblemStatusBar(false);
+		contestProblemStatusBarInfo[1] = loadProblemStatusBar(true);
+		flushProblemStatusBar();
+	}
 }
 function singleContestantSyncHacks(un, ci, json, p){
 	if(p != contestStandingsIndex)	return;
@@ -1223,6 +1264,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 	contestRankInfo = [[], []];
 	contestStangingLoadTime = new Date(0);
 	contestProblemResult = [];
+	contestProblemStatusBarInfo = [[], []];
 	contestSubmissionList = [];
 	contestJsonProblems = [];
 	contestStartTime = contestEndTime = new Date(0);
@@ -1281,6 +1323,7 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 	contestRankInfo = [[], []];
 	contestStangingLoadTime = new Date(0);
 	contestProblemResult = [];
+	contestProblemStatusBarInfo = [[], []];
 	contestSubmissionList = [];
 	contestJsonProblems = [];
 	contestStartTime = contestEndTime = new Date(0);
@@ -1389,7 +1432,7 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
 		$.ajax({
-			url: "https://codeforces.com/api/contest.list",
+			url: settings.codeforcesApiUrl + "/api/contest.list",
 			type: "GET",
 			timeout : settings.smallTimeLimit,
 			data: {gym: ci >= 100000},
@@ -1454,7 +1497,7 @@ function loadSingleContestantAll(un, ci){
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
 		$.ajax({
-			url: "https://codeforces.com/api/contest.standings",
+			url: settings.codeforcesApiUrl + "/api/contest.standings",
 			type: "GET",
 			timeout : settings.smallTimeLimit,
 			data: {contestId: ci, from: 1, count: 1, showUnofficial: true},
@@ -1616,7 +1659,7 @@ function loadSingleVirtualAll(un, ci, tm){
 			}
 		});
 	}
-	reloadIf("https://codeforces.com/api/contest.standings"
+	reloadIf(settings.codeforcesApiUrl + "/api/contest.standings"
 		, {contestId: ci, showUnofficial: true}, function(json){
 		contestStandingList = json.result;
 		singleLoadType = 4;
@@ -1625,7 +1668,7 @@ function loadSingleVirtualAll(un, ci, tm){
 		setTimeout(function(){
 			r.html(`<span info="tipFetchingHacks">${languageOption.tip.tipFetchingHacks}</span>`);
 			r.removeClass("closed");
-			reloadIf("https://codeforces.com/api/contest.hacks"
+			reloadIf(settings.codeforcesApiUrl + "/api/contest.hacks"
 				, {contestId: ci}, function(json){
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
@@ -1654,6 +1697,7 @@ function loadSingleInformation(type, un, ci, tm, started){
 	contestRankInfo = [[], []];
 	contestStangingLoadTime = new Date(0);
 	contestProblemResult = [];
+	contestProblemStatusBarInfo = [[], []];
 	contestSubmissionList = [];
 	contestJsonProblems = [];
 	contestStartTime = contestEndTime = new Date(0);
@@ -1678,14 +1722,14 @@ function verifySingleInformation(type, un, ci, tm){
 	$(forButton).html(`<i class="fas fa-spin fa-sync-alt"></i><span info="singleCheckExist">${languageOption.general.singleCheckExist}</span>`);
 	$(forButton).attr("disabled", true);
 	$.ajax({
-		url: "https://codeforces.com/api/user.info",
+		url: settings.codeforcesApiUrl + "/api/user.info",
 		type: "GET",
 		timeout : settings.smallTimeLimit,
 		data: {handles: un},
 		success: function(json){
 			var isGym = Number(ci) >= 100000;
 			$.ajax({
-				url: "https://codeforces.com/api/contest.standings",
+				url: settings.codeforcesApiUrl + "/api/contest.standings",
 				type: "GET",
 				timeout : settings.smallTimeLimit,
 				data: {contestId: ci, handles: un, showUnofficial: true},

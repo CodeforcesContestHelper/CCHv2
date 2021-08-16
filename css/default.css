@@ -56,13 +56,13 @@ body{
      border-color: #aaa transparent transparent transparent;
 }
 .singleProblemlistDisplayerGridItem{
-    background: #ccc;
+    background: #ddd;
 }
 .singleProblemlistDisplayerGridItemIndex{
-    background: #ddd;
+    background: #ccc;
 }
 .singleProblemlistBottom{
-    background: #ddd;
+    background: #ccc;
 }
 .singleProblemlistDisplayListItemInfo, .singleProblemlistDisplayListItemStatus, .singleProblemlistDisplayEventItem{
     background: #ccc;
