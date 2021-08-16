@@ -1239,7 +1239,7 @@ function loadStandingsService(un, ci, forced){
 	if(settings.showProblemStatus){
 		contestProblemStatusBarInfo[0] = loadProblemStatusBar(false);
 		contestProblemStatusBarInfo[1] = loadProblemStatusBar(true);
-		flushProblemStatusBar();
+		setTimeout(function(){flushProblemStatusBar()}, 300);
 	}
 }
 function singleContestantSyncHacks(un, ci, json, p){
@@ -1365,6 +1365,11 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 				setTimeout(function(){
 					$(".singleContent > div > div > .loadingInterface").css("display", "none");
 				}, 200);
+				if(settings.showProblemStatus){
+					contestProblemStatusBarInfo[0] = loadProblemStatusBar(false);
+					contestProblemStatusBarInfo[1] = loadProblemStatusBar(true);
+					setTimeout(function(){flushProblemStatusBar()}, 300);
+				}
 				if(contestRunningStatus == "FINISHED"){
 					if(!H)
 						setTimeout(function(){loadStandingsService(un, ci, true);}, 1000);
@@ -2079,6 +2084,8 @@ function singleButtonMouseUp(){
 
 $(".singleOpenSmallWindow").click(function(){
 	if(!RunInNwjs)	return;
+	if(contestNewWinOpened && !contestNewWinLoaded)
+		return;
 	if(!contestNewWinOpened){
 		contestNewWinOpened = true;
 		nw.Window.open("contest.html",{

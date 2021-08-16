@@ -3,7 +3,7 @@
   "name": "CodeForces Contest Helper",
   "description": "Codeforces Contest Helper",
   "version": "1.0.1",
-  "chromium-args" : "",
+  "chromium-args" : "--disable-web-security --user-data-dir",
   "keywords": [ "Codeforces", "node-webkit" ],
   "window": {
     "title": "Codeforces Contest Helper", 
