@@ -347,7 +347,7 @@ function initContestNewWinPage(){
 	if(contestStartTime.getTime() >= (new Date()).getTime())
 		contestNewWinJQ.find(".singleContestRunningType").html(`<span info="errorContestNotStarted">${languageOption.error.errorContestNotStarted}</span>`);
 	else{
-		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
 		if(contestJsonProblems.length != 0){
 			contestNewWinJQ.find(".problemDisplayer").html("");
 			for(var i=0; i<contestJsonProblems.length; i++){
@@ -866,7 +866,7 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 			}
 		}
 	if(contestNewWinLoaded)
-		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
 }
 function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	$(".singleContestTags").html("");
@@ -954,7 +954,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			}
 		}
 	if(contestNewWinLoaded)
-		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
 }
 function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	$(".singleContestTags").html("");
@@ -1033,7 +1033,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 			}
 		}
 	if(contestNewWinLoaded)
-		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
 }
 function singleContestantSyncUserInfo(un, ci, json, p){
 	var c = ratingToClass(json.rating);

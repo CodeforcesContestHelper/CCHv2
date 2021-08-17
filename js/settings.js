@@ -729,7 +729,7 @@ function initLanguage(){
 	if(contestNewWinOpened){
 		for(var name in languageOption.general)
 			if(languageOption.general.hasOwnProperty(name)){
-				if(languageOption.general[name].format("") != languageOption.general[name] && $(`[info=${name}]`).attr("argv") != undefined)
+				if(languageOption.general[name].format("") != languageOption.general[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
 					contestNewWinJQ.find(`[info=${name}]`).each(function(){
 						$(this).html(languageOption.general[name].format(JSON.parse($(this).attr("argv"))));
 					})
@@ -737,7 +737,7 @@ function initLanguage(){
 			}
 		for(var name in languageOption.error)
 			if(languageOption.error.hasOwnProperty(name)){
-				if(languageOption.error[name].format("") != languageOption.error[name] && $(`[info=${name}]`).attr("argv") != undefined)
+				if(languageOption.error[name].format("") != languageOption.error[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
 					contestNewWinJQ.find(`[info=${name}]`).each(function(){
 						$(this).html(languageOption.error[name].format(JSON.parse($(this).attr("argv"))));
 					})
@@ -748,7 +748,7 @@ function initLanguage(){
 				contestNewWinJQ.find(`[info=${name}]`).attr("placeholder", languageOption.input[name]);
 		for(var name in languageOption.tip)
 			if(languageOption.tip.hasOwnProperty(name)){
-				if(languageOption.tip[name].format("") != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
+				if(languageOption.tip[name].format("") != languageOption.tip[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
 					contestNewWinJQ.find(`[info=${name}]`).each(function(){
 						$(this).html(languageOption.tip[name].format(JSON.parse($(this).attr("argv"))));
 					})
