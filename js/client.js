@@ -486,7 +486,7 @@ function flushsingleProblemlistDisplayList(sub, prob, pb){
 	});
 	$("[subLink='true']").unbind("click").click(function(){
 		event.stopPropagation();
-		openURL(settings.mainURL + "/contest/" +$(this).attr("subContestId")+"/submission/"+$(this).attr("subId"));
+		openSubmission($(this).attr("subContestId"), $(this).attr("subId"));
 	})
 }
 
@@ -1305,7 +1305,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 				setTimeout(function(){
 					$(".singleContent > div > div > .loadingInterface").css("display", "none");
 				}, 200);
-				if(contestRunningStatus == "CODING")
+				if(contestRunningStatus != "FINISHED")
 					setTimeout(func, settings.reloadTime);
 			}, function(){
 				if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;

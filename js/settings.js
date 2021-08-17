@@ -52,6 +52,12 @@ var lang_en = {
 		Dark: "Dark",
 		setAsDefault: "Set As Default",
 		Rank: "Rank",
+		verdict: "Verdict",
+		language: "Language",
+		time: "Time",
+		memory: "Memory",
+		close: "Close",
+		back: "Back",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -71,6 +77,7 @@ var lang_en = {
 		errorNotInTheContest: "Not in the contest",
 		errorContestNotStarted: "Contest not started",
 		errorVirtualInfoNotFound: "Virtual round not found",
+		errorCannotGetCode: "Cannot Get Code",
 	},
 	tip: {
 		tipInitializing: "Initializing...",
@@ -82,12 +89,21 @@ var lang_en = {
 		tipNoSubmissionFound: "No submission found",
 		tipFetchingStandings: "Fetching standings...",
 		tipFetchingHacks: "Fetching hacks...",
-		tipVirtualTime: "Insert 'auto' to get the latest virtual round <span class='red'>with at least one submission</span>."
+		tipVirtualTime: "Insert 'auto' to get the latest virtual round <span class='red'>with at least one submission</span>.",
+		tipClickToGoBack: "Click here to go back."
 	},
 	settings: {
 		fontFamily: [
 			"Font Family",
 			"Use commas(,) to split font name. Monospace font can make a better view."
+		],
+		editorFontFamily: [
+			"Code Block Font Family",
+			"Set font family for code blocks."
+		],
+		editorFontSize: [
+			"Code Block Font Size",
+			"Set font size for code blocks."
 		],
 		timeLimit: [
 			"Load Time Limit",
@@ -194,7 +210,13 @@ var lang_zh = {
 		Dark: "暗色",
 		setAsDefault: "设置为默认值",
 		Rank: "排名",
-		tipVirtualTime: "输入 'auto' 以获取最近的<span class='red'>提交至少一次的</span>虚拟赛时间。"
+		tipVirtualTime: "输入 'auto' 以获取最近的<span class='red'>提交至少一次的</span>虚拟赛时间。",
+		verdict: "评测结果",
+		language: "语言",
+		time: "用时",
+		memory: "内存",
+		close: "关闭",
+		back: "返回",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -213,7 +235,8 @@ var lang_zh = {
 		errorTimeFormatError: "时间格式错误",
 		errorNotInTheContest: "不在比赛当中",
 		errorContestNotStarted: "比赛没有开始",
-		errorVirtualInfoNotFound: "未找到虚拟赛信息"
+		errorVirtualInfoNotFound: "未找到虚拟赛信息",
+		errorCannotGetCode: "无法获取代码",
 	},
 	tip: {
 		tipInitializing: "初始化中......",
@@ -225,12 +248,21 @@ var lang_zh = {
 		tipNoSubmissionFound: "未找到提交记录",
 		tipFetchingStandings: "获取排行榜信息......",
 		tipFetchingHacks: "获取 hack 记录......",
-		tipVirtualTime: "输入 'auto' 以获取最近的<span class='red'>提交至少一次的</span>虚拟赛时间。"
+		tipVirtualTime: "输入 'auto' 以获取最近的<span class='red'>提交至少一次的</span>虚拟赛时间。",
+		tipClickToGoBack: "点此以返回。"
 	},
 	settings: {
 		fontFamily: [
 			"字体",
 			"使用逗号进行字体名字分割。使用等宽字体会打开更好的效果。"
+		],
+		editorFontFamily: [
+			"代码块字体",
+			"为代码块设置字体。"
+		],
+		editorFontSize: [
+			"代码块字体大小",
+			"为代码块设置字体大小。"
 		],
 		timeLimit: [
 			"加载时间限制",
@@ -524,6 +556,42 @@ var settingsFunctions = {
 			}
 		}
 	},
+	editorFontFamily: {
+		initial: function(){
+			if(settings.editorFontFamily != "")
+				document.documentElement.style.setProperty("--editor-font-family", settings.editorFontFamily);
+			else
+				document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+			return settings.editorFontFamily;
+		},
+		change: function(str){
+			str = $.trim(str);
+			settings.editorFontFamily = str;
+			saveSettings();
+			if(str != "")
+				document.documentElement.style.setProperty("--editor-font-family", str);
+			else
+				document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+		}
+	},
+	editorFontSize: {
+		initial: function(){
+			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
+			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
+		},
+		previous: function(){
+			--settings.editorFontSize;
+			initStyle(); saveSettings();
+			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
+			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
+		},
+		next: function(){
+			++settings.editorFontSize;
+			initStyle(); saveSettings();
+			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
+			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
+		},
+	},
 	styleSelection: {
 		initial: function(){
 			return [localize(styleSelectionList[settings.styleSelection]), true, true];
@@ -587,6 +655,8 @@ var currentDefaultSettings = {
 	virtualFilter: true,
 	codeforcesApiUrl: "https://codeforces.com",
 	showProblemStatus: true,
+	editorFontFamily: "",
+	editorFontSize: 16,
 };
 function setAsDefault(){
 	if(settings == undefined)
@@ -595,13 +665,19 @@ function setAsDefault(){
 		var L = settings.language;
 		var D = settings.styleSelection;
 		var F = settings.fontFamily;
+		var E = settings.editorFontFamily;
+		var S = settings.editorFontSize;
 		if(L == undefined)	L = currentDefaultSettings.language;
 		if(D == undefined)	D = currentDefaultSettings.styleSelection;
 		if(F == undefined)	F = currentDefaultSettings.fontFamily;
+		if(E == undefined)	E = currentDefaultSettings.editorFontFamily;
+		if(S == undefined)	S = currentDefaultSettings.editorFontSize;
 		settings = JSON.parse(JSON.stringify(currentDefaultSettings));
 		settings.language = L;
 		settings.styleSelection = D;
 		settings.fontFamily = F;
+		settings.editorFontFamily = E;
+		settings.editorFontSize = S;
 	}
 	saveSettings();
 	initSettingsPage();
@@ -828,13 +904,13 @@ function toMemoryInfo(limit){
 function toSubmissionMemoryInfo(limit){  
 	var size = "";
 	if( limit < 1024 ) 
-		size = limit.toFixed(0) + "B";	
+		size = limit.toFixed(0) + " B";	
 	else if(limit < 1024 * 1024 )
-		size = (limit / 1024).toFixed(0) + "KB";			  
+		size = (limit / 1024).toFixed(0) + " KB";			  
 	else if(limit < 1024 * 1024 * 1024)
-		size = (limit / (1024 * 1024)).toFixed(0) + "MB";  
+		size = (limit / (1024 * 1024)).toFixed(0) + " MB";  
 	else
-		size = (limit / (1024 * 1024 * 1024)).toFixed(0) + "GB";  
+		size = (limit / (1024 * 1024 * 1024)).toFixed(0) + " GB";  
 	var sizestr = size + "";
 	return sizestr;  
 }
@@ -956,4 +1032,14 @@ function toSmallTestset(x){
 	if(x == "TESTS")	return "MAIN";
 	if(x == "CHALLENGES")	return "HACK";
 	return "TEST";
+}
+function allHtmlSpecialChars(text){
+    var map = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      '\'': '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }

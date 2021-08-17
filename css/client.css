@@ -17,6 +17,7 @@ body{
 }
 :root{
 	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
+	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
 }
 .HtmlContainer{
 	width: 700px;
@@ -474,12 +475,12 @@ body{
 	height: 100%;
 	display: grid;
 	place-items: center;
-	background: rgba(0, 0, 0, 0.8);
+	background: rgba(0, 0, 0, 0.9);
 }
 .loadingInterface > div{
 	text-align: center;
 }
-.loadingInterface > i, .loadingInterface > div > i{
+.loadingInterface > i, .loadingInterface > div:first-child > i{
 	display: block;
 	transition: 0.5s;
 	font-size: 72px;
@@ -750,11 +751,59 @@ img[src=""],img:not([src]){opacity:0;}
 	position: relative;
 	margin: 10px;
 }
-
-
-
-
-
+.submissionDisplayer{
+	text-align: left !important;
+	font-size: 18px !important;
+	padding: 5px;
+	width: calc(100% - 10px);
+	height: calc(100% - 10px);
+	overflow-y: scroll;
+}
+.submissionDisplayer > div:first-child{
+	padding: 5px 10px;
+	height: calc(100% - 10px);
+	width: calc(100% - 20px);
+}
+pre code{
+	border-radius: 5px;
+	display: block;
+	overflow: scroll;
+	height: calc(100% - 10px);
+	width: calc(100% - 10px);
+	padding: 5px !important;
+	-webkit-app-region: no-drag;
+	user-select: text;
+	tab-size: 4;
+	font-family: var(--editor-font-family);
+	font-size: var(--editor-font-size);
+}
+.submissionDisplayer > div:first-child > div:first-child{
+   	padding:  5px 10px;
+   	border-radius: 5px;
+}
+.submissionCodeDisplayer{
+	padding: 5px;
+	margin: 10px 0px;
+	border-radius: 5px;
+	flex:  1;
+	position: relative;
+	overflow: hidden;
+}
+.submissionCode{
+	-webkit-app-region: no-drag;
+	display: block;
+	overflow: hidden;
+	margin: 0px;
+	height: 100%;
+	width: 100%;
+	position: relative;
+}
+pre{
+	font-family: inherit !important;
+}
+.submissionCloser{
+	cursor: pointer;
+}
 
 
 
