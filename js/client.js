@@ -347,7 +347,7 @@ function initContestNewWinPage(){
 	if(contestStartTime.getTime() >= (new Date()).getTime())
 		contestNewWinJQ.find(".singleContestRunningType").html(`<span info="errorContestNotStarted">${languageOption.error.errorContestNotStarted}</span>`);
 	else{
-		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
 		if(contestJsonProblems.length != 0){
 			contestNewWinJQ.find(".problemDisplayer").html("");
 			for(var i=0; i<contestJsonProblems.length; i++){
@@ -486,7 +486,7 @@ function flushsingleProblemlistDisplayList(sub, prob, pb){
 	});
 	$("[subLink='true']").unbind("click").click(function(){
 		event.stopPropagation();
-		openURL(settings.mainURL + "/contest/" +$(this).attr("subContestId")+"/submission/"+$(this).attr("subId"));
+		openSubmission($(this).attr("subContestId"), $(this).attr("subId"));
 	})
 }
 
@@ -866,7 +866,7 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 			}
 		}
 	if(contestNewWinLoaded)
-		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
 }
 function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	$(".singleContestTags").html("");
@@ -954,7 +954,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			}
 		}
 	if(contestNewWinLoaded)
-		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
 }
 function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	$(".singleContestTags").html("");
@@ -1033,7 +1033,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 			}
 		}
 	if(contestNewWinLoaded)
-		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").html());
+		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
 }
 function singleContestantSyncUserInfo(un, ci, json, p){
 	var c = ratingToClass(json.rating);
@@ -1239,7 +1239,7 @@ function loadStandingsService(un, ci, forced){
 	if(settings.showProblemStatus){
 		contestProblemStatusBarInfo[0] = loadProblemStatusBar(false);
 		contestProblemStatusBarInfo[1] = loadProblemStatusBar(true);
-		flushProblemStatusBar();
+		setTimeout(function(){flushProblemStatusBar()}, 300);
 	}
 }
 function singleContestantSyncHacks(un, ci, json, p){
@@ -1305,7 +1305,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 				setTimeout(function(){
 					$(".singleContent > div > div > .loadingInterface").css("display", "none");
 				}, 200);
-				if(contestRunningStatus == "CODING")
+				if(contestRunningStatus != "FINISHED")
 					setTimeout(func, settings.reloadTime);
 			}, function(){
 				if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
@@ -1365,6 +1365,11 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 				setTimeout(function(){
 					$(".singleContent > div > div > .loadingInterface").css("display", "none");
 				}, 200);
+				if(settings.showProblemStatus){
+					contestProblemStatusBarInfo[0] = loadProblemStatusBar(false);
+					contestProblemStatusBarInfo[1] = loadProblemStatusBar(true);
+					setTimeout(function(){flushProblemStatusBar()}, 300);
+				}
 				if(contestRunningStatus == "FINISHED"){
 					if(!H)
 						setTimeout(function(){loadStandingsService(un, ci, true);}, 1000);
@@ -2079,6 +2084,8 @@ function singleButtonMouseUp(){
 
 $(".singleOpenSmallWindow").click(function(){
 	if(!RunInNwjs)	return;
+	if(contestNewWinOpened && !contestNewWinLoaded)
+		return;
 	if(!contestNewWinOpened){
 		contestNewWinOpened = true;
 		nw.Window.open("contest.html",{

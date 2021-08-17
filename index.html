@@ -8,6 +8,8 @@
 		<link rel="stylesheet" href="./css/client.css">
 		<link class="ThemeTypeIf" rel="stylesheet" href="./css/default.css">
 		<link rel="stylesheet" href="./css/all.min.css">
+		<script src="./js/highlight.min.js"></script>
+		<script src="./js/highlightjs-line-numbers.js"></script>
 		<title>Codeforces Contest Helper</title>
 		<script>
 			var RunInNwjs = true;
@@ -26,6 +28,10 @@
 					DarkMode = true, $('.ThemeTypeIf').attr('href','./css/dark.css');
 				}
 			}
+			// try{
+			// 	win.showDevTools();
+			// }
+			// catch(error){}
 		</script>
 		<script class="cssControler"></script>
 	</head>
@@ -42,7 +48,33 @@
 					</div>
 				</div>
 			</div>
-			<div style="display: flex; flex-direction: row;">
+			<div style="display: flex; flex-direction: row; position: relative">
+				<div class="loadingInterface" style="display: none; opacity: 0; z-index: 999">
+					<div><i></i><div class="popTip submissionCloser" info="tipClickToGoBack"></div></div>
+					<div style="display: none" class="submissionDisplayer">
+						<div style="display: flex; flex-direction: column; height: calc(100% - 10px)">
+							<div style="display: flex; flex-direction: column;">
+								<span><span class="submissionUsername">123</span> <i class="fas fa-angle-right"></i> <span class="submissionProblem">123A</span></span>
+								<span><span info="verdict"></span>: <span class="submissionVerdict">Accept</span> <i class="fas fa-external-link-square-alt jumpToSubmission" style="cursor: pointer"></i></span>
+								<div style="display: flex; flex-direction: row;">
+									<div style="width: 43%">
+										<i class="fas fa-sticky-note" style="margin-right: 5px;"></i><span info="language"></span>: <span class="submissionLanguage">GNU G++ 11</span>
+									</div><div style="width: 27%;">
+										<i class="fas fa-clock" style="margin-right: 5px;"></i><span info="time"></span>: <span class="submissionTime">1514ms</span>
+									</div><div style="width: 30%;">
+										<i class="fas fa-microchip" style="margin-right: 5px;"></i><span info="memory"></span>: <span class="submissionMemory">12.34GB</span>
+									</div>
+								</div>
+							</div>
+							<div class="submissionCodeDisplayer">
+								<pre class="submissionCode"><code></code></pre>
+							</div>
+							<div>
+								<span class="submissionCloser"><i class="fas fa-angle-left"></i> <span info='back'></span></span>
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="NavBar">
 					<div class="NavBarCurr"></div>
 					<div class="NavBarContent NavBarChosen" for="singleContent">
@@ -362,6 +394,26 @@
 											<input class="settingsInputPartContent"></input>
 										</div>
 									</div>
+									<div class="settingsUI settingsInput" for="editorFontFamily">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent"></input>
+										</div>
+									</div>
+									<div class="settingsUI settingsSelect" for="editorFontSize">
+										<div class="settingsSelectInfo">
+											<div class="settingsSelectInfoMain">Radio Name</div>
+											<div class="settingsSelectInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsSelectPart">
+											<div class="settingsSelectPartLeft"><i class="fas fa-angle-left"></i></div>
+											<div class="settingsSelectPartContent"></div>
+											<div class="settingsSelectPartRight"><i class="fas fa-angle-right"></i></div>
+										</div>
+									</div>
 									<div class="settingsUI settingsInput" for="mainURL">
 										<div class="settingsInputInfo">
 											<div class="settingsInputInfoMain">Radio Name</div>
@@ -542,7 +594,9 @@
 	</body>
 	<footer>
 		<script src="./js/settings.js"></script>
+		<script src="./js/submission.js"></script>
 		<script src="./js/client.js"></script>
+		<script src="./js/problem.js"></script>
 		<script>
 			if(!RunInNwjs){
 				if(!DarkMode)

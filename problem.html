@@ -1,0 +1,50 @@
+<!DOCTYPE>
+<html>
+	<head lang="en">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<script src="./js/json3.min.js"></script>
+		<script src="./js/jquery.min.js"></script>
+		<meta name="referrer" content="never">
+		<script src="./js/highlight.min.js"></script>
+		<script src="./js/highlightjs-line-numbers.js"></script>
+		<link rel="stylesheet" href="./css/problem/client.css">
+		<link rel="stylesheet" href="./css/all.min.css">
+		<title>Codeforces Contest Helper</title>
+		<script>
+			var RunInNwjs = true;
+			try{
+				var win = nw.Window.get();
+				setTimeout(function(){win.show();},300);
+			}
+			catch(error){
+				document.title = 'Codeforces Contest Helper (Website Mode)';
+				console.log('Switched to Website Mode');
+				RunInNwjs = false;
+			}
+			var DarkMode = false;
+			if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
+				if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+					DarkMode = true, $('.ThemeTypeIf').attr('href','./css/contest/dark.css');
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<link class="ThemeTypeIf" rel="stylesheet" href="./css/problem/dark.css">
+		<script class="cssControler"></script>
+		<div class="HtmlContainer">
+			
+		</div>
+	</body>
+	<footer>
+		<script src="./js/settings.js"></script>
+		<script>
+			if(!RunInNwjs){
+				if(!DarkMode)
+					$('body').css('background','#b7b7b7');
+				else
+					$('body').css('background','#484848');
+			}
+		</script>
+	</footer>
+</html>
