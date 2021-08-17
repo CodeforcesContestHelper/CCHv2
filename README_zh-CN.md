@@ -8,5 +8,5 @@
 https://afdian.net/@cfcontesthelper
 
 ## 交流
-- Discord: [click here](https://discord.gg/natZEphAmS)
+- Discord: [点击这里](https://discord.gg/natZEphAmS)
 - QQ群号: `1006761579`
