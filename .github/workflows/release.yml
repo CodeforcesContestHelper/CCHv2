@@ -1,0 +1,54 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Get the version
+      id: get_version
+      shell: bash
+      run: |
+        VERSION=${GITHUB_REF/refs\/tags\//}
+        echo ::set-output name=VERSION::$VERSION
+    
+    - name: Setup node
+      uses: actions/setup-node@master
+    
+    - name: Build
+      run: |
+        npm install -g nw-builder
+        nwbuild -p win32,win64,osx64,linux32,linux64 .
+    
+    - name: Pack
+      run: |
+        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.win32.zip . -i "build/CodeForces Contest Helper/win32/*"
+        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.win64.zip . -i "build/CodeForces Contest Helper/win64/*"
+        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.osx64.zip . -i "build/CodeForces Contest Helper/osx64/*"
+        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.linux32.zip . -i "build/CodeForces Contest Helper/linux32/*"
+        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.linux64.zip . -i "build/CodeForces Contest Helper/linux64/*"
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        draft: false
+        prerelease: true
+        files: |
+          CCHv2.${{ steps.get_version.outputs.VERSION }}.win32.zip
+          CCHv2.${{ steps.get_version.outputs.VERSION }}.win64.zip
+          CCHv2.${{ steps.get_version.outputs.VERSION }}.osx64.zip
+          CCHv2.${{ steps.get_version.outputs.VERSION }}.linux32.zip
+          CCHv2.${{ steps.get_version.outputs.VERSION }}.linux64.zip
+        name: CCHv2 ${{ steps.get_version.outputs.VERSION }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+   

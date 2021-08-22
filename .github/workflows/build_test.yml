@@ -1,0 +1,49 @@
+name: Build test
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Setup node
+      uses: actions/setup-node@master
+    
+    - name: Build
+      run: |
+        npm install -g nw-builder
+        nwbuild -p win32,win64,osx64,linux32,linux64 .
+    
+    - name: Pack
+      run: |
+        zip -r CCHv2.alpha.${{ github.run_id }}.win32.zip . -i "build/CodeForces Contest Helper/win32/*"
+        zip -r CCHv2.alpha.${{ github.run_id }}.win64.zip . -i "build/CodeForces Contest Helper/win64/*"
+        zip -r CCHv2.alpha.${{ github.run_id }}.osx64.zip . -i "build/CodeForces Contest Helper/osx64/*"
+        zip -r CCHv2.alpha.${{ github.run_id }}.linux32.zip . -i "build/CodeForces Contest Helper/linux32/*"
+        zip -r CCHv2.alpha.${{ github.run_id }}.linux64.zip . -i "build/CodeForces Contest Helper/linux64/*"
+    
+    - uses: actions/upload-artifact@v2
+      with:
+        name: CCHv2.alpha.${{ github.run_id }}.win32.zip
+        path: CCHv2.alpha.${{ github.run_id }}.win32.zip
+    - uses: actions/upload-artifact@v2
+      with:
+        name: CCHv2.alpha.${{ github.run_id }}.win64.zip
+        path: CCHv2.alpha.${{ github.run_id }}.win64.zip
+    - uses: actions/upload-artifact@v2
+      with:
+        name: CCHv2.alpha.${{ github.run_id }}.osx64.zip
+        path: CCHv2.alpha.${{ github.run_id }}.osx64.zip
+    - uses: actions/upload-artifact@v2
+      with:
+        name: CCHv2.alpha.${{ github.run_id }}.linux32.zip
+        path: CCHv2.alpha.${{ github.run_id }}.linux32.zip
+    - uses: actions/upload-artifact@v2
+      with:
+        name: CCHv2.alpha.${{ github.run_id }}.linux64.zip
+        path: CCHv2.alpha.${{ github.run_id }}.linux64.zip
