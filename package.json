@@ -1,30 +1,33 @@
-﻿{
+{
   "main": "index.html",
   "name": "CodeForces Contest Helper",
   "description": "Codeforces Contest Helper",
   "version": "1.0.1",
-  "chromium-args" : "--disable-web-security --user-data-dir",
-  "keywords": [ "Codeforces", "node-webkit" ],
+  "chromium-args": "--disable-web-security --user-data-dir",
+  "keywords": [
+    "Codeforces",
+    "node-webkit"
+  ],
   "window": {
-    "title": "Codeforces Contest Helper", 
+    "title": "Codeforces Contest Helper",
     "icon": "favicon.png",
     "toolbar": true,
     "width": 700,
-    "height": 518, 
+    "height": 518,
     "position": "center",
-    "as_desktop" :false,
+    "as_desktop": false,
     "resizable": false,
-    "always-on-top":false,
-    "fullscreen":false,
-    "show_in_taskbar":true,
-    "show":false, 
-    "kiosk":false,
-    "frame":false,
-    "transparent":true
-},
+    "always-on-top": false,
+    "fullscreen": false,
+    "show_in_taskbar": true,
+    "show": false,
+    "kiosk": false,
+    "frame": false,
+    "transparent": true
+  },
   "webkit": {
     "plugin": true,
-    "java":true,
-    "page-cache":false
-    }
+    "java": true,
+    "page-cache": false
+  }
 }
