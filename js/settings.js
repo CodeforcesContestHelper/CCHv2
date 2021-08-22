@@ -1,7 +1,3 @@
-var settings = localStorage.getItem("CCH_Settings");
-function saveSettings(){
-	localStorage.setItem("CCH_Settings", JSON.stringify(settings));
-}
 var contestRanks = [0, 0], contestRankLast = [0, 0], contestRankInfo = [[], []], contestCalculatingRank = [false, false], contestRankChosen = 0;
 var contestNewWinJQ, contestNewWin, contestNewWinOpened = false, contestNewWinLoaded = false;
 var lang_list = ["English", "简体中文"];
@@ -9,6 +5,13 @@ var lang_attr = ["en", "zh_cn"];
 var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
 var openRankPredictorSelection = ["Disabled", "RatedOnly", "Enabled"];
 var styleSelectionList = ["System", "Light", "Dark"];
+var currentLoginHandle = "";
+var settings = localStorage.getItem("CCH_Settings");
+function saveSettings(){
+	localStorage.setItem("CCH_Settings", JSON.stringify(settings));
+	if(contestNewWinLoaded)
+		contestNewWinJQ.append(`<script>reloadSettings()</script>`);
+}
 var lang_en = {
 	general: {
 		title: "Codeforces Contest Helper v2.0",
@@ -35,8 +38,9 @@ var lang_en = {
 		contestPendingSystemTest: "Pending System Test",
 		contestSystemTest: "System Testing",
 		contestFinished: "Finished",
-		settingsSingle: "Single Mode",
-		settingsPreference: "Preference",
+		settingsSingle: "<span class='fas fa-user'></span> Single Mode",
+		settingsPreference: "<span class='fas fa-palette'></span> Preference",
+		settingsAccount: "<span class='fas fa-user-circle'></span> Account",
 		Ascending: "Ascending",
 		Descending: "Descending",
 		Disabled: "Disabled",
@@ -58,6 +62,13 @@ var lang_en = {
 		memory: "Memory",
 		close: "Close",
 		back: "Back",
+		currentUser: "<span class='fas fa-check green'></span> Current user: {0}",
+		notLoggedIn: "<span class='fas fa-times red'></span> Not logged in",
+		settingsLoginButton: "<i class='fas fa-sign-in-alt'></i> Click here to log in",
+		settingsLoadingLoginType: "<span class='fas fa-pulse fa-spinner'></span> Loading Login Type...",
+		loadLoginTypeError: "<span class='fas fa-unlink red'></span> Load login type error. Click here to retry.",
+		loginLoading: "<span class='fas fa-pulse fa-spinner'></span> Loading...",
+		loginSuccess: "<span class='fas fa-check green'></span> Login Success!",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -78,6 +89,8 @@ var lang_en = {
 		errorContestNotStarted: "Contest not started",
 		errorVirtualInfoNotFound: "Virtual round not found",
 		errorCannotGetCode: "Cannot Get Code",
+		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> Login Failed",
+		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' Load Failed",
 	},
 	tip: {
 		tipInitializing: "Initializing...",
@@ -94,77 +107,83 @@ var lang_en = {
 	},
 	settings: {
 		fontFamily: [
-			"Font Family",
+			"<span class='fas fa-font'></span> Font Family",
 			"Use commas(,) to split font name. Monospace font can make a better view."
 		],
 		editorFontFamily: [
-			"Code Block Font Family",
+			"<span class='fas fa-code'></span> Code Block Font Family",
 			"Set font family for code blocks."
 		],
 		editorFontSize: [
-			"Code Block Font Size",
+			"<span class='fas fa-text-width'></span> Code Block Font Size",
 			"Set font size for code blocks."
 		],
 		timeLimit: [
-			"Load Time Limit",
+			"<span class='fas fa-stopwatch'></span> Load Time Limit",
 			"Time limits while fetching information. Big time limit will be used to limit standings and rating changes loader."
 		],
 		reloadTime: [
-			"Information Load Time",
+			"<span class='fas fa-hourglass-half'></span> Information Load Time",
 			"Load time between updates during the contest."
 		],
 		smallReloadTime: [
-			"Small Reload Time",
+			"<span class='fas fa-sync-alt'></span> Small Reload Time",
 			"Reload time when some of the informations are not be able to be loaded."
 		],
 		mainURL: [
-			"Main URL",
+			"<span class='fas fa-link'></span> Main URL",
 			"URL used while opening Codeforces links."
 		],
 		predictorURL: [
-			"Predictor URL",
+			"<span class='fas fa-search'></span> Predictor URL",
 			"Address to get predicted rating changes."
 		],
 		openStandings: [
-			"Open Standings",
+			"<span class='fas fa-list-ol'></span> Open Standings",
 			"Select when to load the standings and hacks of a contest. <span class='red'>The data can be really large, so think twice.</span>"
 		],
 		standingsLoadingGap: [
-			"Standings Loading Gap",
+			"<span class='fas fa-stopwatch'></span> Standings Loading Gap",
 			"Load time between standings updates."
 		],
 		openRankPredict: [
-			"Open Rank Calculator",
+			"<span class='fas fa-calculator'></span> Open Rank Calculator",
 			"Select when to enable history rank calculator. <span class='red'>Standings Required.</span>"
 		],
 		problemSubmissionDirection: [
-			"Submission Order",
+			"<span class='fas fa-server'></span> Submission Order",
 			"Order option of submissions for each problem."
 		],
 		problemEventDirection: [
-			"Event Order",
+			"<span class='fas fa-book'></span> Event Order",
 			"Order option of events for the contest."
 		],
 		language: [
-			"Language",
+			"<span class='fas fa-language'></span> Language",
 			"The language can be loaded without rebooting."
 		],
 		styleSelection: [
-			"Style",
+			"<span class='fas fa-paint-roller'></span> Style",
 			"Select favourite style."
 		],
 		virtualFilter: [
-			"Open Virtual Filter",
+			"<span class='fas fa-filter'></span> Open Virtual Filter",
 			"Choose how history rank calculator deal with virtual information. Open this to remove them."
 		],
 		codeforcesApiUrl: [
-			"Codeforces API URL", 
+			"<span class='fas fa-exchange-alt'></span> Codeforces API URL", 
 			"Set the address of Codeforces APIs."
 		],
 		showProblemStatus: [
-			"Show Problem Status Bar",
+			"<span class='fas fa-question-circle'></span> Show Problem Status Bar",
 			"View problem status percentage under Problem mode. <span class='red'>Standings Required.</span>"
-		]
+		],
+		accountHandleOrEmail: [
+			"<span class='fas fa-user'></span> Handle or Email", ""
+		],
+		accountPassword: [
+			"<span class='fas fa-key'></span> Password", ""
+		],
 	}
 };
 var lang_zh = {
@@ -193,8 +212,9 @@ var lang_zh = {
 		contestPendingSystemTest: "等待系统测试",
 		contestSystemTest: "系统测试中",
 		contestFinished: "已结束",
-		settingsSingle: "个人模式",
-		settingsPreference: "个性化",
+		settingsSingle: "<span class='fas fa-user'></span> 个人模式",
+		settingsPreference: "<span class='fas fa-palette'></span> 个性化",
+		settingsAccount: "<span class='fas fa-user-circle'></span> 账号",
 		Ascending: "递增",
 		Descending: "递减",
 		Disabled: "关闭",
@@ -217,6 +237,13 @@ var lang_zh = {
 		memory: "内存",
 		close: "关闭",
 		back: "返回",
+		currentUser: "<span class='fas fa-check green'></span> 当前用户: {0}",
+		notLoggedIn: "<span class='fas fa-times red'></span> 未登录",
+		settingsLoginButton: "<i class='fas fa-sign-in-alt'></i> 点此以登录",
+		settingsLoadingLoginType: "<span class='fas fa-pulse fa-spinner'></span> 加载登录状态......",
+		loadLoginTypeError: "<span class='fas fa-unlink red'></span> 加载登陆状态失败。点此重试。",
+		loginLoading: "<span class='fas fa-pulse fa-spinner'></span> 加载中......",
+		loginSuccess: "<span class='fas fa-check green'></span> 登陆成功！",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -237,6 +264,8 @@ var lang_zh = {
 		errorContestNotStarted: "比赛没有开始",
 		errorVirtualInfoNotFound: "未找到虚拟赛信息",
 		errorCannotGetCode: "无法获取代码",
+		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> 登录失败",
+		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' 加载失败",
 	},
 	tip: {
 		tipInitializing: "初始化中......",
@@ -253,80 +282,94 @@ var lang_zh = {
 	},
 	settings: {
 		fontFamily: [
-			"字体",
+			"<span class='fas fa-font'></span> 字体",
 			"使用逗号进行字体名字分割。使用等宽字体会打开更好的效果。"
 		],
 		editorFontFamily: [
-			"代码块字体",
+			"<span class='fas fa-code'></span> 代码块字体",
 			"为代码块设置字体。"
 		],
 		editorFontSize: [
-			"代码块字体大小",
+			"<span class='fas fa-text-width'></span> 代码块字体大小",
 			"为代码块设置字体大小。"
 		],
 		timeLimit: [
-			"加载时间限制",
+			"<span class='fas fa-stopwatch'></span> 加载时间限制",
 			"加载信息时的时间限制。大时间限制将用于比赛排行榜和 Rating 变化量。"
 		],
 		reloadTime: [
-			"信息获取间隔",
+			"<span class='fas fa-hourglass-half'></span> 信息获取间隔",
 			"比赛时获取必要信息的时间间隔。"
 		],
 		smallReloadTime: [
-			"重新加载时间",
+			"<span class='fas fa-sync-alt'></span> 重新加载时间",
 			"在重要信息没有加载成功后的等待时间。"
 		],
 		mainURL: [
-			"主页地址",
+			"<span class='fas fa-link'></span> 主页地址",
 			"打开 Codeforces 链接使用的主页地址。"
 		],
 		predictorURL: [
-			"预测器地址",
+			"<span class='fas fa-search'></span> 预测器地址",
 			"获取比赛 Rating 变化的地址。"
 		],
 		openStandings: [
-			"打开排行榜获取",
+			"<span class='fas fa-list-ol'></span> 打开排行榜获取",
 			"选择何时进行排行榜和 hack 的获取。<span class='red'>因为获取的信息量会很大，所以三思而后行。</span>"
 		],
 		standingsLoadingGap: [
-			"排行榜获取间隔",
+			"<span class='fas fa-stopwatch'></span> 排行榜获取间隔",
 			"比赛时获取排行榜的时间间隔。"
 		],
 		openRankPredict: [
-			"打开历史排名计算器",
+			"<span class='fas fa-calculator'></span> 打开历史排名计算器",
 			"选择何时打开历史排名计算器。<span class='red'>需要排行榜信息。</span>"
 		],
 		problemSubmissionDirection: [
-			"评测记录顺序",
+			"<span class='fas fa-server'></span> 评测记录顺序",
 			"每一道题目的评测记录显示顺序。"
 		],
 		problemEventDirection: [
-			"事件顺序",
+			"<span class='fas fa-book'></span> 事件顺序",
 			"比赛的时间显示顺序。"
 		],
 		language: [
-			"语言",
+			"<span class='fas fa-language'></span> 语言",
 			"语言无需重启即可更换。"
 		],
 		styleSelection: [
-			"样式",
+			"<span class='fas fa-paint-roller'></span> 样式",
 			"选择你喜欢的样式。"
 		],
 		virtualFilter: [
-			"打开虚拟赛过滤",
+			"<span class='fas fa-filter'></span> 打开虚拟赛过滤",
 			"选择历史排名计算器如何处理虚拟赛数据。打开此设置以去除它们。"
 		],
 		codeforcesApiUrl: [
-			"Codeforces API 地址", 
+			"<span class='fas fa-exchange-alt'></span> Codeforces API 地址", 
 			"设置获取 Codeforces API 的地址。"
 		],
 		showProblemStatus: [
-			"显示题目状态",
+			"<span class='fas fa-question-circle'></span> 显示题目状态",
 			"在题目状态中显示每道题的状态比例。<span class='red'>需要排行榜信息。</span>"
-		]
+		],
+		accountHandleOrEmail: [
+			"<span class='fas fa-user'></span> 用户名或邮箱", ""
+		],
+		accountPassword: [
+			"<span class='fas fa-key'></span> 密码", ""
+		],
 	}
 };
 var settingsFunctions = {
+	accountHandleOrEmail: {
+		initial: function(){return ""},
+		change: function(){return ""}
+	},
+	accountPassword: {
+		initial: function(){return ""},
+		change: function(){return ""}
+	},
 	language: {
 		initial: function(){
 			var i = settings.language;
@@ -726,35 +769,6 @@ function initLanguage(){
 			$(`.settingsUI[for=${name}] > div:first-child > div:first-child`).html(languageOption.settings[name][0]);
 			$(`.settingsUI[for=${name}] > div:first-child > div:last-child`).html(languageOption.settings[name][1]);
 		}
-	if(contestNewWinOpened){
-		for(var name in languageOption.general)
-			if(languageOption.general.hasOwnProperty(name)){
-				if(languageOption.general[name].format("") != languageOption.general[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
-					contestNewWinJQ.find(`[info=${name}]`).each(function(){
-						$(this).html(languageOption.general[name].format(JSON.parse($(this).attr("argv"))));
-					})
-				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.general[name]);
-			}
-		for(var name in languageOption.error)
-			if(languageOption.error.hasOwnProperty(name)){
-				if(languageOption.error[name].format("") != languageOption.error[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
-					contestNewWinJQ.find(`[info=${name}]`).each(function(){
-						$(this).html(languageOption.error[name].format(JSON.parse($(this).attr("argv"))));
-					})
-				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.error[name]);
-			}
-		for(var name in languageOption.input)
-			if(languageOption.input.hasOwnProperty(name))
-				contestNewWinJQ.find(`[info=${name}]`).attr("placeholder", languageOption.input[name]);
-		for(var name in languageOption.tip)
-			if(languageOption.tip.hasOwnProperty(name)){
-				if(languageOption.tip[name].format("") != languageOption.tip[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
-					contestNewWinJQ.find(`[info=${name}]`).each(function(){
-						$(this).html(languageOption.tip[name].format(JSON.parse($(this).attr("argv"))));
-					})
-				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.tip[name]);
-			}
-	}
 }
 initLanguage();
 if(settings == undefined)	settings = {};
@@ -786,6 +800,12 @@ function initStyle(){
 	if(contestCalculatingRank[contestRankChosen])
 		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
 	else generateRankGraph(contestRankInfo[contestRankChosen]);
+}
+function reloadSettings(){
+	settings = localStorage.getItem("CCH_Settings");
+	initSettingsPage();
+	initLanguage();
+	initStyle();
 }
 function localize(x){
 	return `<span info="${x}">${languageOption.general[x]}</span>`;
@@ -979,7 +999,7 @@ function getTimeLength3(x){
 	return ret;
 }
 function toSmallInfo(x){
-	if(x==undefined)	return "";
+	if(x == undefined || x == "")	return "INQ";
 	if(x == "OK")	return "AC";
 	if(x == "FAILED")	return "FAIL";
 	if(x == "PARTIAL")	return "PRT";
@@ -1000,7 +1020,7 @@ function toSmallInfo(x){
 	return "";
 }
 function judgeToClass(x){
-	if(x == undefined)	return "loadingColor";
+	if(x == undefined || x == "")	return "loadingColor";
 	if(x == "OK")	return "successColor";
 	if(x == "COMPILATION_ERROR")	return "warningColor";
 	if(x == "TESTING")	return "loadingColor";
@@ -1008,6 +1028,7 @@ function judgeToClass(x){
 	return "dangerColor";
 }
 function getSubmissionIcon(x){
+	if(x == undefined || x == "")	return `<span class="fa fa-hourglass-start"></span>`;
 	if(x == "OK")	return `<span class="fa fa-check"></span>`;
 	if(x == "FAILED")	return `<span class="fa fa-server"></span>`;
 	if(x == "PARTIAL")	return `<span class="fa fa-percent"></span>`;
@@ -1023,7 +1044,7 @@ function getSubmissionIcon(x){
 	if(x == "INPUT_PREPARATION_CRASHED")	return `<span class="fa fa-sign-in"></span>`;
 	if(x == "CHALLENGED")	return `<span class="fa fa-user-secret"></span>`;
 	if(x == "SKIPPED")	return `<span class="fa fa-forward"></span>`;
-	if(x == "TESTING")	return `<span class="fa fa-hourglass-2"></span>`;
+	if(x == "TESTING")	return `<span class="fa fa-pulse fa-spinner"></span>`;
 	if(x == "REJECTED")	return `<span class="fa fa-exclamation-triangle"></span>`;
 }
 function toSmallTestset(x){
@@ -1042,4 +1063,11 @@ function allHtmlSpecialChars(text){
       '\'': '&#039;'
     };
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+function checkHandles(list, name){
+	for(var i=0; i<list.length; i++){
+		var p = list[i];
+		if(p.handle == name)	return true;
+	}
+	return false;
 }

@@ -78,6 +78,7 @@ function openSubmission(c, u){
 		var nL = [];
 		var curr = ctL.children().eq(1).find("a");
 		curr.each(function(){
+			if($(this).text() == '#')	return;
 			var j = $("<div style='display:inline-block'></div>");
 			if($(this).hasClass("user-gray"))			j.attr("class", "user-newbie");
 			else if($(this).hasClass("user-green"))	j.attr("class", "user-pupil");

@@ -11,7 +11,12 @@
 	src: url('../../fonts/VerdanaBold.ttf') format('truetype');
 }
 :root{
-	--font-family: sans-serif;
+	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
+	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
+	--statement-font-family:  'Verdana', sans-serif;
+}
+body{
+	margin: 0px;
 }
 .HtmlContainer{
 	-webkit-app-region: drag;
@@ -20,4 +25,162 @@
 	display: inline-flex;
 	width: 100%;
 	height: 100%;
+	flex-direction: column;
+	font-family: var(--font-family);
+	position: relative;
+}
+.HtmlContainer > div:last-child{
+	display: flex;
+	flex-direction: row;
+	flex: 1;
+	width:  100%;
+	overflow: hidden;
+}
+.sideBar{
+	-webkit-app-region: no-drag;
+	transition: 0.3s;
+	width: 35px;
+	overflow: hidden;
+}
+.sideBar > div{
+	overflow-x: hidden;
+	overflow-y: scroll;
+	width: 160px;
+	height: 100%;
+}
+.sideBar:hover{
+	width: 160px;
+}
+.sideBarItem{
+	transition: 0.2s;
+	font-size: 16px;
+	padding: 10px;
+	padding-left: 10px;
+	width: 135px;
+	font-family: var(--font-family);
+	border-left: 0px solid rgb(255, 204, 102);
+	user-select: none;
+	cursor: pointer;
+}
+.sideBarItem > div:last-child{
+	float: right;
+	transition: 0.2s;
+	margin-right: 3px;
+	border-radius: 5px;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	position: relative;
+}
+.sideBarItem > div:last-child > i{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.innerContent{
+	flex: 1;
+	overflow: hidden
+}
+.ToolList{
+	-webkit-app-region: drag;
+	position: relative;
+	height: 36px;
+}
+.ToolListTitle{
+	margin: 8px 12px;
+	font-size: 16px;
+}
+.ToolListButton{
+	-webkit-app-region: no-drag;
+	cursor: pointer;
+	transition: 0.2s;
+	width:  55px;
+	height: 38px;
+	font-size: 16px;
+	display: grid;
+	place-items: center;
+}
+.ToolListClose:hover{
+	background: rgb(232, 17, 35);
+	color: white;
+}
+.progressBar{
+	user-select: none;
+	height: 24px;
+	padding: 5px;
+	display: flex;
+	flex-direction: row;
+	font-size: 20px;
+}
+.progressBarMain{
+	display: flex;
+	flex-direction: row;
+}
+.prevProblem, .nextProblem{
+	-webkit-app-region: no-drag;
+	transition: 0.2s;
+	margin: 0px 20px;
+	border-radius: 5px;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	position: relative;
+}
+.prevProblem > i, .nextProblem > i{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.innerContentPage{
+	padding: 10px;
+	height: calc(100% - 20px);
+	width: calc(100% - 20px);
+	overflow-y: scroll;
+	user-select: text;
+	-webkit-app-region: no-drag;
+	font-family: var(--statement-font-family);
+}
+.problemTitle{
+	font-size: 24px;
+	text-align: center;
+}
+.problemTags{
+	font-size: 16px;
+	text-align: center;
+}
+.blockManager{
+	margin: 10px;
+	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+.blockManagerTitle{
+	padding: 5px;
+	font-size: 16px;
+	height: 20px;
+}
+.blockManagerContent{
+	padding: 5px;
+}
+
+
+
+
+
+
+
+
+
+::-webkit-scrollbar{
+	width: 5px;
+	height: 5px;
+}
+::-webkit-scrollbar-thumb{
+	border-radius: 1px;
+}
+::-webkit-scrollbar-corner{
+	display: none;
 }

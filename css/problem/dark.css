@@ -4,3 +4,134 @@ body{
 .HtmlContainer{
     background: #333;
 }
+.sideBar{
+    background: #555;
+}
+.sideBarItem.chosen{
+    padding-left: 5px;
+    border-left: 5px solid rgb(255, 204, 102);
+}
+.sideBarItem > div:last-child:hover{
+    background: #ff456b;
+    color: white;
+}
+.sideBarItem:hover{
+    background: #777;
+}
+.ToolList{
+    border-bottom: 2px solid #555;
+}
+.ToolListMinimize:hover, .ToolListMaximize:hover{
+    background: #666;
+}
+.progressBar{
+    background: #616161;
+}
+.prevProblem:hover, .nextProblem:hover{
+    background: #777;
+}
+input{
+    border: 0;
+    border-bottom: 1px solid #888;
+    color: white;
+    outline: none;
+}
+.blockManagerTitle{
+    background: #474747;
+}
+.blockManagerContent{
+    background: #555;
+}
+
+
+
+
+::-webkit-scrollbar:hover{
+    background-color: #666;
+}
+::-webkit-scrollbar-thumb{
+    background-color: #888;
+}
+.primaryColor{
+    background: rgb(38, 103, 157);
+    transition: 0.2s;
+    color: white;
+}
+.primaryColor:hover{
+    background: rgb(26, 85, 134);
+}
+.dangerColor{
+    background: rgb(158, 12, 41);
+    transition: 0.2s;
+    color: white;
+}
+.dangerColor:hover{
+    background: rgb(136, 4, 31);
+}
+.warningColor{
+    background: rgb(175, 142, 52);
+    transition: 0.2s;
+    color: white;
+}
+.warningColor:hover{
+    background: rgb(146, 117, 37);
+}
+.successColor{
+    background: #2ace96;
+    transition: 0.2s;
+    color: white;
+}
+.successColor:hover{
+    background: rgb(26, 123, 90);
+}
+.loadingColor{
+    background: rgb(175, 175, 175);
+    transition: 0.2s;
+    color: white;
+}
+.loadingColor:hover{
+    background: rgb(150, 150, 150);
+}
+.red{
+    color: #ff456b;
+}
+.green{
+    color: #36c292;
+}
+
+.user-legendary, .user-igramdmaster, .user-grandmaster {
+    color: rgb(255, 26, 26);
+    font-weight: 600;
+}
+.user-legendary:first-letter{
+    color: white;
+}
+.user-master, .user-imaster {
+    color: rgb(255, 152, 26);
+    font-weight: 600;
+}
+.user-cmaster {
+    color: rgb(255, 85, 255);
+    font-weight: 600;
+}
+.user-expert {
+    color: rgb(51, 125, 255);
+    font-weight: 600;
+}
+.user-specialist {
+    color: rgb(87, 252, 242);
+    font-weight: 600;
+}
+.user-pupil {
+    color: rgb(114, 255, 114);
+    font-weight: 600;
+}
+.user-newbie {
+    color: rgb(152, 143, 129);
+    font-weight: 600;
+}
+.user-unrated {
+    color: white;
+}
+::selection { background:#707070; }  
+pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;background:inherit}.hljs-comment,.hljs-quote{color:#8b919c;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}

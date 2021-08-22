@@ -1129,13 +1129,13 @@ function getOverallPredictedRank(pr, sl, un, hl, uno){
 	var thisPerson = -1;
 	// Load All Person
 	for(var i=0;i<sl.length;i++){
-		var op = (un == sl[i].party.members[0].handle && contestStartTime.getTime() / 1000 == sl[i].party.startTimeSeconds && sl[i].party.participantType != "PRACTICE");
+		var op = (checkHandles(sl[i].party.members, un) && contestStartTime.getTime() / 1000 == sl[i].party.startTimeSeconds && sl[i].party.participantType != "PRACTICE");
 		var _points = 0, _penalty = 0;
 		if(sl[i].party.participantType != "CONTESTANT" &&
 			(!uno || sl[i].party.participantType != "OUT_OF_COMPETITION") &&
 			(!uno || settings.virtualFilter != false || sl[i].party.participantType != "VIRTUAL") && !op)	continue;
 		++curr; scores.push([0, 0]);
-		if(un == sl[i].party.members[0].handle && contestStartTime.getTime() / 1000 == sl[i].party.startTimeSeconds)
+		if(checkHandles(sl[i].party.members, un) && contestStartTime.getTime() / 1000 == sl[i].party.startTimeSeconds)
 			thisPerson = curr;
 		for(var j=0;j<sl[i].problemResults.length;j++){
 			if(sl[i].problemResults[j].bestSubmissionTimeSeconds != undefined){
@@ -2064,6 +2064,7 @@ $(".singleHeadBack > span").mousedown(function(e){
 			if(contestNewWinOpened){
 				contestNewWinOpened = contestNewWinLoaded = false;
 				contestNewWin.close();
+				$(".singleOpenSmallWindow").html(`<span info="singleSmallWindow">${languageOption.general.singleSmallWindow}</span> <i class="fas fa-angle-right"></i>`);
 			}
 			setTimeout(function(){
 				if(!ifInObserve)	window.onmousemove = function(){}

@@ -9,7 +9,7 @@
 		<script src="./js/highlightjs-line-numbers.js"></script>
 		<link rel="stylesheet" href="./css/problem/client.css">
 		<link rel="stylesheet" href="./css/all.min.css">
-		<title>Codeforces Contest Helper</title>
+		<link rel="stylesheet" href="./KaTeX/katex.min.css">
 		<script>
 			var RunInNwjs = true;
 			try{
@@ -33,17 +33,111 @@
 		<link class="ThemeTypeIf" rel="stylesheet" href="./css/problem/dark.css">
 		<script class="cssControler"></script>
 		<div class="HtmlContainer">
-			
+			<div class="ToolList">
+				<div class="ToolListTitle" info="problemTitle"></div>
+				<div style="position: absolute; top: 0px; right: 0px; display: flex; flex-direction: row">
+					<div class="ToolListButton ToolListMinimize">
+						<i class="fas fa-minus"></i>
+					</div>
+					<div class="ToolListButton ToolListMaximize">
+						<i class="far fa-square"></i>
+					</div>
+					<div class="ToolListButton ToolListClose">
+						<i class="fas fa-times"></i>
+					</div>
+				</div>
+			</div>
+			<div>
+				<div class="sideBar"><div>
+					<div class="sideBarItem"><i class="fas fa-unlink"></i> 1234D<div><i class="fas fa-times"></i></div></div>
+					<div class="sideBarItem"><i class="fas fa-circle"></i> 1234D<div><i class="fas fa-times"></i></div></div>
+					<div class="sideBarItem"><i class="fas fa-circle"></i> 1234D<div><i class="fas fa-times"></i></div></div>
+				</div></div>
+				<div style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+					<div class="innerContent">
+						<div class="innerContentPage" id="page1">
+							<div class="problemTitle">A. test of the title</div>
+							<div class="problemTags">WTF?</div>
+							<div class="blockManager">
+								<div class="blockManagerTitle">Description</div>
+								<div class="blockManagerContent">no.</div>
+							</div>
+							<div class="blockManager">
+								<div class="blockManagerTitle">Description</div>
+								<div class="blockManagerContent">no.</div>
+							</div>
+							<div class="blockManager">
+								<div class="blockManagerTitle">Description</div>
+								<div class="blockManagerContent">no.</div>
+							</div>
+							<div class="blockManager">
+								<div class="blockManagerTitle">Description</div>
+								<div class="blockManagerContent">no.</div>
+							</div>
+							<div class="blockManager">
+								<div class="blockManagerTitle">Description</div>
+								<div class="blockManagerContent">no.</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="progressBar">
+						<div style="flex: 1">
+						</div>
+						<div class="progressBarMain">
+							<div class="prevProblem"><i class="fas fa-angle-left"></i></div>
+							<div class="problemName">1234D</div>
+							<div class="nextProblem"><i class="fas fa-angle-right"></i></div>
+						</div>
+						<div style="flex: 1"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
 	<footer>
 		<script src="./js/settings.js"></script>
+		<script src="./js/problempage.js"></script>
 		<script>
 			if(!RunInNwjs){
+				$('body').css('margin', '8px');
 				if(!DarkMode)
 					$('body').css('background','#b7b7b7');
 				else
 					$('body').css('background','#484848');
+			}
+			else{
+				nw.Screen.Init();
+				$(".ToolListClose").click(function(){
+					win.close();
+				});
+				var maximized = false;
+				$(".ToolListMaximize").click(function(){
+					if(!maximized){
+						maximized = true;
+						win.maximize();
+						$(".ToolListMaximize > i").attr("class", "far fa-clone");
+					}
+					else{
+						maximized = false;
+						win.restore();
+						$(".ToolListMaximize > i").attr("class", "far fa-square");
+					}
+				})
+				win.on("maximize", function(){
+					maximized = true;
+					win.maximize();
+					$(".ToolListMaximize > i").attr("class", "far fa-clone");
+				})
+				win.on("restore", function(){
+					maximized = false;
+					win.restore();
+					$(".ToolListMaximize > i").attr("class", "far fa-square");
+				})
+				$(".ToolListMinimize").click(function(){
+					win.minimize();
+				});
+				win.title = "Codeforces Problems";
 			}
 		</script>
 	</footer>

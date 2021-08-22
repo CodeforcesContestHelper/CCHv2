@@ -919,9 +919,16 @@ pre{
 	cursor: pointer;
 	font-size: 16px;
 }
-
-
-
+[info=settingsLoginButton]{
+	cursor: pointer;
+}
+.settingsLoginButton{
+	transition: 0.2s;
+	text-align: center;
+}
+.settingsInputInfoMain > .fas, .settingsSelectInfoMain > .fas, .settingsRadioInfoMain > .fas{
+	width: 25px;
+}
 
 
 

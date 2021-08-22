@@ -109,7 +109,9 @@ body{
 .submissionCodeDisplayer{
     background: #ddd;
 }
-
+.settingsLoginButton, .settingsLoginType{
+    color: black;
+}
 
 
 

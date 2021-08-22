@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="./css/all.min.css">
 		<script src="./js/highlight.min.js"></script>
 		<script src="./js/highlightjs-line-numbers.js"></script>
+		<script src="./KaTeX/katex.min.js"></script>
 		<title>Codeforces Contest Helper</title>
 		<script>
 			var RunInNwjs = true;
@@ -128,12 +129,12 @@
 										<div class="remainSinglePart">
 											<div class="bigInputArea">
 												<input class="singleContestantUsernameInput" info="singleContestantUsername"
-													type="text" onkeyup="this.value=this.value.replace(/[^a-zA-Z0-9_.-]/g,'')" maxlength="24"/>
+													type="text"/>
 												<i class="fa fa-user"></i>
 											</div>
 											<div class="bigInputArea">
 												<input class="singleContestantContestIdInput" info="singleContestantContestId"
-													type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
+													type="text"/>
 												<i class="fa fa-calendar"></i>
 											</div>
 											<button class="bigButton primaryColor singleContestantButton">
@@ -154,12 +155,12 @@
 										<div class="remainSinglePart">
 											<div class="bigInputArea">
 												<input class="singleVirtualUsernameInput" info="singleVirtualUsername"
-													type="text" onkeyup="this.value=this.value.replace(/[^a-zA-Z0-9_.-]/g,'')" maxlength="24"/>
+													type="text"/>
 												<i class="fa fa-user"></i>
 											</div>
 											<div class="bigInputArea">
 												<input class="singleVirtualContestIdInput" info="singleVirtualContestId"
-													type="text" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');"/>
+													type="text"/>
 												<i class="fa fa-calendar"></i>
 											</div>
 											<div class="bigInputArea">
@@ -268,7 +269,7 @@
 											</div>
 										</div>
 										<div class="blockManager singleProblemDisplayer">
-											<div class="blockManagerTitle"><i class="fas fa-check-square"></i> <span info="Problem"></span><div class="folderButton singleProblemButton"><i class="fas fa-angle-left"></i></div></div>
+											<div class="blockManagerTitle"><i class="fas fa-tasks"></i> <span info="Problem"></span><div class="folderButton singleProblemButton"><i class="fas fa-angle-left"></i></div></div>
 											<div class="blockManagerContent">
 												<div class="blockManagerRight singleProblemlistDisplayer">
 													<div class="singleProblemlistlistDisplayGrid closed">
@@ -362,6 +363,28 @@
 						<div class="contentRowInfo">
 							<div class="contentPage">
 								<div class="settingPage"> <div style="margin: 20px 0px">
+									<div class="settingsHeader" info="settingsAccount"></div>
+									<div class="settingsSelectInfoAddition settingsLoginType">...</div>
+									<div class="settingsUI settingsInput" for="accountHandleOrEmail">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent"></input>
+										</div>
+									</div>
+									<div class="settingsUI settingsInput" for="accountPassword">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent" type="password"></input>
+										</div>
+									</div>
+									<div class="settingsSelectInfoAddition settingsLoginButton"><span info='settingsLoginButton' onclick="submitLogin()"></span></div>
+
 									<div class="settingsHeader" info="settingsPreference"></div>
 									<div class="settingsUI settingsSelect" for="styleSelection">
 										<div class="settingsSelectInfo">
@@ -594,6 +617,7 @@
 	</body>
 	<footer>
 		<script src="./js/settings.js"></script>
+		<script src="./js/authorize.js"></script>
 		<script src="./js/submission.js"></script>
 		<script src="./js/client.js"></script>
 		<script src="./js/problem.js"></script>

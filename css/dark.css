@@ -105,7 +105,9 @@ body{
 .submissionCodeDisplayer{
     background: #333;
 }
-
+.settingsLoginButton, .settingsLoginType{
+    color: white;
+}
 
 
 
