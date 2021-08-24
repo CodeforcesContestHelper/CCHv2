@@ -781,9 +781,10 @@ function getContestType(x){
 	return undefined;
 }
 function singleContestantTimeCountdown(){
-	setTimeout(singleContestantTimeCountdown, 500);
 	var d = contestEndTime.getTime() - (new Date()).getTime();
-	if(d < 0)	return;
+	if(d < 0)
+		return;
+	setTimeout(singleContestantTimeCountdown, 500);
 	d = getTimeLength2(d);
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
