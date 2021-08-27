@@ -1,14 +1,11 @@
 
-
-
-var problemNewWinOpen = false, problemNewWin, problemNewWinJQ;
 function initProblemNewWin(x){
 	problemNewWinJQ.find(".ToolListTitle").html("Codeforces Problems");
 }
 function openProblemWin(idList){
 	if(!RunInNwjs)	return;
-	if(problemNewWinOpen)	return;
-	problemNewWinOpen = true;
+	if(problemNewWinOpened)	return;
+	problemNewWinOpened = true;
 	nw.Window.open("problem.html",{
 	    "title": "Codeforces Problems", 
 	    "icon": "favicon.png",
@@ -27,13 +24,13 @@ function openProblemWin(idList){
 	    "transparent":true,
 	}, function(x){
 		problemNewWin = x;
-		setTimeout(function(){
+		problemNewWin.on("loaded", function(){
 			problemNewWinJQ = $(problemNewWin.window.document.body);
 			initProblemNewWin(idList);
-			problemNewWin.on("closed", function(){
-				problemNewWinOpen = false;
-			})
-		}, 100);
+		})
+		problemNewWin.on("closed", function(){
+			problemNewWinOpened = false;
+		})
 	});
 }
 // openProblemWin([]);

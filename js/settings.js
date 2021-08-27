@@ -1,5 +1,6 @@
 var contestRanks = [0, 0], contestRankLast = [0, 0], contestRankInfo = [[], []], contestCalculatingRank = [false, false], contestRankChosen = 0;
 var contestNewWinJQ, contestNewWin, contestNewWinOpened = false, contestNewWinLoaded = false;
+var problemNewWinOpened = false, problemNewWin, problemNewWinJQ;
 var lang_list = ["English", "简体中文"];
 var lang_attr = ["en", "zh_cn"];
 var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
@@ -8,9 +9,12 @@ var styleSelectionList = ["System", "Light", "Dark"];
 var currentLoginHandle = "";
 var settings = localStorage.getItem("CCH_Settings");
 function saveSettings(){
+	initFonts();
 	localStorage.setItem("CCH_Settings", JSON.stringify(settings));
 	if(contestNewWinLoaded)
 		contestNewWinJQ.append(`<script>reloadSettings()</script>`);
+	if(problemNewWinOpened)
+		problemNewWinJQ.append(`<script>reloadSettings()</script>`);
 }
 var lang_en = {
 	general: {
@@ -117,6 +121,10 @@ var lang_en = {
 		editorFontSize: [
 			"<span class='fas fa-text-width'></span> Code Block Font Size",
 			"Set font size for code blocks."
+		],
+		statementFontFamily: [
+			"<span class='fas fa-clipboard-list'></span> Statement Font Family",
+			"Set font family for problem statements."
 		],
 		timeLimit: [
 			"<span class='fas fa-stopwatch'></span> Load Time Limit",
@@ -292,6 +300,10 @@ var lang_zh = {
 		editorFontSize: [
 			"<span class='fas fa-text-width'></span> 代码块字体大小",
 			"为代码块设置字体大小。"
+		],
+		statementFontFamily: [
+			"<span class='fas fa-clipboard-list'></span> 题目信息字体",
+			"为题目信息设置字体。"
 		],
 		timeLimit: [
 			"<span class='fas fa-stopwatch'></span> 加载时间限制",
@@ -571,67 +583,46 @@ var settingsFunctions = {
 	},
 	fontFamily: {
 		initial: function(){
-			if(settings.fontFamily != "")
-				document.documentElement.style.setProperty("--font-family", settings.fontFamily);
-			else
-				document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-			if(contestNewWinLoaded){
-				if(settings.fontFamily != "")
-					contestNewWin.window.document.documentElement.style.setProperty("--font-family", settings.fontFamily);
-				else
-					contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-			}
 			return settings.fontFamily;
 		},
 		change: function(str){
 			str = $.trim(str);
 			settings.fontFamily = str;
 			saveSettings();
-			if(str != "")
-				document.documentElement.style.setProperty("--font-family", str);
-			else
-				document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-			if(contestNewWinLoaded){
-				if(str != "")
-					contestNewWin.window.document.documentElement.style.setProperty("--font-family", str);
-				else
-					contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-			}
 		}
 	},
+	statementFontFamily: {
+		initial: function(){
+			return settings.statementFontFamily;
+		},
+		change: function(str){
+			str = $.trim(str);
+			settings.statementFontFamily = str;
+			saveSettings();
+		}
+	},	
 	editorFontFamily: {
 		initial: function(){
-			if(settings.editorFontFamily != "")
-				document.documentElement.style.setProperty("--editor-font-family", settings.editorFontFamily);
-			else
-				document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
 			return settings.editorFontFamily;
 		},
 		change: function(str){
 			str = $.trim(str);
 			settings.editorFontFamily = str;
 			saveSettings();
-			if(str != "")
-				document.documentElement.style.setProperty("--editor-font-family", str);
-			else
-				document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
 		}
 	},
 	editorFontSize: {
 		initial: function(){
-			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
 			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
 		},
 		previous: function(){
 			--settings.editorFontSize;
 			initStyle(); saveSettings();
-			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
 			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
 		},
 		next: function(){
 			++settings.editorFontSize;
 			initStyle(); saveSettings();
-			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
 			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
 		},
 	},
@@ -700,6 +691,7 @@ var currentDefaultSettings = {
 	showProblemStatus: true,
 	editorFontFamily: "",
 	editorFontSize: 16,
+	statementFontFamily: ""
 };
 function setAsDefault(){
 	if(settings == undefined)
@@ -710,17 +702,20 @@ function setAsDefault(){
 		var F = settings.fontFamily;
 		var E = settings.editorFontFamily;
 		var S = settings.editorFontSize;
+		var P = settings.statementFontFamily;
 		if(L == undefined)	L = currentDefaultSettings.language;
 		if(D == undefined)	D = currentDefaultSettings.styleSelection;
 		if(F == undefined)	F = currentDefaultSettings.fontFamily;
 		if(E == undefined)	E = currentDefaultSettings.editorFontFamily;
 		if(S == undefined)	S = currentDefaultSettings.editorFontSize;
+		if(P == undefined)	P = currentDefaultSettings.statementFontFamily;
 		settings = JSON.parse(JSON.stringify(currentDefaultSettings));
 		settings.language = L;
 		settings.styleSelection = D;
 		settings.fontFamily = F;
 		settings.editorFontFamily = E;
 		settings.editorFontSize = S;
+		settings.statementFontFamily = P;
 	}
 	saveSettings();
 	initSettingsPage();
@@ -802,7 +797,8 @@ function initStyle(){
 	else generateRankGraph(contestRankInfo[contestRankChosen]);
 }
 function reloadSettings(){
-	settings = localStorage.getItem("CCH_Settings");
+	settings = JSON.parse(localStorage.getItem("CCH_Settings"));
+	initFonts();
 	initSettingsPage();
 	initLanguage();
 	initStyle();
@@ -834,7 +830,21 @@ function initSettingsPage(){
 	})
 }
 initSettingsPage();
-
+function initFonts(){
+	document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
+	if(settings.fontFamily != "")
+		document.documentElement.style.setProperty("--font-family", settings.fontFamily);
+	else
+		document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+	if(settings.editorFontFamily != "")
+		document.documentElement.style.setProperty("--editor-font-family", settings.editorFontFamily);
+	else
+		document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+	if(settings.statementFontFamily != "")
+		document.documentElement.style.setProperty("--statement-font-family", settings.statementFontFamily);
+	else
+		document.documentElement.style.setProperty("--statement-font-family", "sans-serif");
+}
 
 $(".settingsRadioButton").click(function(){
 	var t = settingsFunctions[$(this).parent().attr("for")].change();

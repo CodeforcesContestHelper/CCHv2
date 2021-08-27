@@ -49,9 +49,9 @@
 			</div>
 			<div>
 				<div class="sideBar"><div>
-					<div class="sideBarItem"><i class="fas fa-unlink"></i>1234D<div><i class="fas fa-times"></i></div></div>
-					<div class="sideBarItem"><i class="fas fa-circle"></i>1234D<div><i class="fas fa-times"></i></div></div>
-					<div class="sideBarItem"><i class="fas fa-circle"></i>1234D<div><i class="fas fa-times"></i></div></div>
+					<div class="sideBarItem"><i class="fas fa-unlink"></i> 1234D<div><i class="fas fa-times"></i></div></div>
+					<div class="sideBarItem"><i class="fas fa-circle"></i> 1234D<div><i class="fas fa-times"></i></div></div>
+					<div class="sideBarItem"><i class="fas fa-circle"></i> 1234D<div><i class="fas fa-times"></i></div></div>
 				</div></div>
 				<div style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
 					<div class="innerContent">
@@ -107,37 +107,9 @@
 					$('body').css('background','#484848');
 			}
 			else{
-				nw.Screen.Init();
 				$(".ToolListClose").click(function(){
 					win.close();
 				});
-				var maximized = false;
-				$(".ToolListMaximize").click(function(){
-					if(!maximized){
-						maximized = true;
-						win.maximize();
-						$(".ToolListMaximize > i").attr("class", "far fa-clone");
-					}
-					else{
-						maximized = false;
-						win.restore();
-						$(".ToolListMaximize > i").attr("class", "far fa-square");
-					}
-				})
-				win.on("maximize", function(){
-					maximized = true;
-					win.maximize();
-					$(".ToolListMaximize > i").attr("class", "far fa-clone");
-				})
-				win.on("restore", function(){
-					maximized = false;
-					win.restore();
-					$(".ToolListMaximize > i").attr("class", "far fa-square");
-				})
-				$(".ToolListMinimize").click(function(){
-					win.minimize();
-				});
-				win.title = "Codeforces Problems";
 			}
 		</script>
 	</footer>

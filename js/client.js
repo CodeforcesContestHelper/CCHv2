@@ -563,6 +563,7 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 		});
 	})
 }
+var bigIsComing = null;
 function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, error, S, E, loadStandings){
 	var s = 0, e = 0, c = 4;
 	var Q = 0;
@@ -570,7 +571,7 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 		if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
-		$.ajax({
+		bigIsComing = $.ajax({
 			url: u,
 			type: "GET",
 			timeout : id == 5 ? settings.largeTimeLimit : settings.smallTimeLimit,
@@ -581,8 +582,10 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 				for(var i=0; i<q.length; i++)
 					json = json[q[i]];
 				success[id](un, ci, json, Q);
-				if(id <= 3)	++s;
-				if(s + e == c)	(s == c) ? S() : E();
+				if(id <= 3){
+					++s;
+					if(s + e == c)	(s == c) ? S() : E();
+				}
 			},
 			error: function(jqXHR, status, errorThrown){
 				if(status == "timeout"){
@@ -591,11 +594,16 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 					reloadSingleMemoryUsed();
 					if(er == true){
 						success[id](un, ci, undefined, Q);
-						if(id <= 3)	++s; if(s + e == c)	(s == c) ? S() : E();
+						if(id <= 3){
+							++s;
+							if(s + e == c)	(s == c) ? S() : E();
+						}
 						return;
 					}
 					error[id](un, ci);
-					if(id <= 3)	++e; if(s + e == c)	(s == c) ? S() : E();
+					if(id <= 3){
+						++e; if(s + e == c)	(s == c) ? S() : E();
+					}
 					return;
 				}
 				if(jqXHR.readyState != 4){
@@ -604,11 +612,15 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 					reloadSingleMemoryUsed();
 					if(er == true){
 						success[id](un, ci, undefined, Q);
-						if(id <= 3)	++s; if(s + e == c)	(s == c) ? S() : E();
+						if(id <= 3){
+							++s; if(s + e == c)	(s == c) ? S() : E();
+						}
 						return;
 					}
 					error[id](un, ci);
-					if(id <= 3)	++e; if(s + e == c)	(s == c) ? S() : E();
+					if(id <= 3){
+						++e; if(s + e == c)	(s == c) ? S() : E();
+					}
 					return;
 				}
 				//Network Error
@@ -616,12 +628,16 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 				reloadSingleMemoryUsed();
 				if(er == true){
 					success[id](un, ci, undefined, Q);
-					if(id <= 3)	++s; if(s + e == c)	(s == c) ? S() : E();
+					if(id <= 3){
+						++s; if(s + e == c)	(s == c) ? S() : E();
+					}
 					return;
 				}
 				error[id](un, ci);
-				if(id <= 3)	++e;
-				if(s + e == c)	(s == c) ? S() : E();
+				if(id <= 3){
+					++e;
+					if(s + e == c)	(s == c) ? S() : E();
+				}
 				reloadOption = true;
 			},
 			xhr: function() {
@@ -1043,9 +1059,9 @@ function singleContestantSyncUserInfo(un, ci, json, p){
 	$(".singleUsernameDisplayer").html(un);
 	$(".singleRatingDisplayer > div:first-child").addClass(c).html(ratingToGrade(json.rating));
 	$(".currRating").attr("class", "currRating setInlineBlock");
-	$(".currRating").addClass(c).html(json.rating);
+	$(".currRating").addClass(c).html(json.rating == undefined ? 0 : json.rating);
 	$(".maxRating").attr("class", "maxRating setInlineBlock");
-	$(".maxRating").addClass(ratingToClass(json.maxRating)).html(json.maxRating);
+	$(".maxRating").addClass(ratingToClass(json.maxRating)).html(json.maxRating == undefined ? 0 : json.maxRating);
 }
 function singleContestantSyncProblemStatus(un, ci, json, p){
 	contestSubmissionList = [];
@@ -1620,17 +1636,16 @@ function loadSingleVirtualAll(un, ci, tm){
 	setTimeout(function(){
 		r.removeClass("closed");
 	}, 750);
-	var reloadIf = function(U, D, C){
+	var reloadIf = function(U, D, C, Q){
 		if(currLastTimeUpdate != singleLastTimeUpdate)	return;
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
-		$.ajax({
+		bigIsComing = $.ajax({
 			url: U,
 			type: "GET",
 			data: D,
 			success: C,
 			error: function(jqXHR, status, errorThrown){
-
 				if(status == "timeout"){
 					//Network Timeout
 					singleLoadType = 2;
@@ -1638,6 +1653,7 @@ function loadSingleVirtualAll(un, ci, tm){
 					setTimeout(function(){reloadIf(U, D, C)}, settings.reloadTime);
 					return;
 				}
+				if(Q){ C({result: []}); return; }
 				if(jqXHR.readyState != 4){
 					//Network Error
 					singleLoadType = 3;
@@ -1682,9 +1698,9 @@ function loadSingleVirtualAll(un, ci, tm){
 					singleVirtualMainTrack(currLastTimeUpdate, un, ci, tm);
 				else
 					singleVirtualWaitToStart(currLastTimeUpdate, un, ci, tm);
-			});
+			}, true);
 		}, 500);
-	},);
+	}, false);
 }
 
 
@@ -2061,6 +2077,7 @@ $(".singleHeadBack > span").mousedown(function(e){
 			$("body").attr("onmouseup", "");
 			ifInObserve = false;
 			singleLastTimeUpdate = new Date();
+			if(bigIsComing)	bigIsComing.abort();
 			if(contestNewWinOpened){
 				contestNewWinOpened = contestNewWinLoaded = false;
 				contestNewWin.close();
@@ -2105,11 +2122,11 @@ $(".singleOpenSmallWindow").click(function(){
 		    "transparent":true
 		}, function(x){
 			contestNewWin = x;
-			setTimeout(function(){
+			contestNewWin.on("loaded", function(){
 				contestNewWinJQ = $(contestNewWin.window.document.body);
 				contestNewWinLoaded = true;
 				initContestNewWinPage();
-			}, 100);
+			});
 		});
 		$(".singleOpenSmallWindow").html(`<span info="singleSmallWindowClose">${languageOption.general.singleSmallWindowClose}</span> <i class="fas fa-angle-right"></i>`);
 	}

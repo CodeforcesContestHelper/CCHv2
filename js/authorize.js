@@ -35,9 +35,6 @@ function getFtaa(){
 	return ret;
 }
 function submitLogout(cb){
-	if(currentLoginHandle == ""){
-		cb(); return;
-	}
 	$.ajax({
 		url: settings.mainURL,
 		success: function(data){

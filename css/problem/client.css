@@ -13,7 +13,7 @@
 :root{
 	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
 	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
-	--statement-font-family:  'Verdana', sans-serif;
+	--statement-font-family:  sans-serif;
 }
 body{
 	margin: 0px;
@@ -61,6 +61,9 @@ body{
 	border-left: 0px solid rgb(255, 204, 102);
 	user-select: none;
 	cursor: pointer;
+}
+.sideBarItem > i{
+	margin-right: 10px;
 }
 .sideBarItem > div:last-child{
 	float: right;
@@ -159,7 +162,7 @@ body{
 }
 .blockManagerTitle{
 	padding: 5px;
-	font-size: 16px;
+	font-size: 18px;
 	height: 20px;
 }
 .blockManagerContent{
