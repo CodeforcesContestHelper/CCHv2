@@ -212,6 +212,7 @@ body{
 	max-height: 0px;
 	margin-bottom: 0px;
 	padding: 0px;
+	height: 0px;
 }
 .singleContestant.singleTypeChosen > div:hover > i,
 .singleVirtual.singleTypeChosen > div:hover > i{
@@ -701,6 +702,8 @@ img[src=""],img:not([src]){opacity:0;}
 	border-bottom-left-radius: 5px;
 	margin: 0px 10px 3px 10px;
 	overflow: hidden;
+	display: flex;
+	flex-direction: row;
 }
 .singleProblemlistDisplayListItemProgress > span{
 	display: inline-block;
@@ -750,6 +753,11 @@ img[src=""],img:not([src]){opacity:0;}
 	height: 58%;
 	position: relative;
 	margin: 10px;
+	font-size: 16px;
+}
+.singleProblemlistTempSettings > div{
+	margin: 10px 0px;
+	cursor: pointer;
 }
 .submissionDisplayer{
 	text-align: left !important;
@@ -791,7 +799,8 @@ pre code{
 }
 .submissionCode{
 	-webkit-app-region: no-drag;
-	display: block;
+	display: grid;
+	place-items: center;
 	overflow: hidden;
 	margin: 0px;
 	height: 100%;
@@ -926,9 +935,7 @@ pre{
 	transition: 0.2s;
 	text-align: center;
 }
-.settingsInputInfoMain > .fas, .settingsSelectInfoMain > .fas, .settingsRadioInfoMain > .fas{
-	width: 25px;
-}
+
 
 
 
@@ -942,7 +949,7 @@ pre{
 	display: inline-block;
 }
 .bigInputArea{
-	width: 100%;
+	width: calc(100% - 60px);
 	padding: 3px 0px;
 	position: relative;
 }
@@ -959,8 +966,8 @@ pre{
 .bigInputArea>i{
 	font-size: 24px;
 	position: absolute;
-	top: 11px;
-	left: 11px;
+	top: 15px;
+	left: 15px;
 }
 .bigInputArea>input:focus{
     border-color: #2665a2;

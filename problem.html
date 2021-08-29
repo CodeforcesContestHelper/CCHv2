@@ -1,4 +1,4 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
 	<head lang="en">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -10,6 +10,9 @@
 		<link rel="stylesheet" href="./css/problem/client.css">
 		<link rel="stylesheet" href="./css/all.min.css">
 		<link rel="stylesheet" href="./KaTeX/katex.min.css">
+		<link rel="stylesheet" href="./codemirror/lib/codemirror.css" />
+		<link rel="stylesheet" href="./codemirror/theme/dracula.css" />
+		<link rel="stylesheet" href="./codemirror/theme/eclipse.css" />
 		<script>
 			var RunInNwjs = true;
 			try{
@@ -47,15 +50,36 @@
 					</div>
 				</div>
 			</div>
-			<div>
-				<div class="sideBar"><div>
-					<div class="sideBarItem"><i class="fas fa-unlink"></i> 1234D<div><i class="fas fa-times"></i></div></div>
-					<div class="sideBarItem"><i class="fas fa-circle"></i> 1234D<div><i class="fas fa-times"></i></div></div>
-					<div class="sideBarItem"><i class="fas fa-circle"></i> 1234D<div><i class="fas fa-times"></i></div></div>
+			<div style="position: relative">
+				<div class="watchDisplayer">
+				</div>
+				<div class="loadingInterface submitWindow" style="display: none; opacity: 0"><div style="height: 300px; width: 400px; padding: 10px; display: flex; flex-direction: column;" class="submitInterface">
+					<div class="submitInterfaceTitle" style="width: calc(100% - 10px); display: flex; flex-direction: row; padding: 5px; overflow-x: hidden">
+						<div style="flex: 1; overflow-x: hidden">
+							<span class="submitUsername">123456789012345678901234</span> <span class="fas fa-angle-right"></span> <span class="submitProblemID">123456A</span>
+						</div><div style="position: relative; width: 24px"><i class="fas fa-times red closeSubmitPage" style="cursor: pointer"></i></div>
+					</div>
+					<div style="width: calc(100% - 10px); padding: 5px;display: flex; flex-direction: row">
+						<div style="position: relative; width: 30px"><i class="fas fa-code"></i></div>
+						<div style="flex: 1"><select class="submitLanguageChoser"></select></div>
+					</div>
+					<div class="submitInterfaceEditor" style="overflow: hidden; position: relative">
+						<textarea id="submitCodeArea" style="width: 100%; height: 100%; overflow: scroll"></textarea>
+					</div>
+					<div class="submitButton">
+						<button class="bigButton primaryColor singleContestantButton">
+							<i class="fas fa-paper-plane"></i><span info="sendAnswer"></span>
+						</button>
+					</div>
 				</div></div>
-				<div style="display: flex; flex-direction: column; flex: 1; overflow: hidden;">
+				<div class="sideBar"><div>
+					<div class="sideBarItem chosen"><i class="fas fa-unlink"></i>1234D<div><i class="fas fa-times"></i></div></div>
+					<div class="sideBarItem"><i class="fas fa-circle"></i>1234D<div><i class="fas fa-times"></i></div></div>
+					<div class="sideBarItem"><i class="fas fa-circle"></i>1234D<div><i class="fas fa-times"></i></div></div>
+				</div></div>
+				<div style="display: flex; flex-direction: column; width: calc(100% - 35px); height: 100%; position: absolute; top: 0px; left: 35px; overflow: hidden; border-radius: 5px;" class="problemPageRightContent">
 					<div class="innerContent">
-						<div class="innerContentPage" id="page1">
+						<div class="innerContentPage">
 							<div class="problemTitle">A. test of the title</div>
 							<div class="problemTags">WTF?</div>
 							<div class="blockManager">
@@ -78,18 +102,28 @@
 								<div class="blockManagerTitle">Description</div>
 								<div class="blockManagerContent">no.</div>
 							</div>
+							<div class="blockManager">
+								<div class="blockManagerTitle">Samples</div>
+								<div class="blockManagerContent">
+								</div>
+							</div>
 						</div>
 
 					</div>
 					<div class="progressBar">
 						<div style="flex: 1">
+							<div class="sendCurrData actions" style="flex: 1"><i class="fas fa-arrow-right"></i></div>
+							<div class="sendAllData actions" style="flex: 1"><i class="fas fa-arrow-circle-right"></i></div>
 						</div>
 						<div class="progressBarMain">
-							<div class="prevProblem"><i class="fas fa-angle-left"></i></div>
+							<div class="prevProblem actions"><i class="fas fa-angle-left"></i></div>
 							<div class="problemName">1234D</div>
-							<div class="nextProblem"><i class="fas fa-angle-right"></i></div>
+							<div class="nextProblem actions"><i class="fas fa-angle-right"></i></div>
 						</div>
-						<div style="flex: 1"></div>
+						<div style="flex: 1">
+							<div class="submitCode actions" style="flex: 1"><i class="fas fa-paper-plane"></i></div>
+							<div class="reloadStatement actions" style="flex: 1"><i class="fas fa-sync-alt"></i></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -97,10 +131,15 @@
 	</body>
 	<footer>
 		<script src="./js/settings.js"></script>
-		<script src="./js/problempage.js"></script>
+		<script src="./js/langs.js"></script>
 		<script>
+			reloadSettings()
+			for(var name in Langs)
+				if(Langs.hasOwnProperty(name))
+					$(".submitLanguageChoser").append(`<option value=${name}>${Langs[name]}</option>`)
+			$(".submitLanguageChoser").val(50);
 			if(!RunInNwjs){
-				$('body').css('margin', '8px');
+				$('body').css('margin', '8px').css("width", "calc(100% - 16px)").css("height", "calc(100% - 16px)");
 				if(!DarkMode)
 					$('body').css('background','#b7b7b7');
 				else
@@ -138,6 +177,42 @@
 					win.minimize();
 				});
 				win.title = "Codeforces Problems";
+			}
+			function ChangeTheme(){
+				if(!DarkMode){
+					$(".ThemeTypeIf").attr("href", "./css/problem/dark.css");
+					if(!RunInNwjs)
+						$('body').css('background','#222');
+				}
+				else{
+					$(".ThemeTypeIf").attr("href", "./css/problem/default.css");
+					if(!RunInNwjs)
+						$('body').css('background','#bbb');
+				}
+				DarkMode = !DarkMode;
+			}
+			$(".closeSubmitPage").click(function(){
+				$(".submitWindow").css("opacity", "0");
+				setTimeout(function(){
+					$(".submitWindow").css("display", "none");
+				}, 500);
+			})
+			function backToNormal(x){
+				setTimeout(function(){
+					x.html(`<span info='copy'>${languageOption.general.copy}</span>`);
+				}, 1000)
+			}
+			function loadCopyOption(){
+				$(".copyCode").unbind("click").click(function(){
+					var q = $("<textarea></textarea>");
+					q.text($(this).parent().parent().find(".codeDisplayer").text());
+					$("body").append(q);
+					q.select();
+					document.execCommand("copy");
+					q.remove();
+					$(this).html(`<span info='copied'>${languageOption.general.copied}</span>`);
+					backToNormal($(this));
+				})
 			}
 		</script>
 	</footer>

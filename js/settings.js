@@ -1,5 +1,7 @@
 var contestRanks = [0, 0], contestRankLast = [0, 0], contestRankInfo = [[], []], contestCalculatingRank = [false, false], contestRankChosen = 0;
 var contestNewWinJQ, contestNewWin, contestNewWinOpened = false, contestNewWinLoaded = false;
+var problemNewWinOpened = false, problemNewWin, problemNewWinJQ, submitCodeAreaController, problemNewWinLoaded;
+var watchNewWinOpened = false, watchNewWin, watchNewWinJQ, watchNewWinLoaded;
 var lang_list = ["English", "简体中文"];
 var lang_attr = ["en", "zh_cn"];
 var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
@@ -8,9 +10,18 @@ var styleSelectionList = ["System", "Light", "Dark"];
 var currentLoginHandle = "";
 var settings = localStorage.getItem("CCH_Settings");
 function saveSettings(){
+	initFonts();
 	localStorage.setItem("CCH_Settings", JSON.stringify(settings));
 	if(contestNewWinLoaded)
 		contestNewWinJQ.append(`<script>reloadSettings()</script>`);
+	if(problemNewWinLoaded)
+		problemNewWinJQ.append(`<script>reloadSettings()</script>`);
+}
+function openURL(x){
+	if(RunInNwjs)
+		nw.Shell.openExternal(x);
+	else
+		window.open(x);
 }
 var lang_en = {
 	general: {
@@ -69,6 +80,14 @@ var lang_en = {
 		loadLoginTypeError: "<span class='fas fa-unlink red'></span> Load login type error. Click here to retry.",
 		loginLoading: "<span class='fas fa-pulse fa-spinner'></span> Loading...",
 		loginSuccess: "<span class='fas fa-check green'></span> Login Success!",
+		sendAnswer: "Send Answer",
+		input: "Input",
+		output: "Output",
+		copy: "Copy",
+		copied: "Copied",
+		forceLoadStandings: "Force Load Standings",
+		openProblems: "Open Problems",
+		submitSuccess: "Submit Success!",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -91,6 +110,7 @@ var lang_en = {
 		errorCannotGetCode: "Cannot Get Code",
 		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> Login Failed",
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' Load Failed",
+		errorSubmitFailed: "Submit Failed"
 	},
 	tip: {
 		tipInitializing: "Initializing...",
@@ -117,6 +137,10 @@ var lang_en = {
 		editorFontSize: [
 			"<span class='fas fa-text-width'></span> Code Block Font Size",
 			"Set font size for code blocks."
+		],
+		statementFontFamily: [
+			"<span class='fas fa-clipboard-list'></span> Statement Font Family",
+			"Set font family for problem statements."
 		],
 		timeLimit: [
 			"<span class='fas fa-stopwatch'></span> Load Time Limit",
@@ -184,6 +208,14 @@ var lang_en = {
 		accountPassword: [
 			"<span class='fas fa-key'></span> Password", ""
 		],
+		openProblems: [
+			"<span class='fas fa-tasks'></span> Open Problems",
+			`Open problems if the contest is not ended.`
+		],
+		transformPort: [
+			"<span class='fas fa-location-arrow'></span> Transform Port",
+			"Set the ports while communicating to editors. Use commas(,) to split each port."
+		]
 	}
 };
 var lang_zh = {
@@ -244,6 +276,14 @@ var lang_zh = {
 		loadLoginTypeError: "<span class='fas fa-unlink red'></span> 加载登陆状态失败。点此重试。",
 		loginLoading: "<span class='fas fa-pulse fa-spinner'></span> 加载中......",
 		loginSuccess: "<span class='fas fa-check green'></span> 登陆成功！",
+		sendAnswer: "提交答案",
+		input: "输入",
+		output: "输出",
+		copy: "复制",
+		copied: "已复制",
+		forceLoadStandings: "强制加载排行榜",
+		openProblems: "打开问题界面",
+		submitSuccess: "提交成功！",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -266,6 +306,8 @@ var lang_zh = {
 		errorCannotGetCode: "无法获取代码",
 		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> 登录失败",
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' 加载失败",
+		sendAnswer: "提交答案",
+		errorSubmitFailed: "提交失败",
 	},
 	tip: {
 		tipInitializing: "初始化中......",
@@ -292,6 +334,10 @@ var lang_zh = {
 		editorFontSize: [
 			"<span class='fas fa-text-width'></span> 代码块字体大小",
 			"为代码块设置字体大小。"
+		],
+		statementFontFamily: [
+			"<span class='fas fa-clipboard-list'></span> 题目信息字体",
+			"为题目信息设置字体。"
 		],
 		timeLimit: [
 			"<span class='fas fa-stopwatch'></span> 加载时间限制",
@@ -359,6 +405,14 @@ var lang_zh = {
 		accountPassword: [
 			"<span class='fas fa-key'></span> 密码", ""
 		],
+		openProblems: [
+			"<span class='fas fa-tasks'></span> 打开 Problems",
+			`在比赛没有结束的时候打开 Problems 页面。`
+		],
+		transformPort: [
+			"<span class='fas fa-location-arrow'></span> 交流端口",
+			"设置和代码编辑器交流的端口，用逗号分割。"
+		]
 	}
 };
 var settingsFunctions = {
@@ -518,6 +572,15 @@ var settingsFunctions = {
 			saveSettings();
 		}
 	},
+	transformPort: {
+		initial: function(){
+			return settings.transformPort;
+		},
+		change: function(str){
+			settings.transformPort = str;
+			saveSettings();
+		}
+	},
 	predictorURL: {
 		initial: function(){
 			return settings.predictorURL;
@@ -571,67 +634,46 @@ var settingsFunctions = {
 	},
 	fontFamily: {
 		initial: function(){
-			if(settings.fontFamily != "")
-				document.documentElement.style.setProperty("--font-family", settings.fontFamily);
-			else
-				document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-			if(contestNewWinLoaded){
-				if(settings.fontFamily != "")
-					contestNewWin.window.document.documentElement.style.setProperty("--font-family", settings.fontFamily);
-				else
-					contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-			}
 			return settings.fontFamily;
 		},
 		change: function(str){
 			str = $.trim(str);
 			settings.fontFamily = str;
 			saveSettings();
-			if(str != "")
-				document.documentElement.style.setProperty("--font-family", str);
-			else
-				document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-			if(contestNewWinLoaded){
-				if(str != "")
-					contestNewWin.window.document.documentElement.style.setProperty("--font-family", str);
-				else
-					contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-			}
 		}
 	},
+	statementFontFamily: {
+		initial: function(){
+			return settings.statementFontFamily;
+		},
+		change: function(str){
+			str = $.trim(str);
+			settings.statementFontFamily = str;
+			saveSettings();
+		}
+	},	
 	editorFontFamily: {
 		initial: function(){
-			if(settings.editorFontFamily != "")
-				document.documentElement.style.setProperty("--editor-font-family", settings.editorFontFamily);
-			else
-				document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
 			return settings.editorFontFamily;
 		},
 		change: function(str){
 			str = $.trim(str);
 			settings.editorFontFamily = str;
 			saveSettings();
-			if(str != "")
-				document.documentElement.style.setProperty("--editor-font-family", str);
-			else
-				document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
 		}
 	},
 	editorFontSize: {
 		initial: function(){
-			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
 			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
 		},
 		previous: function(){
 			--settings.editorFontSize;
 			initStyle(); saveSettings();
-			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
 			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
 		},
 		next: function(){
 			++settings.editorFontSize;
 			initStyle(); saveSettings();
-			document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
 			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
 		},
 	},
@@ -662,6 +704,16 @@ var settingsFunctions = {
 			settings.virtualFilter = !settings.virtualFilter;
 			saveSettings();
 			return settings.virtualFilter;
+		}
+	},
+	openProblems: {
+		initial: function(){
+			return settings.openProblems;
+		},
+		change: function(){
+			settings.openProblems = !settings.openProblems;
+			saveSettings();
+			return settings.openProblems;
 		}
 	},
 	showProblemStatus: {
@@ -700,6 +752,9 @@ var currentDefaultSettings = {
 	showProblemStatus: true,
 	editorFontFamily: "",
 	editorFontSize: 16,
+	statementFontFamily: "",
+	openProblems: false,
+	transformPort: "1327,4244,6174,10042,10043,10045,27121"
 };
 function setAsDefault(){
 	if(settings == undefined)
@@ -710,17 +765,20 @@ function setAsDefault(){
 		var F = settings.fontFamily;
 		var E = settings.editorFontFamily;
 		var S = settings.editorFontSize;
+		var P = settings.statementFontFamily;
 		if(L == undefined)	L = currentDefaultSettings.language;
 		if(D == undefined)	D = currentDefaultSettings.styleSelection;
 		if(F == undefined)	F = currentDefaultSettings.fontFamily;
 		if(E == undefined)	E = currentDefaultSettings.editorFontFamily;
 		if(S == undefined)	S = currentDefaultSettings.editorFontSize;
+		if(P == undefined)	P = currentDefaultSettings.statementFontFamily;
 		settings = JSON.parse(JSON.stringify(currentDefaultSettings));
 		settings.language = L;
 		settings.styleSelection = D;
 		settings.fontFamily = F;
 		settings.editorFontFamily = E;
 		settings.editorFontSize = S;
+		settings.statementFontFamily = P;
 	}
 	saveSettings();
 	initSettingsPage();
@@ -796,13 +854,18 @@ function initStyle(){
 	}
 	if(contestNewWinLoaded)
 		contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
+	if(problemNewWinLoaded){
+		problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/problem/dark.css" : "./css/problem/default.css");
+		submitCodeAreaController.setOption("theme", DarkMode ? "dracula" : "eclipse");
+	}
 	if(contestRankInfo == undefined || contestRankInfo[contestRankChosen].length == 0)	return;
 	if(contestCalculatingRank[contestRankChosen])
 		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
 	else generateRankGraph(contestRankInfo[contestRankChosen]);
 }
 function reloadSettings(){
-	settings = localStorage.getItem("CCH_Settings");
+	settings = JSON.parse(localStorage.getItem("CCH_Settings"));
+	initFonts();
 	initSettingsPage();
 	initLanguage();
 	initStyle();
@@ -834,7 +897,21 @@ function initSettingsPage(){
 	})
 }
 initSettingsPage();
-
+function initFonts(){
+	document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize + "px");
+	if(settings.fontFamily != "")
+		document.documentElement.style.setProperty("--font-family", settings.fontFamily);
+	else
+		document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+	if(settings.editorFontFamily != "")
+		document.documentElement.style.setProperty("--editor-font-family", settings.editorFontFamily);
+	else
+		document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+	if(settings.statementFontFamily != "")
+		document.documentElement.style.setProperty("--statement-font-family", settings.statementFontFamily);
+	else
+		document.documentElement.style.setProperty("--statement-font-family", "sans-serif");
+}
 
 $(".settingsRadioButton").click(function(){
 	var t = settingsFunctions[$(this).parent().attr("for")].change();
@@ -1060,7 +1137,7 @@ function allHtmlSpecialChars(text){
       '<': '&lt;',
       '>': '&gt;',
       '"': '&quot;',
-      '\'': '&#039;'
+      '\'': '&#039;',
     };
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }

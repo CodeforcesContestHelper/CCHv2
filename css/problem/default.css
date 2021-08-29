@@ -7,22 +7,69 @@ body{
 .sideBar{
     background: #ccc;
 }
+.sideBarItem.chosen{
+    padding-left: 5px;
+    border-left: 5px solid #ed9970;
+}
+.sideBarItem > div:last-child:hover{
+    background: #ff456b;
+    color: white;
+}
+.sideBarItem:hover{
+    background: #eee;
+}
 .ToolList{
     border-bottom: 2px solid #ccc;
 }
-
+.ToolListMinimize:hover, .ToolListMaximize:hover{
+    background: #bbb;
+}
+.progressBar{
+    background: #ddd;
+}
+.progressBar > div > div.actions:hover{
+    background: #eee;
+}
 input{
     border: 0;
     border-bottom: 1px solid #777;
     color: black;
     outline: none;
 }
-
-
-
-
-
-
+.blockManagerTitle{
+    background: #d6d6d6;
+}
+.blockManagerContent{
+    background: #ddd;
+}
+.loadingInterface{
+    background: rgba(200, 200, 200, 0.95);
+    color: black;
+}
+.submitInterface{
+    background: #ddd;
+}
+.bigButton{
+    border: 1px solid #777;
+    color: white;
+}
+select{
+    background: #ddd;
+}
+a {color: #2aa3c3;}
+a:hover {color: #4eb2cd;}
+a:onclick {color: #4eb2cd;}
+a:visited {color: #45d0f5;}
+table > tr > th, table > tr > td { border-color:black; }
+.copyCode{
+    background: #bbb;
+}
+.copyCode:hover{
+    background: #999;
+}
+.singleWatchContent{
+    background: rgba(255, 255, 255, 0.85);
+}
 
 
 
