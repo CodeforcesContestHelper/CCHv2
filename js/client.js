@@ -308,6 +308,7 @@ var singleLastTimeUpdate = new Date(0);
 var singleMemoryUsed = 0, singleLoadTypeLast;
 var singleLoadType;
 var contestUsername, contestContestId;
+var singleFirstTimeLoaded = true;
 var loadTypeReaction = [
 	"",
 	" <i class='fas fa-spin fa-sync-alt'></i>",
@@ -884,6 +885,15 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		}
 	if(contestNewWinLoaded)
 		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
+	if(settings.openProblems && $(".singleContestProgressRatingChangesDisplayer > span:first-child").attr("info") != "contestFinished"){
+		if(singleFirstTimeLoaded){
+			singleFirstTimeLoaded = false;
+			var l = [];
+			for(var i=0; i<contestJsonProblems.length; i++)
+				l.push(contestContestId + contestJsonProblems[i].index);
+			openProblemWin(l);
+		}
+	}
 }
 function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	$(".singleContestTags").html("");
@@ -972,6 +982,15 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 		}
 	if(contestNewWinLoaded)
 		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
+	if(settings.openProblems && $(".singleContestProgressRatingChangesDisplayer > span:first-child").attr("info") != "contestFinished"){
+		if(singleFirstTimeLoaded){
+			singleFirstTimeLoaded = false;
+			var l = [];
+			for(var i=0; i<contestJsonProblems.length; i++)
+				l.push(contestContestId + contestJsonProblems[i].index);
+			openProblemWin(l);
+		}
+	}
 }
 function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	$(".singleContestTags").html("");
@@ -1051,6 +1070,15 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 		}
 	if(contestNewWinLoaded)
 		contestNewWinJQ.find(".singleContestRunningType").html($(".singleContestProgressRatingChangesDisplayer > span:first-child").prop("outerHTML"));
+	if(settings.openProblems && $(".singleContestProgressRatingChangesDisplayer > span:first-child").attr("info") != "contestFinished"){
+		if(singleFirstTimeLoaded){
+			singleFirstTimeLoaded = false;
+			var l = [];
+			for(var i=0; i<contestJsonProblems.length; i++)
+				l.push(contestContestId + contestJsonProblems[i].index);
+			openProblemWin(l);
+		}
+	}
 }
 function singleContestantSyncUserInfo(un, ci, json, p){
 	var c = ratingToClass(json.rating);
@@ -1160,7 +1188,8 @@ function getOverallPredictedRank(pr, sl, un, hl, uno){
 				if(contestRunningType == "ICPC")
 					q[1] = Math.floor(sl[i].problemResults[j].bestSubmissionTimeSeconds / 60)
 						+sl[i].problemResults[j].rejectedAttemptCount*10;
-				eventList[Math.floor(sl[i].problemResults[j].bestSubmissionTimeSeconds / Step)].push([curr, q]);
+				if(Math.floor(sl[i].problemResults[j].bestSubmissionTimeSeconds / Step) < eventList.length)
+					eventList[Math.floor(sl[i].problemResults[j].bestSubmissionTimeSeconds / Step)].push([curr, q]);
 			}
 		}
 		if(contestRunningType == "CF" && hl[sl[i].party.members[0].handle]!=undefined){
@@ -1404,6 +1433,8 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 
 
 function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
+	if(settings.openProblems)
+		openProblemWin([]);
 	setTimeout(function(){
 		$(".singleContent > div > div > .loadingInterface > div > .popTip").addClass("closed").css("max-height", 0);
 		$(".singleContent > div > div > .loadingInterface > div > i").css("opacity", 0);
@@ -1578,6 +1609,8 @@ function loadSingleContestantAll(un, ci){
 
 
 function singleVirtualWaitToStart(currLastTimeUpdate, un, ci, tm){
+	if(settings.openProblems)
+		openProblemWin([]);
 	setTimeout(function(){
 		$(".singleContent > div > div > .loadingInterface > div > .popTip").addClass("closed").css("max-height", 0);
 		$(".singleContent > div > div > .loadingInterface > div > i").css("opacity", 0);
@@ -1610,6 +1643,8 @@ function singleVirtualWaitToStart(currLastTimeUpdate, un, ci, tm){
 			return;
 		}
 		q.html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
+		if(contestNewWinLoaded)
+			contestNewWinJQ.find(".singleContestRunningType").html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
 		u = setTimeout(reloadTimeCount, 500);
 	}
 	var reloadMonitor = function(){
@@ -1711,6 +1746,7 @@ function loadSingleVirtualAll(un, ci, tm){
 
 
 function loadSingleInformation(type, un, ci, tm, started){
+	singleFirstTimeLoaded = true;
 	contestUsername = un;
 	contestContestId = ci;
 	singleLastTimeUpdate = new Date();
@@ -2049,13 +2085,6 @@ $(".singleProblemlistTypeContainer > div > div").click(function(){
 })
 
 
-
-function openURL(x){
-	if(RunInNwjs)
-		nw.Shell.openExternal(x);
-	else
-		window.open(x);
-}
 var timeLoader, ifInObserve;
 $(".singleHeadBack > span").mousedown(function(e){
 	$(".singleHeadBackProgress").addClass("selected");
@@ -2145,5 +2174,89 @@ if(RunInNwjs)
 			try{contestNewWin.close(true);}
 			catch(e){}
 		}
+		if(problemNewWinOpened){
+			problemNewWinOpened = problemNewWinLoaded = false;
+			try{problemNewWin.close(true);}
+			catch(e){}
+		}
 		this.close(true);
 	})
+$(".forceLoadStandings").click(function(){
+	var success = [singleContestantSyncHacks, singleContestantSyncStandings],
+		error = [function(){}, function(){}],
+		un = contestUsername,
+		ci = contestContestId,
+		Q = 0;
+	function loadInfo(u, d, q, id, er){
+		singleLoadType = 1;
+		reloadSingleMemoryUsed();
+		bigIsComing = $.ajax({
+			url: u,
+			type: "GET",
+			timeout : settings.largeTimeLimit,
+			data: d,
+			success: function(json){
+				singleLoadType = 4;
+				reloadSingleMemoryUsed();
+				for(var i=0; i<q.length; i++)
+					json = json[q[i]];
+				success[id](un, ci, json, Q);
+			},
+			error: function(jqXHR, status, errorThrown){
+				if(status == "timeout"){
+					//Network Timeout
+					singleLoadType = 2;
+					reloadSingleMemoryUsed();
+					if(er == true){
+						success[id](un, ci, undefined, Q);
+						return;
+					}
+					error[id](un, ci);
+					return;
+				}
+				if(jqXHR.readyState != 4){
+					//Network Error
+					singleLoadType = 3;
+					reloadSingleMemoryUsed();
+					if(er == true){
+						success[id](un, ci, undefined, Q);
+						return;
+					}
+					error[id](un, ci);
+					return;
+				}
+				//Network Error
+				singleLoadType = 3;
+				reloadSingleMemoryUsed();
+				if(er == true){
+					success[id](un, ci, undefined, Q);
+					return;
+				}
+				error[id](un, ci);
+				reloadOption = true;
+			},
+			xhr: function() {
+				var xhr = new XMLHttpRequest();
+				var q = 0;
+				singleLoadType = 1; reloadSingleMemoryUsed();
+				xhr.addEventListener('progress', function (e) {
+					 singleMemoryUsed += (e.loaded - q);
+					 reloadSingleMemoryUsed();
+					 q = e.loaded;
+				});
+				return xhr;
+			}
+		});
+	}
+	Q = ++contestStandingsIndex;
+	contestStandingLoader = 0;
+	contestStangingLoadTime = new Date();
+	loadInfo(settings.codeforcesApiUrl + "/api/contest.hacks", {contestId: ci}, ["result"], 0, true);
+	setTimeout(function(){loadInfo(settings.codeforcesApiUrl + "/api/contest.standings", {contestId: ci, showUnofficial: settings.openRankPredict == 2}, ["result"], 1, false);}, 500);
+})
+$(".openProblems").click(function(){
+	var l = [];
+	for(var i=0; i<contestJsonProblems.length; i++)
+		l.push(contestContestId + contestJsonProblems[i].index);
+	openProblemWin(l);
+})

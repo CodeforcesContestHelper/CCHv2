@@ -1,6 +1,7 @@
 var contestRanks = [0, 0], contestRankLast = [0, 0], contestRankInfo = [[], []], contestCalculatingRank = [false, false], contestRankChosen = 0;
 var contestNewWinJQ, contestNewWin, contestNewWinOpened = false, contestNewWinLoaded = false;
-var problemNewWinOpened = false, problemNewWin, problemNewWinJQ;
+var problemNewWinOpened = false, problemNewWin, problemNewWinJQ, submitCodeAreaController, problemNewWinLoaded;
+var watchNewWinOpened = false, watchNewWin, watchNewWinJQ, watchNewWinLoaded;
 var lang_list = ["English", "简体中文"];
 var lang_attr = ["en", "zh_cn"];
 var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
@@ -13,8 +14,14 @@ function saveSettings(){
 	localStorage.setItem("CCH_Settings", JSON.stringify(settings));
 	if(contestNewWinLoaded)
 		contestNewWinJQ.append(`<script>reloadSettings()</script>`);
-	if(problemNewWinOpened)
+	if(problemNewWinLoaded)
 		problemNewWinJQ.append(`<script>reloadSettings()</script>`);
+}
+function openURL(x){
+	if(RunInNwjs)
+		nw.Shell.openExternal(x);
+	else
+		window.open(x);
 }
 var lang_en = {
 	general: {
@@ -73,6 +80,14 @@ var lang_en = {
 		loadLoginTypeError: "<span class='fas fa-unlink red'></span> Load login type error. Click here to retry.",
 		loginLoading: "<span class='fas fa-pulse fa-spinner'></span> Loading...",
 		loginSuccess: "<span class='fas fa-check green'></span> Login Success!",
+		sendAnswer: "Send Answer",
+		input: "Input",
+		output: "Output",
+		copy: "Copy",
+		copied: "Copied",
+		forceLoadStandings: "Force Load Standings",
+		openProblems: "Open Problems",
+		submitSuccess: "Submit Success!",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -95,6 +110,7 @@ var lang_en = {
 		errorCannotGetCode: "Cannot Get Code",
 		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> Login Failed",
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' Load Failed",
+		errorSubmitFailed: "Submit Failed"
 	},
 	tip: {
 		tipInitializing: "Initializing...",
@@ -192,6 +208,14 @@ var lang_en = {
 		accountPassword: [
 			"<span class='fas fa-key'></span> Password", ""
 		],
+		openProblems: [
+			"<span class='fas fa-tasks'></span> Open Problems",
+			`Open problems if the contest is not ended.`
+		],
+		transformPort: [
+			"<span class='fas fa-location-arrow'></span> Transform Port",
+			"Set the ports while communicating to editors. Use commas(,) to split each port."
+		]
 	}
 };
 var lang_zh = {
@@ -252,6 +276,14 @@ var lang_zh = {
 		loadLoginTypeError: "<span class='fas fa-unlink red'></span> 加载登陆状态失败。点此重试。",
 		loginLoading: "<span class='fas fa-pulse fa-spinner'></span> 加载中......",
 		loginSuccess: "<span class='fas fa-check green'></span> 登陆成功！",
+		sendAnswer: "提交答案",
+		input: "输入",
+		output: "输出",
+		copy: "复制",
+		copied: "已复制",
+		forceLoadStandings: "强制加载排行榜",
+		openProblems: "打开问题界面",
+		submitSuccess: "提交成功！",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -274,6 +306,8 @@ var lang_zh = {
 		errorCannotGetCode: "无法获取代码",
 		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> 登录失败",
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' 加载失败",
+		sendAnswer: "提交答案",
+		errorSubmitFailed: "提交失败",
 	},
 	tip: {
 		tipInitializing: "初始化中......",
@@ -371,6 +405,14 @@ var lang_zh = {
 		accountPassword: [
 			"<span class='fas fa-key'></span> 密码", ""
 		],
+		openProblems: [
+			"<span class='fas fa-tasks'></span> 打开 Problems",
+			`在比赛没有结束的时候打开 Problems 页面。`
+		],
+		transformPort: [
+			"<span class='fas fa-location-arrow'></span> 交流端口",
+			"设置和代码编辑器交流的端口，用逗号分割。"
+		]
 	}
 };
 var settingsFunctions = {
@@ -530,6 +572,15 @@ var settingsFunctions = {
 			saveSettings();
 		}
 	},
+	transformPort: {
+		initial: function(){
+			return settings.transformPort;
+		},
+		change: function(str){
+			settings.transformPort = str;
+			saveSettings();
+		}
+	},
 	predictorURL: {
 		initial: function(){
 			return settings.predictorURL;
@@ -655,6 +706,16 @@ var settingsFunctions = {
 			return settings.virtualFilter;
 		}
 	},
+	openProblems: {
+		initial: function(){
+			return settings.openProblems;
+		},
+		change: function(){
+			settings.openProblems = !settings.openProblems;
+			saveSettings();
+			return settings.openProblems;
+		}
+	},
 	showProblemStatus: {
 		initial: function(){
 			return settings.showProblemStatus;
@@ -691,7 +752,9 @@ var currentDefaultSettings = {
 	showProblemStatus: true,
 	editorFontFamily: "",
 	editorFontSize: 16,
-	statementFontFamily: ""
+	statementFontFamily: "",
+	openProblems: false,
+	transformPort: "1327,4244,6174,10042,10043,10045,27121"
 };
 function setAsDefault(){
 	if(settings == undefined)
@@ -791,6 +854,10 @@ function initStyle(){
 	}
 	if(contestNewWinLoaded)
 		contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
+	if(problemNewWinLoaded){
+		problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/problem/dark.css" : "./css/problem/default.css");
+		submitCodeAreaController.setOption("theme", DarkMode ? "dracula" : "eclipse");
+	}
 	if(contestRankInfo == undefined || contestRankInfo[contestRankChosen].length == 0)	return;
 	if(contestCalculatingRank[contestRankChosen])
 		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
@@ -831,7 +898,7 @@ function initSettingsPage(){
 }
 initSettingsPage();
 function initFonts(){
-	document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize);
+	document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize + "px");
 	if(settings.fontFamily != "")
 		document.documentElement.style.setProperty("--font-family", settings.fontFamily);
 	else
@@ -1070,7 +1137,7 @@ function allHtmlSpecialChars(text){
       '<': '&lt;',
       '>': '&gt;',
       '"': '&quot;',
-      '\'': '&#039;'
+      '\'': '&#039;',
     };
     return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }

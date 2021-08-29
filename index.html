@@ -1,4 +1,4 @@
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
 	<head lang="en">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -11,6 +11,16 @@
 		<script src="./js/highlight.min.js"></script>
 		<script src="./js/highlightjs-line-numbers.js"></script>
 		<script src="./KaTeX/katex.min.js"></script>
+		<script src="./KaTeX/auto-render.min.js"></script>
+		<script>
+			var katex_config = {
+				delimiters: [
+					{left: "$$", right: "$$", display: true},
+					{left: "$", right: "$", display: false}
+				]
+			};
+		</script>
+		<script src="./codemirror/lib/codemirror.js"></script>
 		<title>Codeforces Contest Helper</title>
 		<script>
 			var RunInNwjs = true;
@@ -121,7 +131,7 @@
 							<div class="contentPage"> <div style="text-align: center;">
 								<div class="MajorTitle" info="singleTitle"></div>
 								<div class="singleContestTypeSelector">
-									<div class="singleContestant"> <div style="width: 100%; text-align: center">
+									<div class="singleContestant"> <div style="width: 100%; text-align: center; display: flex; flex-direction: column;">
 										<i class="fas fa-desktop"></i> <br/>
 										<span class="anglePointer">
 											<i class="fas fa-angle-right"></i> <span info="singleContestantPointer"></span> <i class="fas fa-angle-left"></i>
@@ -147,7 +157,7 @@
 										<span class="DividerContent" info="singleDivider"></span>
 										<div class="DividerLine"></div>
 									</div>
-									<div class="singleVirtual"> <div style="width: 100%; text-align: center">
+									<div class="singleVirtual"> <div style="width: 100%; text-align: center; display: flex; flex-direction: column;">
 										<i class="fas fa-ghost"></i> <br/>
 										<span class="anglePointer">
 											<i class="fas fa-angle-right"></i> <span info="singleVirtualPointer"></span> <i class="fas fa-angle-left"></i>
@@ -317,7 +327,9 @@
 													</div>
 												</div><div class="blockManagerLeft singleProblemDisplayerTypeChoser">
 													<div class="singleProblemlistTempSettings">
-														<div style="width:100%;height:100%;display:grid;place-items:center">To be continued...</div>
+														<div class="forceLoadStandings"><i class='fas fas fa-list-ol'></i> <span info='forceLoadStandings'></span></div>
+														<div class="openProblems"><i class='fas fa-external-link-square-alt'></i> <span info='openProblems'></span></div>
+
 													</div>
 													<div class="singleProblemlistTypeContainer">
 														<div><div class="selectButton" for="0"><i class="fas fa-check-square"></i></div></div>
@@ -507,6 +519,25 @@
 										</div>
 									</div>
 									<div class="settingsHeader" info="settingsSingle"></div>
+									<div class="settingsUI settingsRadio" for="openProblems">
+										<div class="settingsRadioInfo">
+											<div class="settingsRadioInfoMain">Radio Name</div>
+											<div class="settingsRadioInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsRadioButton">
+											<i class="far fa-square"></i>
+											<i class="fas fa-check-square"></i>
+										</div>
+									</div>
+									<div class="settingsUI settingsInput" for="transformPort">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent"></input>
+										</div>
+									</div>
 									<div class="settingsUI settingsSelect" for="openStandings">
 										<div class="settingsSelectInfo">
 											<div class="settingsSelectInfoMain">Radio Name</div>
@@ -630,6 +661,7 @@
 		<script src="./js/submission.js"></script>
 		<script src="./js/client.js"></script>
 		<script src="./js/problem.js"></script>
+		<script src="./js/watch.js"></script>
 		<script>
 			if(!RunInNwjs){
 				if(!DarkMode)

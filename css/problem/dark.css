@@ -27,7 +27,7 @@ body{
 .progressBar{
     background: #616161;
 }
-.prevProblem:hover, .nextProblem:hover{
+.progressBar > div > div.actions:hover{
     background: #777;
 }
 input{
@@ -41,6 +41,31 @@ input{
 }
 .blockManagerContent{
     background: #474747;
+}
+.submitInterface{
+    background: #555;
+}
+.bigButton{
+    background: transparent;
+    border: 1px solid #777;
+    color: white;
+}
+select{
+    background: #555;
+}
+a {color: #55d015;}
+a:hover {color: #42c100;}
+a:onclick {color: #42c100;}
+a:visited {color: #55d015;}
+table > tr > th, table > tr > td { border-color:#fff; }
+.copyCode{
+    background: #666;
+}
+.copyCode:hover{
+    background: #777;
+}
+.singleWatchContent{
+    background: rgba(0, 0, 0, 0.85);
 }
 
 

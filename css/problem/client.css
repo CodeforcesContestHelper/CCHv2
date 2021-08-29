@@ -13,7 +13,12 @@
 :root{
 	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
 	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
+	--editor-font-size: 14;
 	--statement-font-family:  sans-serif;
+}
+html, body{
+	width: 100%;
+	height: 100%;
 }
 body{
 	margin: 0px;
@@ -30,13 +35,16 @@ body{
 	position: relative;
 }
 .HtmlContainer > div:last-child{
-	display: flex;
-	flex-direction: row;
 	flex: 1;
 	width:  100%;
 	overflow: hidden;
 }
 .sideBar{
+	z-index: 4;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 100%;
 	-webkit-app-region: no-drag;
 	transition: 0.3s;
 	width: 35px;
@@ -63,6 +71,8 @@ body{
 	cursor: pointer;
 }
 .sideBarItem > i{
+	text-align: center;
+	width: 16px;
 	margin-right: 10px;
 }
 .sideBarItem > div:last-child{
@@ -93,6 +103,7 @@ body{
 .ToolListTitle{
 	margin: 8px 12px;
 	font-size: 16px;
+	user-select: none;
 }
 .ToolListButton{
 	-webkit-app-region: no-drag;
@@ -115,22 +126,27 @@ body{
 	display: flex;
 	flex-direction: row;
 	font-size: 20px;
+	text-align: center;
 }
-.progressBarMain{
+.progressBar > div{
 	display: flex;
 	flex-direction: row;
+	text-align: center;
 }
-.prevProblem, .nextProblem{
+.progressBar > div > div.actions{
 	-webkit-app-region: no-drag;
 	transition: 0.2s;
-	margin: 0px 20px;
+	margin: 0px 10px;
 	border-radius: 5px;
 	width: 24px;
 	height: 24px;
 	cursor: pointer;
 	position: relative;
 }
-.prevProblem > i, .nextProblem > i{
+.progressBarMain > div.actions{
+	margin: 0px 20px !important;
+}
+.progressBar > div > div.actions > i{
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -148,12 +164,15 @@ body{
 .problemTitle{
 	font-size: 24px;
 	text-align: center;
+	margin-bottom: 10px;
 }
 .problemTags{
 	font-size: 16px;
 	text-align: center;
+	margin-bottom: 10px;
 }
 .blockManager{
+	font-size: 14px;
 	margin: 10px;
 	border-radius: 5px;
 	display: flex;
@@ -168,11 +187,260 @@ body{
 .blockManagerContent{
 	padding: 5px;
 }
+.loadingInterface{
+	transition: 0.2s;
+	position: absolute;
+	z-index: 99;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	display: grid;
+	place-items: center;
+	background: rgba(0, 0, 0, 0.9);
+}
+.loadingInterface > div{
+	text-align: center;
+}
+.bigButton{
+	cursor: pointer;
+	width: calc(100% - 20px);
+	margin: 10px;
+	height: 30px;
+	border-radius: 5px;
+	font-size: 16px;
+	font-family: var(--font-family);
+	transition: 0.2s;
+}
+.bigButton:focus{
+	outline: 0;
+} 
+.bigButton>i{
+	width: 16px;
+	margin-right: 12px;
+}
+.submitInterfaceTitle{
+	font-size: 18px;
+}
+.closeSubmitPage{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+select{
+	transition: 0.2s;
+	border: none;
+	width: 100%;
+	color: inherit;
+	font-family: inherit;
+}
+.CodeMirror{
+	text-align: left;
+	font-family: var(--editor-font-family) !important;
+	font-size: var(--editor-font-size) !important;
+}
+.CodeMirror-scrollbar-filler{
+	opacity: 0;
+}
+.problemTag {
+    font-size: 14px;
+    display: inline-block;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+.problemTag > i{
+	margin-right: 10px;
+}
+p{
+	margin: 10px 0px;
+}
+.innerContentPage center{
+	display: block;
+	margin: 10px;
+}
+.tex-font-size-small{
+	font-size: 12px;
+}
+ul, ol{
+	padding-inline-start: 20px;
+}
+.tex-font-style-tt{
+	border: 1px solid #777;
+	border-radius: 5px;
+	padding: 0px 3px;
+}
+.tex-font-style-it{
+	font-style: italic;
+}
+.tex-font-style-bf{
+	font-weight: bold;
+}
+.epigraph-text{
+	margin-left: 50%;
+	width: 50%;
+	overflow: hidden;
 
-
-
-
-
+}
+.tex-span{
+	font-size: 125%;
+	font-family: KaTeX_Main, "Times New Roman", serif;
+}
+.tex-formula{
+	font-size: 125%;
+	font-family: KaTeX_Main, "Times New Roman", serif;
+	display: block;
+	text-align: center;
+}
+.blockManagerContent pre{
+	width: calc(100% - 15px);
+	overflow-x: scroll;
+	font-family: var(--editor-font-family);
+	border: 1px solid #777;
+	border-radius: 5px;
+}
+.tex-tabular .tex-tabular-text-align-left{
+    text-align:left
+}
+.tex-tabular .tex-tabular-text-align-center{
+    text-align:center
+}
+.tex-tabular .tex-tabular-text-align-right{
+    text-align:right
+}
+.tex-font-size-tiny{
+    font-size:70%
+}
+.tex-font-size-script{
+    font-size:75%
+}
+.tex-font-size-footnotes{
+    font-size:85%
+}
+.tex-font-size-small{
+    font-size:85%
+}
+.tex-font-size-normal{
+    font-size:100%
+}
+.tex-font-size-large-1{
+    font-size:115%
+}
+.tex-font-size-large-2{
+    font-size:130%
+}
+.tex-font-size-large-3{
+    font-size:145%
+}
+.tex-font-size-huge-1{
+    font-size:175%
+}
+.tex-font-size-huge-2{
+    font-size:200%
+}
+.tex-font-style-tt{
+    font-size:110%;
+}
+.tex-font-style-bf{
+    font-weight:700
+}
+.tex-font-style-up{
+}
+.tex-font-style-it{
+    font-style:italic
+}
+.tex-font-style-sl{
+    font-style:italic
+}
+.tex-font-style-sc{
+    text-transform:uppercase
+}
+.tex-font-style-striked{
+    text-decoration:line-through
+}
+.tex-font-style-underline{
+    text-decoration:underline
+}
+.tex-graphics{
+    display:block
+}
+.spoiler > span{
+	width: 20px;
+	text-align: center;
+	margin-right: 5px;
+}
+.spoiler{
+	border-left: 5px solid #777;
+	padding-left: 5px;
+	overflow: hidden;
+}
+.sampleBlock{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+.sampleBlock > div{
+	flex-grow: 1;
+	overflow-x: hidden;
+	margin: 5px;
+	display: flex;
+	width: calc(100% - 10px);
+	height: calc(100% - 10px);
+	flex-direction: column;
+}
+.codeDisplayer{
+	tab-size: 4;
+	border: 1px solid #777;
+	border-radius: 5px;
+	padding: 5px;
+	width: calc(100% - 12px);
+	height: 100%;
+	overflow-x: scroll;
+	font-family: var(--editor-font-family);
+	font-size: var(--editor-font-size);
+	white-space: pre-line;
+}
+@media only screen and (max-width: 520px){
+	.sampleBlock{
+		flex-direction: column !important;
+	}
+}
+.copyCode{
+	transition: 0.2s;
+	user-select: none;
+	cursor: pointer;
+	border-radius: 5px;
+	padding: 2px 5px;
+	font-size: 13px;
+	display: inline-block;
+}
+.watchDisplayer{
+	z-index: 98;
+	width: 320px !important;
+	position: absolute;
+	left: calc(50% - 160px + 17.5px);
+	top: 0px;
+	text-align: center;
+}
+.singleWatchContent{
+	transition: 0.2s;
+	padding: 0px 10px;
+	margin: 10px 0px;
+	width: 300px;
+	height: 60px;
+	border-radius: 5px;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+.singleWatchTitle{
+	font-size: 16px;
+	text-align: center;
+}
+.katex-mathml, .vlist-s{
+	user-select: none;
+}
 
 
 

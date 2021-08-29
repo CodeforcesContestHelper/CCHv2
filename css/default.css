@@ -157,6 +157,7 @@ body{
     color: black;
 }
 .bigButton{
+    position: relative;
     border: 1px solid #777;
     color: white;
 }

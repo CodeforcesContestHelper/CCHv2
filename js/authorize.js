@@ -4,17 +4,19 @@ function loadLoginType(){
 	if(loginTypeLoader != null)
 		loginTypeLoader.abort();
 	loginTypeLoader = $.ajax({
-		url: settings.mainURL,
+		url: settings.mainURL + '?locale=en',
 		success: function(data){
 			var q = $(data).find(".lang-chooser > div:last-child");
 			console.log(q.children("a"));
 			if(q.children("a").eq(1).html() == "Register"){
 				currentLoginHandle = "";
+				if(problemNewWinLoaded)	initProblemNewWin();
 				$(".settingsLoginType").html(`<span info='notLoggedIn'>${languageOption.general.notLoggedIn}</span>`);
 			}
 			else{
 				var hdl = q.children("a").eq(0).html();
 				currentLoginHandle = hdl;
+				if(problemNewWinLoaded)	initProblemNewWin();
 				$(".settingsLoginType").html(`<span info='currentUser' argv=["${hdl}"]>${languageOption.general.currentUser.format([hdl])}</span>`);
 			}
 		},
@@ -44,9 +46,10 @@ function submitLogout(cb){
 				cb(); return;
 			}
 			$.ajax({
-				url: settings.mainURL + q.children("a").eq(1).attr("href"),
+				url: settings.mainURL + q.children("a").eq(1).attr("href") + '?locale=en',
 				success: function(){
 					currentLoginHandle = "";
+					if(problemNewWinLoaded)	initProblemNewWin();
 					$(".settingsLoginType").html(`<span info='notLoggedIn'>${languageOption.general.notLoggedIn}</span>`);
 					cb();
 				},
@@ -72,7 +75,7 @@ function submitLogin(){
 			var csrf = queryCsrf.exec(data)[1];
 			console.log(csrf);
 			$.ajax({
-				url: settings.mainURL + '/enter?back=%2F',
+				url: settings.mainURL + '/enter?back=%2F&locale=en',
 				type: "POST",
 				data: {
 					csrf_token: csrf,
@@ -102,6 +105,7 @@ function submitLogin(){
 					}, 2000);
 					var hdl = q.children("a").eq(0).html();
 					currentLoginHandle = hdl;
+					if(problemNewWinLoaded)	initProblemNewWin();
 					$(".settingsLoginType").html(`<span info='currentUser' argv=["${hdl}"]>${languageOption.general.currentUser.format([hdl])}</span>`);
 				},
 				error: function(){
@@ -120,6 +124,54 @@ function submitLogin(){
 		}
 	})});
 }
-
+function submitSolution(ci, idx, code, lang, S, E){
+	console.log(ci, idx, code, lang, S, E);
+	$.ajax({
+		url: settings.mainURL,
+		success: function(data){
+			console.log(data);
+			var csrf = queryCsrf.exec(data)[1];
+			console.log(csrf);
+			$.ajax({
+				url: settings.mainURL + '/contest/' + ci + '/submit',
+				type: "POST",
+				data: {
+					csrf_token: csrf,
+					action: "submitSolutionFormSubmitted",
+					ftaa: getFtaa(),
+					bfaa: "f1b3f18c715565b589b7823cda7448ce",
+					"submittedProblemIndex": idx,
+					"programTypeId":         lang,
+					"contestId":             ci,
+					"source":                code,
+					"sourceFile":            "",
+					"tabSize":               "4",
+					"_tta":                  "493",
+					"sourceCodeConfirmed":   "true",
+				},
+				success: function(d){
+					var q = $(d).find(".lang-chooser > div:last-child");
+					console.log(q.children("a"));
+					if(q.children("a").eq(1).html() == "Register"){
+						currentLoginHandle = "";
+						E('errorLoginFailed', languageOption.error.errorLoginFailed);
+						return;
+					}
+					if(d.indexOf("submitted successfully") == -1){
+						E('errorSubmitFailed', languageOption.error.errorSubmitFailed);
+						return;
+					}
+					S($(d).find(`[submissionid]`).eq(0).attr("submissionid"));
+				},
+				error: function(){
+					E('errorLoginFailed', languageOption.error.errorLoginFailed);
+				}
+			})
+		},
+		error: function(){
+			E('errorCsrfLoadFailed', languageOption.error.errorCsrfLoadFailed);
+		}
+	});
+}
 if(RunInNwjs)
 	loadLoginType();
