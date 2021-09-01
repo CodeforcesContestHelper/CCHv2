@@ -8,16 +8,17 @@ function loadLoginType(){
 		success: function(data){
 			var q = $(data).find(".lang-chooser > div:last-child");
 			console.log(q.children("a"));
-			if(q.children("a").eq(1).html() == "Register"){
-				currentLoginHandle = "";
-				if(problemNewWinLoaded)	initProblemNewWin();
-				$(".settingsLoginType").html(`<span info='notLoggedIn'>${languageOption.general.notLoggedIn}</span>`);
-			}
-			else{
+			console.log(q.children("a").eq(0).html(), q.children("a").eq(1).html())
+			if(q.children("a").eq(1).html() == "Logout"){
 				var hdl = q.children("a").eq(0).html();
 				currentLoginHandle = hdl;
 				if(problemNewWinLoaded)	initProblemNewWin();
 				$(".settingsLoginType").html(`<span info='currentUser' argv=["${hdl}"]>${languageOption.general.currentUser.format([hdl])}</span>`);
+			}
+			else{
+				currentLoginHandle = "";
+				if(problemNewWinLoaded)	initProblemNewWin();
+				$(".settingsLoginType").html(`<span info='notLoggedIn' style="cursor: pointer" onclick="loadLoginType()">${languageOption.general.notLoggedIn}</span>`);
 			}
 		},
 		error: function(){

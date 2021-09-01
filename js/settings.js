@@ -8,6 +8,8 @@ var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
 var openRankPredictorSelection = ["Disabled", "RatedOnly", "Enabled"];
 var styleSelectionList = ["System", "Light", "Dark"];
 var currentLoginHandle = "";
+var contestRatingChangesHook = null;
+var contestEnterInPage = false;
 var settings = localStorage.getItem("CCH_Settings");
 function saveSettings(){
 	initFonts();
@@ -29,7 +31,7 @@ var lang_en = {
 		singleNav: "Single",
 		multiNav: "Multi",
 		contestNav: "Contest",
-		questionNav: "Question",
+		questionNav: "Problem",
 		infoNav: "Profile",
 		settingNav: "Settings",
 		singleTitle: "<i class='fas fa-calendar'></i> Select Contest Type",
@@ -88,6 +90,7 @@ var lang_en = {
 		forceLoadStandings: "Force Load Standings",
 		openProblems: "Open Problems",
 		submitSuccess: "Submit Success!",
+		unlimited: "Unlimited",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -284,6 +287,7 @@ var lang_zh = {
 		forceLoadStandings: "强制加载排行榜",
 		openProblems: "打开问题界面",
 		submitSuccess: "提交成功！",
+		unlimited: "无限制"
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -455,19 +459,29 @@ var settingsFunctions = {
 	},
 	timeLimit: {
 		initial: function(){
-			return [getTimeLength3(settings.smallTimeLimit) + ' - ' + getTimeLength3(settings.largeTimeLimit), settings.smallTimeLimit != 10000, settings.smallTimeLimit != 30000];
+			return [settings.smallTimeLimit == 1145141919 ? localize("unlimited") : getTimeLength3(settings.smallTimeLimit) + ' - ' + getTimeLength3(settings.largeTimeLimit), settings.smallTimeLimit != 10000, settings.smallTimeLimit != 1145141919];
 		},
 		next: function(){
-			settings.smallTimeLimit += 10000;
-			settings.largeTimeLimit += 30000;
+			if(settings.smallTimeLimit == 30000)
+				settings.smallTimeLimit = settings.largeTimeLimit = 1145141919;
+			else{
+				settings.smallTimeLimit += 10000;
+				settings.largeTimeLimit += 30000;
+			}
 			saveSettings();
-			return [getTimeLength3(settings.smallTimeLimit) + ' - ' + getTimeLength3(settings.largeTimeLimit), settings.smallTimeLimit != 10000, settings.smallTimeLimit != 30000];
+			return [settings.smallTimeLimit == 1145141919 ? localize("unlimited") : getTimeLength3(settings.smallTimeLimit) + ' - ' + getTimeLength3(settings.largeTimeLimit), settings.smallTimeLimit != 10000, settings.smallTimeLimit != 1145141919];
 		},
 		previous: function(){
-			settings.smallTimeLimit -= 10000;
-			settings.largeTimeLimit -= 30000;
+			if(settings.smallTimeLimit == 1145141919){
+				settings.smallTimeLimit = 30000;
+				settings.largeTimeLimit = 90000;
+			}
+			else{
+				settings.smallTimeLimit -= 10000;
+				settings.largeTimeLimit -= 30000;
+			}
 			saveSettings();
-			return [getTimeLength3(settings.smallTimeLimit) + ' - ' + getTimeLength3(settings.largeTimeLimit), settings.smallTimeLimit != 10000, settings.smallTimeLimit != 30000];
+			return [settings.smallTimeLimit == 1145141919 ? localize("unlimited") : getTimeLength3(settings.smallTimeLimit) + ' - ' + getTimeLength3(settings.largeTimeLimit), settings.smallTimeLimit != 10000, settings.smallTimeLimit != 1145141919];
 		}
 	},
 	reloadTime: {
@@ -734,8 +748,8 @@ String.prototype.format = function() {
 };
 var currentDefaultSettings = {
 	language: "en",
-	smallTimeLimit: 10000,
-	largeTimeLimit: 30000,
+	smallTimeLimit: 1145141919,
+	largeTimeLimit: 1145141919,
 	reloadTime: 30000,
 	smallReloadTime: 5000,
 	standingsLoadingGap: 120000,
@@ -748,7 +762,7 @@ var currentDefaultSettings = {
 	fontFamily: "",
 	styleSelection: 0,
 	virtualFilter: true,
-	codeforcesApiUrl: "https://codeforces.com",
+	codeforcesApiUrl: "https://codeforces.com/api",
 	showProblemStatus: true,
 	editorFontFamily: "",
 	editorFontSize: 16,

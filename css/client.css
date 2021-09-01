@@ -878,7 +878,7 @@ pre{
 }
 .settingsRadioButton > i:last-child{
 	position: absolute;
-	top: 0px;
+	top: 5px;
 	left: 0px;
 	transition: 0.2s;
 	opacity: 0;
@@ -913,7 +913,7 @@ pre{
 	position: absolute;
 	right: 0px;
 	top: 0px;
-	height: 30px;
+	height: 20px;
 	width: 180px;
 	border-radius: 0px;
 	padding: 5px 0px;
@@ -922,7 +922,7 @@ pre{
 	text-align: center;
 }
 .settingsInputPartContent:focus{
-	width: 100%;
+	width: calc(100% + 5px);
 }
 .settingsSetAsDefault{
 	cursor: pointer;
