@@ -387,6 +387,7 @@ function sampleWrapper(x, y){
 }
 function initProblemNewWin(){
 	problemNewWinJQ.find(".ToolListTitle").html("Codeforces Problems");
+	problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/problem/dark.css" : "./css/problem/default.css");
 	if(currentLoginHandle == ""){
 		problemNewWinJQ.find(".submitCode").css("display", "none");
 		if(problemNewWinJQ.find(".submitWindow").css("opacity") != 0){
@@ -402,6 +403,7 @@ function initProblemNewWin(){
 		reloadProblem(problemCurrentPageList[problemFocusOn][0]);
 	});
 	problemNewWinJQ.find(".submitCode").unbind("click").click(function(){
+		submitCodeAreaController.setValue("");
 		problemNewWinJQ.find(".submitWindow").css("display", "grid");
 		problemNewWinJQ.find(".submitWindow").css("opacity", "1");
 		submitCodeAreaController.refresh();

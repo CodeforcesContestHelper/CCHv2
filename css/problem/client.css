@@ -267,6 +267,7 @@ ul, ol{
 	padding-inline-start: 20px;
 }
 .tex-font-style-tt{
+	font-family: var(--editor-font-family);
 	border: 1px solid #777;
 	border-radius: 5px;
 	padding: 0px 3px;
@@ -364,6 +365,9 @@ ul, ol{
 }
 .tex-graphics{
     display:block
+}
+.verbatim{
+	padding: 5px;
 }
 .spoiler > span{
 	width: 20px;
