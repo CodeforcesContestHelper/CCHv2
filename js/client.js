@@ -1494,8 +1494,10 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 					singleLoadType = 4;
 					setTimeout(reloadStartTime, settings.reloadTime);
 					reloadSingleMemoryUsed();
-					var q = $(json).find(".countdown > span").attr("title");
+					var q = $(json).find(".countdown").html();
 					console.log(q);
+					if(q == undefined || q == "")
+						q = $(json).find(".countdown > span").html();
 					q = q.split(":");
 					var cd = (new Date()).getTime() + (Number(q[0]) * 60 * 60 + Number(q[1]) * 60 + Number(q[2])) * 1000;
 					var hoam = 1000 * 60;
