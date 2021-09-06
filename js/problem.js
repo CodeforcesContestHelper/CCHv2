@@ -325,7 +325,6 @@ function killProblemListItem(x){
 	x = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 	x = Number(x);
 	problemNewWinJQ.find(".innerContent > div").eq(x).remove();
-	console.log(x);
 	if(problemCurrentPageList[x][1] != null)
 		problemCurrentPageList[x][1].abort();
 	if(problemCurrentPageList.length - 1 == x)
@@ -511,8 +510,8 @@ function openProblemWin(xx){
 	    "height": 420, 
 	    "position": "center",
 	    "resizable": true,
-	    "min_width": 500,
-	    "min_height": 420,
+	    "min_width": 450,
+	    "min_height": 290,
 	    "fullscreen":false,
 	    "show_in_taskbar":true,
 	    "show":true, 
@@ -543,7 +542,7 @@ function openProblemWin(xx){
 				gutters: ["CodeMirror-linenumbers"],
 				matchBrackets: true
 			});
-			submitCodeAreaController.setSize("400px", "190px");
+			submitCodeAreaController.setSize("100%", "100%");
 			flushProblemNewWin();
 		})
 		problemNewWin.on("closed", function(){

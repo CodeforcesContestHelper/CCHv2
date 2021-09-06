@@ -60,7 +60,13 @@ function openSubmission(c, u){
 		$(".submissionUsername").html();
 		$(".submissionProblem").html(ctL.children().eq(2).find("a").text());
 		$(".submissionLanguage").html(ctL.children().eq(3).text());
-		$(".submissionVerdict").html(ctL.children().eq(4).text());
+		var pwp = ctL.children().eq(4);
+		var vdl = "";
+		pwp.children().each(function(){
+			if($(this).attr("class") != undefined && $(this).attr("class").indexOf("verdict") != -1)
+				vdl += $(this).text();
+		})
+		$(".submissionVerdict").html(vdl);
 		$(".submissionVerdict").attr("class", "submissionVerdict");
 		if(ctL.children().eq(4).children().eq(0).hasClass("verdict-accepted"))
 			$(".submissionVerdict").addClass("green");
