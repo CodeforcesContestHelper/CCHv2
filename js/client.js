@@ -799,10 +799,12 @@ function getContestType(x){
 		if(x.indexOf("Div. " + i) >= 0)	return "Div. " + i;
 	return undefined;
 }
-function singleContestantTimeCountdown(){
-	setTimeout(singleContestantTimeCountdown, 500);
+var singleContestantTimeCountdownTimeCnt = 0;
+function singleContestantTimeCountdown(tc){
+	if(singleContestantTimeCountdownTimeCnt != tc)	return;
 	var d = contestEndTime.getTime() - (new Date()).getTime();
 	if(d < 0)	return;
+	setTimeout(function(){singleContestantTimeCountdown(tc)}, 500);
 	d = getTimeLength2(d);
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
@@ -845,7 +847,7 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		flushsingleProblemlistDisplayGrid([], json.problems);
 	}
 	flushRankDisplayer();
-	if(json.contest.phase == "CODING"){singleContestantTimeCountdown();}
+	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
 	else if(json.contest.phase == "PENDING_SYSTEM_TEST")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestPendingSystemTest")
@@ -909,7 +911,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	contestRunningStatus = json.contest.phase;
 	contestRunningType = json.contest.type;
 	contestJsonProblems = json.problems;
-	if(json.contest.phase == "CODING"){singleContestantTimeCountdown();}
+	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
 	else if(json.contest.phase == "PENDING_SYSTEM_TEST")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestPendingSystemTest")
@@ -1008,7 +1010,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	contestJsonProblems = json.problems;
 	contestRealStartTime = new Date(json.contest.startTimeSeconds * 1000);
 	contestRealEndTime = new Date((json.contest.startTimeSeconds + json.contest.durationSeconds) * 1000);
-	if(contestRunningStatus == "CODING"){singleContestantTimeCountdown();}
+	if(contestRunningStatus == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
 	else if(contestRunningStatus == "FINISHED")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestFinished")
@@ -1494,8 +1496,11 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 					singleLoadType = 4;
 					setTimeout(reloadStartTime, settings.reloadTime);
 					reloadSingleMemoryUsed();
-					var q = $(json).find(".countdown").html();
-					console.log(q);
+					var q = $(json).find(".countdown").attr("title");
+					if(q == undefined || q == "")
+						q = $(json).find(".countdown > span").attr("title");
+					if(q == undefined || q == "")
+						q = $(json).find(".countdown").html();
 					if(q == undefined || q == "")
 						q = $(json).find(".countdown > span").html();
 					q = q.split(":");
@@ -1666,6 +1671,7 @@ function loadSingleContestantAll(un, ci){
 
 
 function singleVirtualWaitToStart(currLastTimeUpdate, un, ci, tm){
+	var currLastTimeUpdate = singleLastTimeUpdate;
 	if(settings.openProblems)
 		openProblemWin([]);
 	setTimeout(function(){
@@ -1695,6 +1701,7 @@ function singleVirtualWaitToStart(currLastTimeUpdate, un, ci, tm){
 	var startTime = tm;
 	var u;
 	var reloadTimeCount = function(){
+		if(currLastTimeUpdate != singleLastTimeUpdate)	return;
 		if(startTime <= (new Date()).getTime()){
 			singleVirtualMainTrack(currLastTimeUpdate, un, ci, tm);
 			return;
@@ -1825,6 +1832,7 @@ function loadSingleInformation(type, un, ci, tm, started){
 	contestRunningStatus = "", contestRunningType = "";
 	contestSubmissionList = [];
 	inContest = false;
+	++ singleContestantTimeCountdownTimeCnt;
 	contestEnterInPage = true;
 	$(".contentRowInfo").eq(0).css("left", "-620px");
 	$(".singleTypeChosen").removeClass("singleTypeChosen");
@@ -2173,6 +2181,7 @@ $(".singleHeadBack > span").mousedown(function(e){
 				contestNewWin.close();
 				$(".singleOpenSmallWindow").html(`<span info="singleSmallWindow">${languageOption.general.singleSmallWindow}</span> <i class="fas fa-angle-right"></i>`);
 			}
+			++ singleContestantTimeCountdownTimeCnt;
 			setTimeout(function(){
 				if(!ifInObserve)	window.onmousemove = function(){}
 			}, 300);
