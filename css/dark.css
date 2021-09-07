@@ -82,13 +82,15 @@ body{
 .singleHeadBackProgress.selected{
     border: 0 solid rgba(255, 255, 255, 0.7);
 }
-.settingsRadioInfoAddition, .settingsSelectInfoAddition, .settingsInputInfoAddition, .pageSmallTip{
+.settingsRadioInfoAddition, .settingsSelectInfoAddition, .settingsSelectBigInfoAddition, .settingsInputInfoAddition, .pageSmallTip{
     color: #999;
 }
-.settingsSelectPart > div:first-child:hover, .settingsSelectPart > div:last-child:hover{
+.settingsSelectPart > div:first-child:hover, .settingsSelectPart > div:last-child:hover,
+.settingsSelectBigPart > div:first-child:hover, .settingsSelectBigPart > div:last-child:hover{
     background: #555;
 }
-.settingsSelectPartLeft.closed, .settingsSelectPartRight.closed{
+.settingsSelectPartLeft.closed, .settingsSelectPartRight.closed,
+.settingsSelectBigPartLeft.closed, .settingsSelectBigPartRight.closed{
     color: #666;
     cursor: default;
 }
@@ -109,7 +111,9 @@ body{
     color: white;
     
 }
-
+.settingsSelectBigPartContent{
+    background: #444;
+}
 
 
 

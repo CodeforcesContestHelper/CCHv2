@@ -1,33 +1,34 @@
 {
-  "main": "index.html",
-  "name": "CodeForces Contest Helper",
-  "description": "Codeforces Contest Helper",
-  "version": "1.0.1",
-  "chromium-args": "--disable-web-security --user-data-dir",
-  "keywords": [
-    "Codeforces",
-    "node-webkit"
-  ],
-  "window": {
-    "title": "Codeforces Contest Helper",
-    "icon": "favicon.png",
-    "toolbar": true,
-    "width": 700,
-    "height": 518,
-    "position": "center",
-    "as_desktop": false,
-    "resizable": false,
-    "always-on-top": false,
-    "fullscreen": false,
-    "show_in_taskbar": true,
-    "show": false,
-    "kiosk": false,
-    "frame": false,
-    "transparent": true
-  },
-  "webkit": {
-    "plugin": true,
-    "java": true,
-    "page-cache": false
-  }
+    "version": "2.0",
+    "keywords": [
+        "Codeforces",
+        "node-webkit"
+    ],
+    "name": "CodeForces Contest Helper",
+    "description": "Codeforces Contest Helper",
+    "window": {
+        "fullscreen": false,
+        "title": "Codeforces Contest Helper",
+        "resizable": false,
+        "show_in_taskbar": true,
+        "width": 700,
+        "kiosk": false,
+        "height": 518,
+        "toolbar": true,
+        "as_desktop": false,
+        "position": "center",
+        "icon": "favicon.png",
+        "always_on_top": false,
+        "frame": false,
+        "show": false,
+        "transparent": true
+    },
+    "main": "index.html",
+    "chromium-args": "--disable-web-security --user-data-dir",
+    "double_tap_to_zoom_enabled": "false",
+    "webkit": {
+        "page-cache": false,
+        "plugin": true,
+        "java": true
+    }
 }

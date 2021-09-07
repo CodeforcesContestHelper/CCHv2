@@ -15,6 +15,7 @@
 	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
 	--editor-font-size: 14;
 	--statement-font-family:  sans-serif;
+	--statement-font-size: 16;
 }
 html, body{
 	width: 100%;
@@ -172,7 +173,7 @@ body{
 	margin-bottom: 10px;
 }
 .blockManager{
-	font-size: 14px;
+	font-size: var(--statement-font-size);
 	margin: 10px;
 	border-radius: 5px;
 	display: flex;
@@ -181,8 +182,8 @@ body{
 }
 .blockManagerTitle{
 	padding: 5px;
-	font-size: 18px;
-	height: 20px;
+	font-size: calc(var(--statement-font-size) * 1.2);
+	height: calc(var(--statement-font-size) + 10);
 }
 .blockManagerContent{
 	padding: 5px;
@@ -259,9 +260,6 @@ p{
 .innerContentPage center{
 	display: block;
 	margin: 10px;
-}
-.tex-font-size-small{
-	font-size: 12px;
 }
 ul, ol{
 	padding-inline-start: 20px;
@@ -421,9 +419,9 @@ ul, ol{
 }
 .watchDisplayer{
 	z-index: 98;
-	width: 320px !important;
+	width: 370px !important;
 	position: absolute;
-	left: calc(50% - 160px + 17.5px);
+	left: calc(50% - 185px + 17.5px);
 	top: 0px;
 	text-align: center;
 }
@@ -431,8 +429,8 @@ ul, ol{
 	transition: 0.2s;
 	padding: 0px 10px;
 	margin: 10px 0px;
-	width: 300px;
-	height: 60px;
+	width: 350px;
+	height: 50px;
 	border-radius: 5px;
 	position: relative;
 	display: flex;

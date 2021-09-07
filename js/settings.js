@@ -11,9 +11,15 @@ var currentLoginHandle = "";
 var contestRatingChangesHook = null;
 var contestEnterInPage = false;
 var settings = localStorage.getItem("CCH_Settings");
+var submissionLangs = localStorage.getItem("CCH_Languages");
+if(submissionLangs == undefined)
+	submissionLangs = JSON.stringify(Langs);
+localStorage.setItem("CCH_Languages", JSON.stringify(submissionLangs));
+submissionLangs = JSON.parse(submissionLangs);
 function saveSettings(){
 	initFonts();
 	localStorage.setItem("CCH_Settings", JSON.stringify(settings));
+	localStorage.setItem("CCH_Languages", JSON.stringify(submissionLangs));
 	if(contestNewWinLoaded)
 		contestNewWinJQ.append(`<script>reloadSettings()</script>`);
 	if(problemNewWinLoaded)
@@ -54,6 +60,7 @@ var lang_en = {
 		settingsSingle: "<span class='fas fa-user'></span> Single Mode",
 		settingsPreference: "<span class='fas fa-palette'></span> Preference",
 		settingsAccount: "<span class='fas fa-user-circle'></span> Account",
+		settingsProblemPage: "<span class='fas fa-book'></span> Problem Page",
 		Ascending: "Ascending",
 		Descending: "Descending",
 		Disabled: "Disabled",
@@ -75,6 +82,8 @@ var lang_en = {
 		memory: "Memory",
 		close: "Close",
 		back: "Back",
+		reloadLanguages: "<span class='fas fa-sync-alt'></span> Reload Language",
+		reloadLanguagesSuccess: "<span class='fas fa-check green'></span> Reload Success!",
 		currentUser: "<span class='fas fa-check green'></span> Current user: {0}",
 		notLoggedIn: "<span class='fas fa-times red'></span> Not logged in",
 		settingsLoginButton: "<i class='fas fa-sign-in-alt'></i> Click here to log in",
@@ -112,6 +121,7 @@ var lang_en = {
 		errorVirtualInfoNotFound: "Virtual round not found",
 		errorCannotGetCode: "Cannot Get Code",
 		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> Login Failed",
+		errorLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> Load Failed",
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' Load Failed",
 		errorSubmitFailed: "Submit Failed"
 	},
@@ -218,7 +228,15 @@ var lang_en = {
 		transformPort: [
 			"<span class='fas fa-location-arrow'></span> Transform Port",
 			"Set the ports while communicating to editors. Use commas(,) to split each port."
-		]
+		],
+		statementFontSize: [
+			"<span class='fas fa-text-width'></span> Statement Font Size",
+			"Set font size for statements."
+		],
+		statementDefaultLanguage: [
+			"<span class='fas fa-cloud-upload-alt'></span> Submit Default Language",
+			"Set default language while submitting."
+		],
 	}
 };
 var lang_zh = {
@@ -250,6 +268,7 @@ var lang_zh = {
 		settingsSingle: "<span class='fas fa-user'></span> 个人模式",
 		settingsPreference: "<span class='fas fa-palette'></span> 个性化",
 		settingsAccount: "<span class='fas fa-user-circle'></span> 账号",
+		settingsProblemPage: "<span class='fas fa-book'></span> 题目界面",
 		Ascending: "递增",
 		Descending: "递减",
 		Disabled: "关闭",
@@ -272,6 +291,8 @@ var lang_zh = {
 		memory: "内存",
 		close: "关闭",
 		back: "返回",
+		reloadLanguages: "<span class='fas fa-sync-alt'></span> 重载代码语言",
+		reloadLanguagesSuccess: "<span class='fas fa-check green'></span> 重载成功！",
 		currentUser: "<span class='fas fa-check green'></span> 当前用户: {0}",
 		notLoggedIn: "<span class='fas fa-times red'></span> 未登录",
 		settingsLoginButton: "<i class='fas fa-sign-in-alt'></i> 点此以登录",
@@ -309,6 +330,7 @@ var lang_zh = {
 		errorVirtualInfoNotFound: "未找到虚拟赛信息",
 		errorCannotGetCode: "无法获取代码",
 		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> 登录失败",
+		errorLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 加载失败",
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' 加载失败",
 		sendAnswer: "提交答案",
 		errorSubmitFailed: "提交失败",
@@ -416,7 +438,15 @@ var lang_zh = {
 		transformPort: [
 			"<span class='fas fa-location-arrow'></span> 交流端口",
 			"设置和代码编辑器交流的端口，用逗号分割。"
-		]
+		],
+		statementFontSize: [
+			"<span class='fas fa-text-width'></span> 题面字体大小",
+			"为题面设置字体大小。"
+		],
+		statementDefaultLanguage: [
+			"<span class='fas fa-cloud-upload-alt'></span> 默认提交语言",
+			"设置提交时的默认语言。"
+		],
 	}
 };
 var settingsFunctions = {
@@ -691,6 +721,21 @@ var settingsFunctions = {
 			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
 		},
 	},
+	statementFontSize: {
+		initial: function(){
+			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 24];
+		},
+		previous: function(){
+			--settings.statementFontSize;
+			initStyle(); saveSettings();
+			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 24];
+		},
+		next: function(){
+			++settings.statementFontSize;
+			initStyle(); saveSettings();
+			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 24];
+		},
+	},
 	styleSelection: {
 		initial: function(){
 			return [localize(styleSelectionList[settings.styleSelection]), true, true];
@@ -709,6 +754,16 @@ var settingsFunctions = {
 			initStyle(); saveSettings();
 			return [localize(styleSelectionList[settings.styleSelection]), true, true];
 		},
+	},
+	statementDefaultLanguage: {
+		initial: function(){
+			return [submissionLangs, settings.statementDefaultLanguage];
+		},
+		change: function(x){
+			settings.statementDefaultLanguage = x;
+			saveSettings();
+			return [submissionLangs, settings.statementDefaultLanguage];
+		}
 	},
 	virtualFilter: {
 		initial: function(){
@@ -768,7 +823,9 @@ var currentDefaultSettings = {
 	editorFontSize: 16,
 	statementFontFamily: "",
 	openProblems: false,
-	transformPort: "1327,4244,6174,10042,10043,10045,27121"
+	transformPort: "1327,4244,6174,10042,10043,10045,27121",
+	statementFontSize: 16,
+	statementDefaultLanguage: 50
 };
 function setAsDefault(){
 	if(settings == undefined)
@@ -780,12 +837,14 @@ function setAsDefault(){
 		var E = settings.editorFontFamily;
 		var S = settings.editorFontSize;
 		var P = settings.statementFontFamily;
+		var s = settings.statementDefaultLanguage;
 		if(L == undefined)	L = currentDefaultSettings.language;
 		if(D == undefined)	D = currentDefaultSettings.styleSelection;
 		if(F == undefined)	F = currentDefaultSettings.fontFamily;
 		if(E == undefined)	E = currentDefaultSettings.editorFontFamily;
 		if(S == undefined)	S = currentDefaultSettings.editorFontSize;
 		if(P == undefined)	P = currentDefaultSettings.statementFontFamily;
+		if(s == undefined)	s = currentDefaultSettings.statementDefaultLanguage
 		settings = JSON.parse(JSON.stringify(currentDefaultSettings));
 		settings.language = L;
 		settings.styleSelection = D;
@@ -793,6 +852,7 @@ function setAsDefault(){
 		settings.editorFontFamily = E;
 		settings.editorFontSize = S;
 		settings.statementFontFamily = P;
+		settings.statementDefaultLanguage = s;
 	}
 	saveSettings();
 	initSettingsPage();
@@ -844,8 +904,7 @@ function initLanguage(){
 }
 initLanguage();
 if(settings == undefined)	settings = {};
-else
-	settings = JSON.parse(settings);
+else settings = JSON.parse(settings);
 if(Object.keys(settings).length != Object.keys(currentDefaultSettings).length)
 	setAsDefault();
 saveSettings();
@@ -905,6 +964,14 @@ function initSettingsPage(){
 			$(this).find(".settingsSelectPartRight").removeClass("closed");
 		$(this).find(".settingsSelectPartContent").html(t[0]);
 	})
+	$(".settingsSelectBig").each(function(){
+		var t = settingsFunctions[$(this).attr("for")].initial();
+		$(this).find(".settingsSelectBigPartContent").html("");
+		for(var name in t[0])
+			if(t[0].hasOwnProperty(name))
+				$(this).find(".settingsSelectBigPartContent").append(`<option value=${name}>${t[0][name]}</option>`)
+		$(this).find(".settingsSelectBigPartContent").val(t[1]);
+	})
 	$(".settingsInput").each(function(){
 		var t = settingsFunctions[$(this).attr("for")].initial();
 		$(this).find(".settingsInputPartContent").val(t);
@@ -913,6 +980,7 @@ function initSettingsPage(){
 initSettingsPage();
 function initFonts(){
 	document.documentElement.style.setProperty("--editor-font-size", settings.editorFontSize + "px");
+	document.documentElement.style.setProperty("--statement-font-size", settings.statementFontSize + "px");
 	if(settings.fontFamily != "")
 		document.documentElement.style.setProperty("--font-family", settings.fontFamily);
 	else
@@ -944,6 +1012,7 @@ $(".settingsSelectPartLeft").click(function(){
 	else
 		$(this).parent().find(".settingsSelectPartRight").removeClass("closed");
 	$(this).parent().find(".settingsSelectPartContent").html(t[0]);
+	$(this).parent().find(".settingsSelectBigPartContent").html(t[0]);
 })
 $(".settingsSelectPartRight").click(function(){
 	var t = settingsFunctions[$(this).parent().parent().attr("for")].initial();
@@ -956,10 +1025,20 @@ $(".settingsSelectPartRight").click(function(){
 	else
 		$(this).parent().find(".settingsSelectPartRight").removeClass("closed");
 	$(this).parent().find(".settingsSelectPartContent").html(t[0]);
+	$(this).parent().find(".settingsSelectBigPartContent").html(t[0]);
 })
 $(".settingsInputPartContent").blur(function(){
 	var q = $(this).val();
 	settingsFunctions[$(this).parent().parent().attr("for")].change(q);
+})
+$(".settingsSelectBigPartContent").change(function(){
+	var q = $(this).val();
+	var t = settingsFunctions[$(this).parent().parent().attr("for")].change(q);
+	$(".settingsSelectBigPartContent").html("");
+	for(var name in t[0])
+		if(t[0].hasOwnProperty(name))
+			$(".settingsSelectBigPartContent").append(`<option value=${name}>${t[0][name]}</option>`)
+	$(".settingsSelectBigPartContent").val(t[1]);
 })
 
 
