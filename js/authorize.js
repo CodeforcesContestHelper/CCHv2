@@ -174,5 +174,44 @@ function submitSolution(ci, idx, code, lang, S, E){
 		}
 	});
 }
+function reloadLanguages(){
+	if(currentLoginHandle == ""){
+		$(".settingsReloadLanguages").html(localize('notLoggedIn'));
+		setTimeout(function(){
+			$(".settingsReloadLanguages").html(`<span info='reloadLanguages' onclick="reloadLanguages()">${languageOption.general.reloadLanguages}</span>`);
+		}, 2000)
+		return;
+	}
+	$(".settingsReloadLanguages").html(localize('loginLoading'));
+	$.ajax({
+		url: settings.mainURL + '/problemset/submit',
+		success: function(d){
+			var q = $(d).find(".submit-form select");
+			submissionLangs = {};
+			var pt = 0;
+			$("[for=statementDefaultLanguage] select").html("");
+			q.children().each(function(){
+				if(pt == 0)
+					pt = Number($(this).attr("value"));
+				submissionLangs[$(this).attr("value")] = $(this).html();
+				$("[for=statementDefaultLanguage] select").append(`<option value=${$(this).attr("value")}>${$(this).html()}</option>`);
+			})
+			if(submissionLangs[settings.statementDefaultLanguage] == undefined)
+				settings.statementDefaultLanguage = pt;
+			$("[for=statementDefaultLanguage] select").val(settings.statementDefaultLanguage);
+			saveSettings();
+			$(".settingsReloadLanguages").html(localize('reloadLanguagesSuccess'));
+			setTimeout(function(){
+				$(".settingsReloadLanguages").html(`<span info='reloadLanguages' onclick="reloadLanguages()">${languageOption.general.reloadLanguages}</span>`);
+			}, 2000)
+		},
+		error: function(){
+			$(".settingsReloadLanguages").html(`<span info='errorLoadFailed'>${languageOption.error.errorLoadFailed}</span>`);
+			setTimeout(function(){
+				$(".settingsReloadLanguages").html(`<span info='reloadLanguages' onclick="reloadLanguages()">${languageOption.general.reloadLanguages}</span>`);
+			}, 2000)
+		}
+	})
+}
 if(RunInNwjs)
 	loadLoginType();

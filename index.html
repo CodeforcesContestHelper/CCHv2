@@ -396,7 +396,6 @@
 										</div>
 									</div>
 									<div class="settingsSelectInfoAddition settingsLoginButton"><span info='settingsLoginButton' onclick="submitLogin()"></span></div>
-
 									<div class="settingsHeader" info="settingsPreference"></div>
 									<div class="settingsUI settingsSelect" for="styleSelection">
 										<div class="settingsSelectInfo">
@@ -447,15 +446,6 @@
 											<div class="settingsSelectPartLeft"><i class="fas fa-angle-left"></i></div>
 											<div class="settingsSelectPartContent"></div>
 											<div class="settingsSelectPartRight"><i class="fas fa-angle-right"></i></div>
-										</div>
-									</div>
-									<div class="settingsUI settingsInput" for="statementFontFamily">
-										<div class="settingsInputInfo">
-											<div class="settingsInputInfoMain">Radio Name</div>
-											<div class="settingsInputInfoAddition">Radio Addition</div>
-										</div>
-										<div class="settingsInputPart">
-											<input class="settingsInputPartContent"></input>
 										</div>
 									</div>
 									<div class="settingsUI settingsInput" for="mainURL">
@@ -613,7 +603,37 @@
 											<div class="settingsSelectPartRight"><i class="fas fa-angle-right"></i></div>
 										</div>
 									</div>
-
+									<div class="settingsHeader" info="settingsProblemPage"></div>
+									<div class="settingsUI settingsInput" for="statementFontFamily">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent"></input>
+										</div>
+									</div>
+									<div class="settingsUI settingsSelect" for="statementFontSize">
+										<div class="settingsSelectInfo">
+											<div class="settingsSelectInfoMain">Radio Name</div>
+											<div class="settingsSelectInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsSelectPart">
+											<div class="settingsSelectPartLeft"><i class="fas fa-angle-left"></i></div>
+											<div class="settingsSelectPartContent"></div>
+											<div class="settingsSelectPartRight"><i class="fas fa-angle-right"></i></div>
+										</div>
+									</div>
+									<div class="settingsUI settingsSelectBig" for="statementDefaultLanguage">
+										<div class="settingsSelectInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsSelectBigPart">
+											<select class="settingsSelectBigPartContent"></select>
+										</div>
+									</div>
+									<div class="settingsSelectInfoAddition settingsReloadLanguages"><span info='reloadLanguages' onclick="reloadLanguages()"></span></div>
 									<!-- <div class="settingsUI settingsRadio" for="testRadio">
 										<div class="settingsRadioInfo">
 											<div class="settingsRadioInfoMain">Radio Name</div>
@@ -644,7 +664,7 @@
 											<input class="settingsInputPartContent"></input>
 										</div>
 									</div> -->
-									<div style="text-align: center;">
+									<div style="text-align: center; margin-top: 30px">
 										<span class="settingsSetAsDefault" onclick="setAsDefault()"><i class="fas fa-eraser"></i> <span info="setAsDefault"></span></span>
 									</div>
 								</div></div>
@@ -656,6 +676,7 @@
 		</div>
 	</body>
 	<footer>
+		<script src="./js/langs.js"></script>
 		<script src="./js/settings.js"></script>
 		<script src="./js/authorize.js"></script>
 		<script src="./js/submission.js"></script>

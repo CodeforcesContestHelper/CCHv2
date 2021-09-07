@@ -133,11 +133,7 @@
 		<script src="./js/settings.js"></script>
 		<script src="./js/langs.js"></script>
 		<script>
-			reloadSettings()
-			for(var name in Langs)
-				if(Langs.hasOwnProperty(name))
-					$(".submitLanguageChoser").append(`<option value=${name}>${Langs[name]}</option>`)
-			$(".submitLanguageChoser").val(50);
+			reloadSettings();
 			if(!RunInNwjs){
 				$('body').css('margin', '8px').css("width", "calc(100% - 16px)").css("height", "calc(100% - 16px)");
 				if(!DarkMode)

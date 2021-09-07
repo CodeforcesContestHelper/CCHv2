@@ -171,7 +171,7 @@ function initProblemPageInfo(page, data, id){
 			problemNewWinJQ.find("#"+rnd).find(".spoiler").each(function(){
 				var tit = $(this).find(".spoiler-title").html();
 				var con = $(this).find('.spoiler-content').html();
-				$(this).html(`<span class='fas fa-question'></span>` + tit + `<br/>` + `<span class='fas fa-exclamation'></span>` + con);
+				$(this).html(`<details><summary>` + tit + `</summary>` + con + '</details>');
 			})
 		}
 		else if(qq.eq(i).attr("class") == "sample-tests"){
@@ -402,6 +402,11 @@ function initProblemNewWin(){
 		reloadProblem(problemCurrentPageList[problemFocusOn][0]);
 	});
 	problemNewWinJQ.find(".submitCode").unbind("click").click(function(){
+		problemNewWinJQ.find(".submitLanguageChoser").html("");
+		for(var name in submissionLangs)
+			if(submissionLangs.hasOwnProperty(name))
+				problemNewWinJQ.find(".submitLanguageChoser").append(`<option value=${name}>${submissionLangs[name]}</option>`)
+		problemNewWinJQ.find(".submitLanguageChoser").val(settings.statementDefaultLanguage);
 		submitCodeAreaController.setValue("");
 		problemNewWinJQ.find(".submitWindow").css("display", "grid");
 		problemNewWinJQ.find(".submitWindow").css("opacity", "1");

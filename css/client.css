@@ -845,6 +845,7 @@ pre{
 }
 .settingsRadio,
 .settingsSelect,
+.settingsSelectBig,
 .settingsInput{
 	width: 100%;
 	position: relative;
@@ -852,18 +853,21 @@ pre{
 }
 .settingsRadioInfo,
 .settingsSelectInfo,
+.settingsSelectBigInfo,
 .settingsInputInfo{
 	width: calc(100% - 0px);
 	word-wrap: break-word; word-break: keep-all;
 }
 .settingsRadioInfoMain,
 .settingsSelectInfoMain,
+.settingsSelectBigInfoMain,
 .settingsInputInfoMain{
 	font-size: 20px;
 	margin: 6px 0px;
 }
 .settingsRadioInfoAddition,
 .settingsSelectInfoAddition,
+.settingsSelectBigInfoAddition,
 .settingsInputInfoAddition,
 .pageSmallTip{
 	font-size: 16px;
@@ -893,7 +897,8 @@ pre{
 	top: 0px;
 	right: 0px;
 }
-.settingsSelectPart > div{
+.settingsSelectPart > div,
+.settingsSelectBigPart > div{
 	display: inline-grid;
 	place-items: center;
 	border-radius: 5px;
@@ -901,7 +906,8 @@ pre{
 	font-size: 16px;
 	height: 30px;
 }
-.settingsSelectPart > div:first-child, .settingsSelectPart > div:last-child{
+.settingsSelectPart > div:first-child, .settingsSelectPart > div:last-child,
+.settingsSelectBigPart > div:first-child, .settingsSelectBigPart > div:last-child{
 	transition: 0.2s;
 	font-size: 24px;
 	width: 30px !important;
@@ -935,11 +941,30 @@ pre{
 	transition: 0.2s;
 	text-align: center;
 }
-
-
-
-
-
+.settingsSelectBigPart{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+.settingsSelectBigPartContent{
+	flex: 1;
+}
+.settingsSelectBigPartContent{
+	margin-top: 10px;
+	transition: 0.2s;
+	border: none;
+	width: 100%;
+	color: inherit;
+	font-family: inherit;
+	font-size: inherit;
+}
+.settingsReloadLanguages{
+	color: inherit !important;
+	text-align: center;
+}
+[info=reloadLanguages]{
+	cursor: pointer;
+}
 
 
 
