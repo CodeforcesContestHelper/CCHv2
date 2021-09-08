@@ -880,11 +880,13 @@ pre{
 	right: 0px;
 	top: 0px;
 }
-.settingsRadioButton > i:last-child{
+.settingsRadioButton > i{
 	position: absolute;
-	top: 5px;
+	top: 0px;
 	left: 0px;
 	transition: 0.2s;
+}
+.settingsRadioButton > i:last-child{
 	opacity: 0;
 }
 .settingsRadio.selected > .settingsRadioButton > i:last-child{
@@ -965,6 +967,54 @@ pre{
 [info=reloadLanguages]{
 	cursor: pointer;
 }
+
+
+
+
+.searchPage{
+	padding: 10px 0px;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+.searchPageTop{
+	padding: 10px;
+	width: calc(100% - 20px);
+	display: flex;
+	flex-direction: row;
+}
+.searchArgumentsChoser{
+	display: inline-flex;
+	flex-direction: row;
+	height: 34px;
+	margin: 2px;
+	padding: 8px;
+	border-radius: 5px;
+}
+.searchArgumentsItem{
+	width: 34px;
+	height: 34px;
+	font-size: 20px;
+	position: relative;
+	border-radius: 50%;
+	margin: 0px 10px;
+	cursor: pointer;
+	transition: 0.2s;
+}
+.searchArgumentsItem > span{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.searchPageBottom{
+	flex: 1;
+	width: 100%;
+	overflow: scroll;
+}
+
 
 
 

@@ -2,6 +2,7 @@ var contestRanks = [0, 0], contestRankLast = [0, 0], contestRankInfo = [[], []],
 var contestNewWinJQ, contestNewWin, contestNewWinOpened = false, contestNewWinLoaded = false;
 var problemNewWinOpened = false, problemNewWin, problemNewWinJQ, submitCodeAreaController, problemNewWinLoaded;
 var watchNewWinOpened = false, watchNewWin, watchNewWinJQ, watchNewWinLoaded;
+var singleAnnouncementLength = -1;
 var lang_list = ["English", "简体中文"];
 var lang_attr = ["en", "zh_cn"];
 var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
@@ -100,6 +101,8 @@ var lang_en = {
 		openProblems: "Open Problems",
 		submitSuccess: "Submit Success!",
 		unlimited: "Unlimited",
+		flushContestList: "Flush contest list...",
+		copyInfo: "Copy Info",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -107,6 +110,7 @@ var lang_en = {
 		singleVirtualUsername: "Username",
 		singleVirtualContestId: "Contest ID",
 		singleVirtualTime: "Time (YYYY/M/D HH:MM)",
+		search: "Search",
 	},
 	error: {
 		errorUsernameError: "Username Error",
@@ -308,7 +312,9 @@ var lang_zh = {
 		forceLoadStandings: "强制加载排行榜",
 		openProblems: "打开问题界面",
 		submitSuccess: "提交成功！",
-		unlimited: "无限制"
+		unlimited: "无限制",
+		flushContestList: "刷新比赛列表中......",
+		copyInfo: "复制信息",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -316,6 +322,7 @@ var lang_zh = {
 		singleVirtualUsername: "用户名",
 		singleVirtualContestId: "比赛 ID",
 		singleVirtualTime: "时间 (YYYY/M/D HH:MM)",
+		search: "搜索",
 	},
 	error: {
 		errorUsernameError: "用户名错误",

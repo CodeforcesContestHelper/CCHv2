@@ -61,10 +61,10 @@ a:hover {color: #4eb2cd;}
 a:onclick {color: #4eb2cd;}
 a:visited {color: #45d0f5;}
 table > tr > th, table > tr > td { border-color:black; }
-.copyCode{
+.copyCode, .copyInfo{
     background: #bbb;
 }
-.copyCode:hover{
+.copyCode:hover, .copyInfo:hover{
     background: #999;
 }
 .singleWatchContent{

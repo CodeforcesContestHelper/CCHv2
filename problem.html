@@ -56,7 +56,7 @@
 				<div class="loadingInterface submitWindow" style="display: none; opacity: 0"><div style="height: calc(100% - 50px); width: calc(100% - 100px); padding: 10px; display: flex; flex-direction: column; overflow: hidden" class="submitInterface">
 					<div class="submitInterfaceTitle" style="height: 30px; width: calc(100% - 10px); display: flex; flex-direction: row; padding: 5px; overflow-x: hidden">
 						<div style="overflow-x: hidden; flex: 1">
-							<span class="submitUsername">123456789012345678901234</span> <span class="fas fa-angle-right"></span> <span class="submitProblemID">123456A</span>
+							<span class="submitUsername"></span> <span class="fas fa-angle-right"></span> <span class="submitProblemID"></span>
 						</div><div style="position: relative; width: 24px"><i class="fas fa-times red closeSubmitPage" style="cursor: pointer"></i></div>
 					</div>
 					<div style="width: calc(100% - 10px); padding: 5px;display: flex; flex-direction: row">
@@ -73,42 +73,10 @@
 					</div>
 				</div></div>
 				<div class="sideBar"><div>
-					<div class="sideBarItem chosen"><i class="fas fa-unlink"></i>1234D<div><i class="fas fa-times"></i></div></div>
-					<div class="sideBarItem"><i class="fas fa-circle"></i>1234D<div><i class="fas fa-times"></i></div></div>
-					<div class="sideBarItem"><i class="fas fa-circle"></i>1234D<div><i class="fas fa-times"></i></div></div>
 				</div></div>
 				<div style="display: flex; flex-direction: column; width: calc(100% - 35px); height: 100%; position: absolute; top: 0px; left: 35px; overflow: hidden; border-radius: 5px;" class="problemPageRightContent">
 					<div class="innerContent">
-						<div class="innerContentPage">
-							<div class="problemTitle">A. test of the title</div>
-							<div class="problemTags">WTF?</div>
-							<div class="blockManager">
-								<div class="blockManagerTitle">Description</div>
-								<div class="blockManagerContent">no.</div>
-							</div>
-							<div class="blockManager">
-								<div class="blockManagerTitle">Description</div>
-								<div class="blockManagerContent">no.</div>
-							</div>
-							<div class="blockManager">
-								<div class="blockManagerTitle">Description</div>
-								<div class="blockManagerContent">no.</div>
-							</div>
-							<div class="blockManager">
-								<div class="blockManagerTitle">Description</div>
-								<div class="blockManagerContent">no.</div>
-							</div>
-							<div class="blockManager">
-								<div class="blockManagerTitle">Description</div>
-								<div class="blockManagerContent">no.</div>
-							</div>
-							<div class="blockManager">
-								<div class="blockManagerTitle">Samples</div>
-								<div class="blockManagerContent">
-								</div>
-							</div>
-						</div>
-
+						
 					</div>
 					<div class="progressBar">
 						<div style="flex: 1">
@@ -117,7 +85,7 @@
 						</div>
 						<div class="progressBarMain">
 							<div class="prevProblem actions"><i class="fas fa-angle-left"></i></div>
-							<div class="problemName">1234D</div>
+							<div class="problemName"></div>
 							<div class="nextProblem actions"><i class="fas fa-angle-right"></i></div>
 						</div>
 						<div style="flex: 1">
@@ -198,6 +166,11 @@
 					x.html(`<span info='copy'>${languageOption.general.copy}</span>`);
 				}, 1000)
 			}
+			function backToNormal2(x){
+				setTimeout(function(){
+					x.html(`<span info='copyInfo'>${languageOption.general.copyInfo}</span>`);
+				}, 1000)
+			}
 			function loadCopyOption(){
 				$(".copyCode").unbind("click").click(function(){
 					var q = $("<textarea></textarea>");
@@ -209,6 +182,19 @@
 					$(this).html(`<span info='copied'>${languageOption.general.copied}</span>`);
 					backToNormal($(this));
 				})
+				$(".copyInfo").unbind("click").click(function(){
+					var q = $("<textarea></textarea>");
+					q.text($(this).parent().parent().attr("statement-info"));
+					$("body").append(q);
+					q.select();
+					document.execCommand("copy");
+					q.remove();
+					$(this).html(`<span info='copied'>${languageOption.general.copied}</span>`);
+					backToNormal2($(this));
+				})
+			}
+			function announcementDisplay(x){
+				alert(x);
 			}
 		</script>
 	</footer>

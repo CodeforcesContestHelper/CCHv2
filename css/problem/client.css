@@ -414,7 +414,7 @@ ul, ol{
 	cursor: pointer;
 	border-radius: 5px;
 	padding: 2px 5px;
-	font-size: 13px;
+	font-size: calc(100% - 5px);
 	display: inline-block;
 }
 .watchDisplayer{
@@ -443,7 +443,14 @@ ul, ol{
 .katex-mathml, .vlist-s{
 	user-select: none;
 }
-
+.copyInfo{
+	margin-left: 10px;
+	user-select: none;
+	cursor: pointer;
+	font-size: calc(100% - 4px);
+	padding: 2px;
+	border-radius: 5px;
+}
 
 
 

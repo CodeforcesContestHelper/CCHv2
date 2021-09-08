@@ -149,7 +149,6 @@ function initProblemPageInfo(page, data, id){
 		problemCurrentPageList[id][4].output = getOutputFileType(getRealOutputFile(data.find(".output-file").contents().eq(1).text()));
 	page.append(tg);
 	var qq = data.children();
-	console.log(qq);
 	for(var i=0; i<qq.length; i++){
 		if(qq.eq(i).attr("class") != "header" && qq.eq(i).attr("class") != "sample-tests"){
 			var l = "Description";
@@ -161,7 +160,9 @@ function initProblemPageInfo(page, data, id){
 			var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
 			for(var j=0; j<18; j++)
 				rnd += str[Math.floor(Math.random()*str.length)];
-			page.append(`<div class="blockManager"><div class="blockManagerTitle">${l}</div><div class="blockManagerContent" id="${rnd}">${qq.eq(i).html().replace(/\$\$\$/g, "$")}</div></div>`);
+			var pqp = $(`<div class="blockManager"><div class="blockManagerTitle">${l}<span class='copyInfo'><span info='copyInfo'>${languageOption.general.copyInfo}</span></span></div><div class="blockManagerContent" id="${rnd}">${qq.eq(i).html().replace(/\$\$\$/g, "$")}</div></div>`);
+			pqp.attr("statement-info", $('<div>' + qq.eq(i).html().replace(/\$\$\$/g, "$") + "</div>").text());
+			page.append(pqp);
 			renderMathInElement(problemNewWin.window.document.getElementById(rnd), katex_config);
 			problemNewWinJQ.find("#"+rnd).find("a").click(function(){
 				event.stopPropagation();
@@ -178,7 +179,6 @@ function initProblemPageInfo(page, data, id){
 			var inp = [], oup = [];
 			qq.eq(i).find(".input pre").each(function(){inp.push($(this).text());});
 			qq.eq(i).find(".output pre").each(function(){oup.push($(this).text());});
-			console.log(inp, oup);
 			problemCurrentPageList[id][3] = [inp, oup];
 			var rnd = "";
 			var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
@@ -189,14 +189,14 @@ function initProblemPageInfo(page, data, id){
 				var pp = $(`<div class="sampleBlock">
 							<div>
 								<div style="width: calc(100% - 10px); position: relative; margin: 5px">
-									<span style="font-weight: bold; font-size: 16px"><span info='input'>${languageOption.general.input}</span></span>
+									<span style="font-weight: bold; font-size: 100% - 2px"><span info='input'>${languageOption.general.input}</span></span>
 									<span class='copyCode' style="float: right"><span info='copy'>${languageOption.general.copy}</span></span>
 								</div>
 								<div style="flex: 1"><div class="codeDisplayer"></div></div>
 							</div>
 							<div>
 								<div style="width: calc(100% - 10px); position: relative; margin: 5px">
-									<span style="font-weight: bold; font-size: 16px"><span info='output'>${languageOption.general.output}</span></span>
+									<span style="font-weight: bold; font-size: 100%"><span info='output'>${languageOption.general.output}</span></span>
 									<span class='copyCode' style="float: right"><span info='copy'>${languageOption.general.copy}</span></span>
 								</div>
 								<div style="flex: 1"><div class="codeDisplayer"></div></div>
@@ -204,7 +204,6 @@ function initProblemPageInfo(page, data, id){
 						</div>`);
 				pp.find(".codeDisplayer").eq(0).text(inp[j]);
 				pp.find(".codeDisplayer").eq(1).text(oup[j]);
-				console.log(inp[j], oup[j]);
 				o.append(pp);
 			}
 			var oo = $(`<div class="blockManager"><div class="blockManagerTitle">Samples</div></div>`);
@@ -455,7 +454,6 @@ function initProblemNewWin(){
 		}
 		for(var i=0; i<problemCurrentPageList.length; i++){
 			if(problemCurrentPageList[i][2] != 0)	continue;
-			console.log(i);
 			var info = JSON.stringify({
 							"name": problemCurrentPageList[i][4].title,
 						    "group": problemCurrentPageList[i][4].contestName,

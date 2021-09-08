@@ -114,9 +114,18 @@ body{
 .settingsSelectBigPartContent{
     background: #444;
 }
-
-
-
+.searchPageTop{
+    background: #555;
+}
+.searchArgumentsChoser{
+    background: #444;
+}
+.searchArgumentsItem{
+    background: #555;
+}
+.searchArgumentsItem.chosen{
+    background: #777;
+}
 
 
 

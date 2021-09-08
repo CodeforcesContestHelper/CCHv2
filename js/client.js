@@ -494,6 +494,22 @@ function flushsingleProblemlistDisplayList(sub, prob, pb){
 
 function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 	if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
+	if(problemNewWinLoaded){
+		$.ajax({
+			url: settings.mainURL + "/contest/" + ci,
+			success: function(d){
+				var q = $(d).find(".question-response");
+				if(singleAnnouncementLength == -1)
+					singleAnnouncementLength = q.length;
+				if(singleAnnouncementLength != q.length && q.length != 0){
+					singleAnnouncementLength = q.length;
+					q = q.eq(0).attr("data-announcement-response-text");
+					q = $('<div>' + q + '</div>').text();
+					problemNewWinJQ.append(`<script>announcementDisplay(\`${q}\`)</script>`);
+				}
+			}
+		})
+	}
 	if(singleContestUnrated == "Unrated"){
 		$(".singleContestProgressRatingChangesDisplayer > span:last-child").html(localize("Unrated"));
 		if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
@@ -537,6 +553,14 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 					singleLoadType = 3;
 					reloadSingleMemoryUsed();
 					callbacks();
+					return;
+				}
+				var e = jqXHR.responseJSON.comment;
+				if(e == "contestId: Rating changes are unavailable for this contest"){
+					singleLoadType = 4;
+					reloadSingleMemoryUsed();
+					$(".singleContestProgressRatingChangesDisplayer > span:last-child").html(localize("Unrated"));
+					if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
 					return;
 				}
 				//Network Error
@@ -1257,7 +1281,7 @@ function loadProblemStatusBar(uno){
 	return ret;
 }
 function loadStandingsService(un, ci, forced){
-	if(forced == true || (settings.openRankPredict >= 1 && inContest == 2)){
+	if(forced == true || (settings.openRankPredict >= 1 && (inContest == 2 || singleContestUnrated == "Virtual"))){
 		contestCalculatingRank[0] = true;
 		flushRankDisplayer();
 		var g = function(ret){
@@ -1325,6 +1349,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 	contestStangingLoadTime = new Date(0);
 	contestRunningStatus = "", contestRunningType = "";
 	contestSubmissionList = [];
+	singleAnnouncementLength = -1;
 	inContest = false;
 	setTimeout(function(){
 		$(".singleContent > div > div > .loadingInterface > div > i").css("opacity", 0);
@@ -2148,6 +2173,10 @@ $(".singleProblemlistTypeContainer > div > div").click(function(){
 	$(this).addClass("selected");
 	$(".singleProblemlistDisplayer > div").addClass("closed");
 	$(".singleProblemlistDisplayer > div").eq(Number($(this).attr("for"))).removeClass("closed");
+})
+$(".searchArgumentsItem").click(function(){
+	$(this).parent().find(".chosen").removeClass("chosen");
+	$(this).addClass("chosen");
 })
 
 
