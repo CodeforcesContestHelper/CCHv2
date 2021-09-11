@@ -6,22 +6,6 @@ var problemFocusOn = 0;
 var problemLoadQueue = [];
 var problemLoadRunning = 0;
 
-function getProblemIndexes(x){
-	var p = x.length - 1;
-	while(p >= 0 && !(/[A-Za-z]/.test(x[p])))	--p;
-	if(p < 0){
-		if(x.length <= 2)	return [-1, -1];
-		return [x.substring(0, x.length - 2), x.substring(x.length - 2)];
-	}
-	var q = p;
-	while(q >= 0 && (/[A-Za-z]/.test(x[q])))	--q;
-	if(q < 0)	return [-1, -1];
-	++q;
-	for(var i=0; i<x.length; i++)
-		if((x < q || x > p) && !(/0-9/.test(x[i])))
-			return [-1, -1];
-	return [x.substring(0, q), x.substring(q)];
-}
 function getRealTimeLimit(x){
 	x = x.split(" ");
 	if(x[1] == 'minute' || x[1] == 'minutes' || x[1] == 'm')
@@ -122,6 +106,9 @@ function addWatcher(id, idx){
 				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-waiting")
 				|| lastJudgement == "In queue")
 					setTimeout(loadWatchType, 1000);
+				else{
+					new Notification(`Result of CF${idx}`, {body: ctL.children().eq(4).text().trim(), icon: '../favicon.png'});
+				}
 			},
 			error: function(){
 				setTimeout(loadWatchType, 1000);
@@ -406,10 +393,9 @@ function initProblemNewWin(){
 			if(submissionLangs.hasOwnProperty(name))
 				problemNewWinJQ.find(".submitLanguageChoser").append(`<option value=${name}>${submissionLangs[name]}</option>`)
 		problemNewWinJQ.find(".submitLanguageChoser").val(settings.statementDefaultLanguage);
-		submitCodeAreaController.setValue("");
+		problemNewWinJQ.find("#submitCodeArea").val("");
 		problemNewWinJQ.find(".submitWindow").css("display", "grid");
 		problemNewWinJQ.find(".submitWindow").css("opacity", "1");
-		submitCodeAreaController.refresh();
 		problemNewWinJQ.find(".submitUsername").html(currentLoginHandle);
 		problemNewWinJQ.find(".submitProblemID").html(problemCurrentPageList[problemFocusOn][0]);
 	})
@@ -475,7 +461,7 @@ function initProblemNewWin(){
 		problemNewWinJQ.find(".submitButton > button").attr("disabled", "true");
 		submitSolution(getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[0]
 					 , getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[1]
-					 , submitCodeAreaController.getValue()
+					 , problemNewWinJQ.find("#submitCodeArea").val()
 					 , problemNewWinJQ.find(".submitLanguageChoser").val()
 					 , function(id){
 					 	problemNewWinJQ.find(".submitButton > button").removeClass("primaryColor").addClass("successColor");
@@ -484,9 +470,12 @@ function initProblemNewWin(){
 					 		problemNewWinJQ.find(".submitButton > button").addClass("primaryColor").removeClass("successColor");
 					 		problemNewWinJQ.find(".submitButton > button").html(`<i class="fas fa-paper-plane"></i><span info="sendAnswer">${languageOption.general.sendAnswer}</span>`);
 					 		problemNewWinJQ.find(".submitButton > button").removeAttr("disabled");
-					 		problemNewWinJQ.find(".closeSubmitPage").click();
+					 		problemNewWinJQ.find(".submitWindow").css("opacity", "0");
+							setTimeout(function(){
+								problemNewWinJQ.find(".submitWindow").css("display", "none");
+							}, 500);
+					 		addWatcher(id, problemCurrentPageList[problemFocusOn][0]);
 					 	}, 1000);
-					 	addWatcher(id, problemCurrentPageList[problemFocusOn][0]);
 					 }
 					 , function(x, y){
 					 	problemNewWinJQ.find(".submitButton > button").removeClass("primaryColor").addClass("dangerColor");
@@ -534,18 +523,6 @@ function openProblemWin(xx){
 			// problemNewWin.showDevTools();
 			addProblems(xx);
 			problemNewWinLoaded = true;
-			submitCodeAreaController = CodeMirror.fromTextArea(problemNewWin.window.document.getElementById("submitCodeArea"), {
-				mode: "null",
-				lineNumbers: true,
-				theme: DarkMode ? "dracula" : "eclipse",
-				indentUnit: 4,
-				indentWithTabs: true,
-				smartIndent: true,
-				foldGutter: true,
-				gutters: ["CodeMirror-linenumbers"],
-				matchBrackets: true
-			});
-			submitCodeAreaController.setSize("100%", "100%");
 			flushProblemNewWin();
 		})
 		problemNewWin.on("closed", function(){

@@ -137,7 +137,6 @@ body{
 .progressBar > div > div.actions{
 	-webkit-app-region: no-drag;
 	transition: 0.2s;
-	margin: 0px 10px;
 	border-radius: 5px;
 	width: 24px;
 	height: 24px;
@@ -145,7 +144,7 @@ body{
 	position: relative;
 }
 .progressBarMain > div.actions{
-	margin: 0px 20px !important;
+	margin: 0px 10px !important;
 }
 .progressBar > div > div.actions > i{
 	position: absolute;
@@ -236,13 +235,15 @@ select{
 	color: inherit;
 	font-family: inherit;
 }
-.CodeMirror{
-	text-align: left;
-	font-family: var(--editor-font-family) !important;
-	font-size: var(--editor-font-size) !important;
-}
-.CodeMirror-scrollbar-filler{
-	opacity: 0;
+#submitCodeArea{
+	tab-size: 4;
+	font-size: var(--editor-font-size);
+	border: 1px solid #777;
+	padding: 5px;
+	outline: 0;
+	background: inherit;
+	color: inherit;
+	font-family: var(--editor-font-family);
 }
 .problemTag {
     font-size: 14px;
@@ -451,7 +452,10 @@ ul, ol{
 	padding: 2px;
 	border-radius: 5px;
 }
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
 
 ::-webkit-scrollbar{

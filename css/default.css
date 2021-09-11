@@ -117,7 +117,11 @@ body{
 .settingsSelectBigPartContent{
     background: #ddd;
 }
+<<<<<<< Updated upstream
 .searchPageTop{
+=======
+.searchPageTop, .searchPageTip{
+>>>>>>> Stashed changes
     background: #d2d2d2;
 }
 .searchArgumentsChoser{
@@ -129,8 +133,20 @@ body{
 .searchArgumentsItem.chosen{
     background: #aaa;
 }
+<<<<<<< Updated upstream
 
 
+=======
+.searchPagesButton:hover{
+    background: #aaa;
+}
+.contestInfoCard:hover{
+    border-left-color: #ed9970;
+}
+.highlightedContestList{
+    background: #ccc;
+}
+>>>>>>> Stashed changes
 
 
 

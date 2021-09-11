@@ -3,14 +3,20 @@ var contestNewWinJQ, contestNewWin, contestNewWinOpened = false, contestNewWinLo
 var problemNewWinOpened = false, problemNewWin, problemNewWinJQ, submitCodeAreaController, problemNewWinLoaded;
 var watchNewWinOpened = false, watchNewWin, watchNewWinJQ, watchNewWinLoaded;
 var singleAnnouncementLength = -1;
+<<<<<<< Updated upstream
 var lang_list = ["English", "简体中文"];
 var lang_attr = ["en", "zh_cn"];
+=======
+>>>>>>> Stashed changes
 var openStandingsSelection = ["Disabled", "Div1Only", "Enabled"];
 var openRankPredictorSelection = ["Disabled", "RatedOnly", "Enabled"];
 var styleSelectionList = ["System", "Light", "Dark"];
 var currentLoginHandle = "";
 var contestRatingChangesHook = null;
 var contestEnterInPage = false;
+
+var getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
+
 var settings = localStorage.getItem("CCH_Settings");
 var submissionLangs = localStorage.getItem("CCH_Languages");
 if(submissionLangs == undefined)
@@ -32,6 +38,7 @@ function openURL(x){
 	else
 		window.open(x);
 }
+<<<<<<< Updated upstream
 var lang_en = {
 	general: {
 		title: "Codeforces Contest Helper v2.0",
@@ -456,6 +463,8 @@ var lang_zh = {
 		],
 	}
 };
+=======
+>>>>>>> Stashed changes
 var settingsFunctions = {
 	accountHandleOrEmail: {
 		initial: function(){return ""},
@@ -610,8 +619,11 @@ var settingsFunctions = {
 			return settings.mainURL;
 		},
 		change: function(str){
+			var rld = (settings.mainURL != str);
 			settings.mainURL = str;
 			saveSettings();
+			if(rld && RunInNwjs)
+				loadLoginType();
 		}
 	},
 	codeforcesApiUrl: {
@@ -804,8 +816,8 @@ var settingsFunctions = {
 	}
 };
 String.prototype.format = function() {
-	for (var a = this, b = 0; b < arguments.length; b++)
-		a = a.replace(RegExp("\\{" + (b) + "\\}", "ig"), arguments[b]);
+	for (var a = this, b = 0; b < arguments[0].length; b++)
+		a = a.replace(RegExp("\\{" + (b) + "\\}", "ig"), arguments[0][b]);
 	return a;
 };
 var currentDefaultSettings = {
@@ -865,11 +877,6 @@ function setAsDefault(){
 	initSettingsPage();
 	initLanguage();
 	initStyle();
-}
-function getLanguage(lang){
-	if(lang == "en")	return lang_en;
-	if(lang == "zh_cn")	return lang_zh;
-	return lang_en;
 }
 function initLanguage(){
 	if(settings == undefined)
@@ -936,7 +943,6 @@ function initStyle(){
 		contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
 	if(problemNewWinLoaded){
 		problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/problem/dark.css" : "./css/problem/default.css");
-		submitCodeAreaController.setOption("theme", DarkMode ? "dracula" : "eclipse");
 	}
 	if(contestRankInfo == undefined || contestRankInfo[contestRankChosen].length == 0)	return;
 	if(contestCalculatingRank[contestRankChosen])
@@ -1247,4 +1253,42 @@ function checkHandles(list, name){
 		if(p.handle == name)	return true;
 	}
 	return false;
+}
+function getProblemIndexes(x){
+	var p = x.length - 1;
+	while(p >= 0 && !(/[A-Za-z]/.test(x[p])))	--p;
+	if(p < 0){
+		if(x.length <= 2)	return [-1, -1];
+		return [x.substring(0, x.length - 2), x.substring(x.length - 2)];
+	}
+	var q = p;
+	while(q >= 0 && (/[A-Za-z]/.test(x[q])))	--q;
+	if(q < 0)	return [-1, -1];
+	++q;
+	for(var i=0; i<x.length; i++)
+		if((x < q || x > p) && !(/0-9/.test(x[i])))
+			return [-1, -1];
+	return [x.substring(0, q), x.substring(q)];
+}
+function getContestType(x){
+	if(x.indexOf("Div. 1 + Div. 2") >= 0)	return "Div. 1+2";
+	if(x.indexOf("Rated for Div. 2") >= 0)	return "Rated for Div. 2";
+	for(var i=1; i<=4; i++)
+		if(x.indexOf("Div. " + i) >= 0)	return "Div. " + i;
+	return undefined;
+}
+function getLimitedContestType(x){
+	if(x.indexOf("Div. 1 + Div. 2") >= 0)	return "Div1+2";
+	if(x.indexOf("Rated for Div. 2") >= 0)	return "RDiv2";
+	for(var i=1; i<=4; i++)
+		if(x.indexOf("Div. " + i) >= 0)	return "Div" + i;
+	return "nType";
+}
+function getOpResult(op, x, y){
+	if(op == "<")	return x < y;
+	if(op == ">")	return x > y;
+	if(op == "<=")	return x <= y;
+	if(op == ">=")	return x >= y;
+	if(op == "=")	return x == y;
+	return x != y;
 }
