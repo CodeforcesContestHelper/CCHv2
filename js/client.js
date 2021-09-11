@@ -503,11 +503,6 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 					singleAnnouncementLength = q.length;
 				if(singleAnnouncementLength != q.length && q.length != 0){
 					singleAnnouncementLength = q.length;
-<<<<<<< Updated upstream
-					q = q.eq(0).attr("data-announcement-response-text");
-					q = $('<div>' + q + '</div>').text();
-					problemNewWinJQ.append(`<script>announcementDisplay(\`${q}\`)</script>`);
-=======
 					q = q.eq(0);
 					var alt = "";
 					q.contents().each(function(){
@@ -521,7 +516,6 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 					if(1){
 						new Notification(`Notification of CF${idx}`, {body: q, icon: '../favicon.png'});
 					}
->>>>>>> Stashed changes
 				}
 			}
 		})

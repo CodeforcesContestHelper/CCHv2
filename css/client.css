@@ -1012,10 +1012,6 @@ pre{
 .searchPageBottom{
 	flex: 1;
 	width: 100%;
-<<<<<<< Updated upstream
-	overflow: scroll;
-}
-=======
 	overflow-y: scroll;
 }
 .searchPageTip{
@@ -1133,7 +1129,6 @@ pre{
 
 
 
->>>>>>> Stashed changes
 
 
 
