@@ -1,16 +1,4 @@
 var contestAllList = [];
-<<<<<<< Updated upstream
-var contestListUpdateTime;
-$(".contestContent").click(function(){
-	if(contestAllList.length == 0){
-		contestListUpdateTime = new Date();
-		
-		return;
-	}
-	if((new Date()).getTime() - contestListUpdateTime.getTime() >= 20 * 60 * 1000){
-		
-	}
-=======
 var contestInSecondPage = false;
 var contestPerPage = 20;
 var contestListCurrentPage = 1;
@@ -221,5 +209,4 @@ $(".contestSearch .searchPagesButton").eq(3).click(function(){
 	var l = 1, r = Math.max(1, Math.ceil(contestListSortResult.length / contestPerPage));
 	contestListCurrentPage = r;
 	displayContestListPage();
->>>>>>> Stashed changes
 })

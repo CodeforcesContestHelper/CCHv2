@@ -46,7 +46,7 @@ function submitLogout(cb){
 	$.ajax({
 		url: settings.mainURL,
 		success: function(data){
-			var q = $(data).find(".lang-chooser > div:last-child");
+			var q = $(data).find(".lang-chooser > div").eq(1);
 			if(q.children("a").eq(1).html() == "Register"){
 				cb(); return;
 			}
