@@ -514,7 +514,7 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 					q = $('<div>' + alt + '</div>').text();
 					problemNewWinJQ.append(`<script>announcementDisplay(\`${q}\`)</script>`);
 					if(1){
-						new Notification(`Notification of CF${idx}`, {body: q, icon: '../favicon.png'});
+						new Notification(`Notification of CF #${ci}`, {body: q, icon: '../favicon.png'});
 					}
 				}
 			}
