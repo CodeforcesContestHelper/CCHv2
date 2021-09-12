@@ -525,7 +525,7 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 		if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
 		return;
 	}
-	var reloadIf = function(url, callbacks){
+	var reloadIf = function(url, callbacks, ID){
 		if(!contestEnterInPage)
 			return;
 		singleLoadType = 1;
@@ -538,6 +538,10 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 			success: function(json){
 				if(typeof(json) == "string")
 					json = JSON.parse(json);
+				if(json.length == 0 && ID == 0){
+					callbacks();
+					return;
+				}
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
 				json = json.result;
@@ -597,8 +601,8 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 		reloadIf(settings.predictorURL, function(){
 			$(".singleContestProgressRatingChangesDisplayer > span:last-child").html("<i class='fas fa-unlink red'></i>");
 			if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
-		});
-	})
+		}, 1);
+	}, 0)
 }
 var bigIsComing = [null, null, null, null, null, null, null];
 function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, error, S, E, loadStandings){
