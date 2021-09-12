@@ -9,7 +9,7 @@ function loadLoginType(){
 	loginTypeLoader = $.ajax({
 		url: settings.mainURL + '?locale=en',
 		success: function(data){
-			var q = $(data).find(".lang-chooser > div:last-child");
+			var q = $(data).find(".lang-chooser > div").eq(1);
 			if(q.children("a").eq(1).html() == "Logout"){
 				var hdl = q.children("a").eq(0).html();
 				currentLoginHandle = hdl;
@@ -93,7 +93,7 @@ function submitLogin(){
 					remember: "on",
 				},
 				success: function(d){
-					var q = $(d).find(".lang-chooser > div:last-child");
+					var q = $(d).find(".lang-chooser > div").eq(1);
 					if(q.children("a").eq(1).html() == "Register"){
 						currentLoginHandle = "";
 						if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
@@ -155,7 +155,7 @@ function submitSolution(ci, idx, code, lang, S, E){
 					"sourceCodeConfirmed":   "true",
 				},
 				success: function(d){
-					var q = $(d).find(".lang-chooser > div:last-child");
+					var q = $(d).find(".lang-chooser > div").eq(1);
 					if(q.children("a").eq(1).html() == "Register"){
 						currentLoginHandle = "";
 						if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
