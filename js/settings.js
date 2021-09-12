@@ -414,9 +414,20 @@ var currentDefaultSettings = {
 	statementFontSize: 16,
 	statementDefaultLanguage: 50
 };
-function setAsDefault(){
-	if(settings == undefined)
+function setAsDefault(op){
+	if(op == undefined)	op = false;
+	if(Object.keys(settings).length == 0)
 		settings = currentDefaultSettings;
+	else if(op){
+		var newSettings = {};
+		for(var i in currentDefaultSettings){
+			if(settings[i] == undefined)
+				newSettings[i] = currentDefaultSettings[i];
+			else
+				newSettings[i] = settings[i];
+		}
+		settings = newSettings;
+	}
 	else{
 		var L = settings.language;
 		var D = settings.styleSelection;
@@ -453,7 +464,7 @@ function initLanguage(){
 		languageOption = getLanguage(settings.language);
 	for(var name in languageOption.general)
 		if(languageOption.general.hasOwnProperty(name)){
-			if(languageOption.general[name].format("") != languageOption.general[name] && $(`[info=${name}]`).attr("argv") != undefined)
+			if(languageOption.general[name].format(["", "", ""]) != languageOption.general[name] && $(`[info=${name}]`).attr("argv") != undefined)
 				$(`[info=${name}]`).each(function(){
 					$(this).html(languageOption.general[name].format(JSON.parse($(this).attr("argv"))));
 				})
@@ -461,7 +472,7 @@ function initLanguage(){
 		}
 	for(var name in languageOption.error)
 		if(languageOption.error.hasOwnProperty(name)){
-			if(languageOption.error[name].format("") != languageOption.error[name] && $(`[info=${name}]`).attr("argv") != undefined)
+			if(languageOption.error[name].format(["", "", ""]) != languageOption.error[name] && $(`[info=${name}]`).attr("argv") != undefined)
 				$(`[info=${name}]`).each(function(){
 					$(this).html(languageOption.error[name].format(JSON.parse($(this).attr("argv"))));
 				})
@@ -472,7 +483,7 @@ function initLanguage(){
 			$(`[info=${name}]`).attr("placeholder", languageOption.input[name]);
 	for(var name in languageOption.tip)
 		if(languageOption.tip.hasOwnProperty(name)){
-			if(languageOption.tip[name].format("") != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
+			if(languageOption.tip[name].format(["", "", ""]) != languageOption.tip[name] && $(`[info=${name}]`).attr("argv") != undefined)
 				$(`[info=${name}]`).each(function(){
 					$(this).html(languageOption.tip[name].format(JSON.parse($(this).attr("argv"))));
 				})
@@ -488,7 +499,7 @@ initLanguage();
 if(settings == undefined)	settings = {};
 else settings = JSON.parse(settings);
 if(Object.keys(settings).length != Object.keys(currentDefaultSettings).length)
-	setAsDefault();
+	setAsDefault(true);
 saveSettings();
 initLanguage();
 var languageOption;
