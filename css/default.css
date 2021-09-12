@@ -117,11 +117,27 @@ body{
 .settingsSelectBigPartContent{
     background: #ddd;
 }
-
-
-
-
-
+.searchPageTop, .searchPageTip{
+    background: #d2d2d2;
+}
+.searchArgumentsChoser{
+    background: #ddd;
+}
+.searchArgumentsItem{
+    background: #ccc;
+}
+.searchArgumentsItem.chosen{
+    background: #aaa;
+}
+.searchPagesButton:hover{
+    background: #aaa;
+}
+.contestInfoCard:hover{
+    border-left-color: #ed9970;
+}
+.highlightedContestList{
+    background: #ccc;
+}
 
 
 

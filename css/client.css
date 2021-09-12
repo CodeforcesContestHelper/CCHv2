@@ -880,11 +880,13 @@ pre{
 	right: 0px;
 	top: 0px;
 }
-.settingsRadioButton > i:last-child{
+.settingsRadioButton > i{
 	position: absolute;
-	top: 5px;
+	top: 0px;
 	left: 0px;
 	transition: 0.2s;
+}
+.settingsRadioButton > i:last-child{
 	opacity: 0;
 }
 .settingsRadio.selected > .settingsRadioButton > i:last-child{
@@ -965,6 +967,169 @@ pre{
 [info=reloadLanguages]{
 	cursor: pointer;
 }
+
+
+
+
+.searchPage{
+	padding: 10px 0px;
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+.searchPageTop{
+	padding: 10px;
+	width: calc(100% - 20px);
+	display: flex;
+	flex-direction: row;
+}
+.searchArgumentsChoser{
+	display: inline-flex;
+	flex-direction: row;
+	height: 34px;
+	margin: 2px;
+	padding: 8px;
+	border-radius: 5px;
+}
+.searchArgumentsItem{
+	width: 34px;
+	height: 34px;
+	font-size: 20px;
+	position: relative;
+	border-radius: 50%;
+	margin: 0px 10px;
+	cursor: pointer;
+	transition: 0.2s;
+}
+.searchArgumentsItem > span{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.searchPageBottom{
+	flex: 1;
+	width: 100%;
+	overflow-y: scroll;
+}
+.searchPageTip{
+	height: 30px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+}
+.searchPageTip > div:first-child, .searchPageTip > div:last-child{
+	margin: 5px 10px;
+	font-size: 16px;
+}
+.searchPagePagesDisplayer{
+	display: flex;
+	flex-direction: row;
+}
+.searchPagesButton{
+	cursor: pointer;
+	position: relative;
+	transition: 0.2s;
+	margin: 2px;
+	width: 26px;
+	height: 26px;
+	border-radius: 5px;
+	font-size: 20px;
+}
+.searchPagesButton>span{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.searchPageCurrentPage{
+	display: inline-block;
+	margin: 3px 0px 3px 10px;
+	font-size: 18px;
+}
+.searchPageOverallPage{
+	margin: 3px 10px 3px 0px;
+	font-size: 18px;
+}
+.contestInfoCard{
+	display: flex;
+	flex-direction: column;
+	width: calc(100% - 20px - 5px);
+	overflow: hidden;
+	padding: 5px 10px;
+	transition: 0.2s;
+	border-left: 5px solid transparent;
+}
+.contestCardRealInfo{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	flex: 1;
+}
+.contestCardNameContainer{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	flex: 1;
+	margin-right: 15px;
+}
+.contestCardPassedCount{
+	font-size: 36px;
+	display: inline-block;
+}
+.contestCardOverallCount{
+	font-size: 20px;
+	display: inline-block;
+}
+.contestCardUACCount{
+	font-size: 12px;
+}
+.contestCardOverall{
+	text-align: right;
+	display: inline-block;
+}
+.contestCardName{
+	width: 100%;
+	font-size: 20px;
+	-webkit-line-clamp: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	list-style-type: none;
+}
+.contestCardTag{
+	text-decoration: underline;
+	display: inline-block;
+	margin-right: 10px;
+	font-size: 16px;
+}
+.contestCardTime{
+	font-size: 16px;
+}
+.contestCardTimeRunningType{
+	float: right;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

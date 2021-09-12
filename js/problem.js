@@ -6,22 +6,6 @@ var problemFocusOn = 0;
 var problemLoadQueue = [];
 var problemLoadRunning = 0;
 
-function getProblemIndexes(x){
-	var p = x.length - 1;
-	while(p >= 0 && !(/[A-Za-z]/.test(x[p])))	--p;
-	if(p < 0){
-		if(x.length <= 2)	return [-1, -1];
-		return [x.substring(0, x.length - 2), x.substring(x.length - 2)];
-	}
-	var q = p;
-	while(q >= 0 && (/[A-Za-z]/.test(x[q])))	--q;
-	if(q < 0)	return [-1, -1];
-	++q;
-	for(var i=0; i<x.length; i++)
-		if((x < q || x > p) && !(/0-9/.test(x[i])))
-			return [-1, -1];
-	return [x.substring(0, q), x.substring(q)];
-}
 function getRealTimeLimit(x){
 	x = x.split(" ");
 	if(x[1] == 'minute' || x[1] == 'minutes' || x[1] == 'm')
@@ -122,6 +106,9 @@ function addWatcher(id, idx){
 				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-waiting")
 				|| lastJudgement == "In queue")
 					setTimeout(loadWatchType, 1000);
+				else{
+					new Notification(`Result of CF${idx}`, {body: ctL.children().eq(4).text().trim(), icon: '../favicon.png'});
+				}
 			},
 			error: function(){
 				setTimeout(loadWatchType, 1000);
@@ -149,7 +136,6 @@ function initProblemPageInfo(page, data, id){
 		problemCurrentPageList[id][4].output = getOutputFileType(getRealOutputFile(data.find(".output-file").contents().eq(1).text()));
 	page.append(tg);
 	var qq = data.children();
-	console.log(qq);
 	for(var i=0; i<qq.length; i++){
 		if(qq.eq(i).attr("class") != "header" && qq.eq(i).attr("class") != "sample-tests"){
 			var l = "Description";
@@ -161,7 +147,9 @@ function initProblemPageInfo(page, data, id){
 			var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
 			for(var j=0; j<18; j++)
 				rnd += str[Math.floor(Math.random()*str.length)];
-			page.append(`<div class="blockManager"><div class="blockManagerTitle">${l}</div><div class="blockManagerContent" id="${rnd}">${qq.eq(i).html().replace(/\$\$\$/g, "$")}</div></div>`);
+			var pqp = $(`<div class="blockManager"><div class="blockManagerTitle">${l}<span class='copyInfo'><span info='copyInfo'>${languageOption.general.copyInfo}</span></span></div><div class="blockManagerContent" id="${rnd}">${qq.eq(i).html().replace(/\$\$\$/g, "$")}</div></div>`);
+			pqp.attr("statement-info", $('<div>' + qq.eq(i).html().replace(/\$\$\$/g, "$") + "</div>").text());
+			page.append(pqp);
 			renderMathInElement(problemNewWin.window.document.getElementById(rnd), katex_config);
 			problemNewWinJQ.find("#"+rnd).find("a").click(function(){
 				event.stopPropagation();
@@ -178,7 +166,6 @@ function initProblemPageInfo(page, data, id){
 			var inp = [], oup = [];
 			qq.eq(i).find(".input pre").each(function(){inp.push($(this).text());});
 			qq.eq(i).find(".output pre").each(function(){oup.push($(this).text());});
-			console.log(inp, oup);
 			problemCurrentPageList[id][3] = [inp, oup];
 			var rnd = "";
 			var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
@@ -189,14 +176,14 @@ function initProblemPageInfo(page, data, id){
 				var pp = $(`<div class="sampleBlock">
 							<div>
 								<div style="width: calc(100% - 10px); position: relative; margin: 5px">
-									<span style="font-weight: bold; font-size: 16px"><span info='input'>${languageOption.general.input}</span></span>
+									<span style="font-weight: bold; font-size: 100% - 2px"><span info='input'>${languageOption.general.input}</span></span>
 									<span class='copyCode' style="float: right"><span info='copy'>${languageOption.general.copy}</span></span>
 								</div>
 								<div style="flex: 1"><div class="codeDisplayer"></div></div>
 							</div>
 							<div>
 								<div style="width: calc(100% - 10px); position: relative; margin: 5px">
-									<span style="font-weight: bold; font-size: 16px"><span info='output'>${languageOption.general.output}</span></span>
+									<span style="font-weight: bold; font-size: 100%"><span info='output'>${languageOption.general.output}</span></span>
 									<span class='copyCode' style="float: right"><span info='copy'>${languageOption.general.copy}</span></span>
 								</div>
 								<div style="flex: 1"><div class="codeDisplayer"></div></div>
@@ -204,7 +191,6 @@ function initProblemPageInfo(page, data, id){
 						</div>`);
 				pp.find(".codeDisplayer").eq(0).text(inp[j]);
 				pp.find(".codeDisplayer").eq(1).text(oup[j]);
-				console.log(inp[j], oup[j]);
 				o.append(pp);
 			}
 			var oo = $(`<div class="blockManager"><div class="blockManagerTitle">Samples</div></div>`);
@@ -407,10 +393,9 @@ function initProblemNewWin(){
 			if(submissionLangs.hasOwnProperty(name))
 				problemNewWinJQ.find(".submitLanguageChoser").append(`<option value=${name}>${submissionLangs[name]}</option>`)
 		problemNewWinJQ.find(".submitLanguageChoser").val(settings.statementDefaultLanguage);
-		submitCodeAreaController.setValue("");
+		problemNewWinJQ.find("#submitCodeArea").val("");
 		problemNewWinJQ.find(".submitWindow").css("display", "grid");
 		problemNewWinJQ.find(".submitWindow").css("opacity", "1");
-		submitCodeAreaController.refresh();
 		problemNewWinJQ.find(".submitUsername").html(currentLoginHandle);
 		problemNewWinJQ.find(".submitProblemID").html(problemCurrentPageList[problemFocusOn][0]);
 	})
@@ -455,7 +440,6 @@ function initProblemNewWin(){
 		}
 		for(var i=0; i<problemCurrentPageList.length; i++){
 			if(problemCurrentPageList[i][2] != 0)	continue;
-			console.log(i);
 			var info = JSON.stringify({
 							"name": problemCurrentPageList[i][4].title,
 						    "group": problemCurrentPageList[i][4].contestName,
@@ -477,7 +461,7 @@ function initProblemNewWin(){
 		problemNewWinJQ.find(".submitButton > button").attr("disabled", "true");
 		submitSolution(getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[0]
 					 , getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[1]
-					 , submitCodeAreaController.getValue()
+					 , problemNewWinJQ.find("#submitCodeArea").val()
 					 , problemNewWinJQ.find(".submitLanguageChoser").val()
 					 , function(id){
 					 	problemNewWinJQ.find(".submitButton > button").removeClass("primaryColor").addClass("successColor");
@@ -486,9 +470,12 @@ function initProblemNewWin(){
 					 		problemNewWinJQ.find(".submitButton > button").addClass("primaryColor").removeClass("successColor");
 					 		problemNewWinJQ.find(".submitButton > button").html(`<i class="fas fa-paper-plane"></i><span info="sendAnswer">${languageOption.general.sendAnswer}</span>`);
 					 		problemNewWinJQ.find(".submitButton > button").removeAttr("disabled");
-					 		problemNewWinJQ.find(".closeSubmitPage").click();
+					 		problemNewWinJQ.find(".submitWindow").css("opacity", "0");
+							setTimeout(function(){
+								problemNewWinJQ.find(".submitWindow").css("display", "none");
+							}, 500);
+					 		addWatcher(id, problemCurrentPageList[problemFocusOn][0]);
 					 	}, 1000);
-					 	addWatcher(id, problemCurrentPageList[problemFocusOn][0]);
 					 }
 					 , function(x, y){
 					 	problemNewWinJQ.find(".submitButton > button").removeClass("primaryColor").addClass("dangerColor");
@@ -536,18 +523,6 @@ function openProblemWin(xx){
 			// problemNewWin.showDevTools();
 			addProblems(xx);
 			problemNewWinLoaded = true;
-			submitCodeAreaController = CodeMirror.fromTextArea(problemNewWin.window.document.getElementById("submitCodeArea"), {
-				mode: "null",
-				lineNumbers: true,
-				theme: DarkMode ? "dracula" : "eclipse",
-				indentUnit: 4,
-				indentWithTabs: true,
-				smartIndent: true,
-				foldGutter: true,
-				gutters: ["CodeMirror-linenumbers"],
-				matchBrackets: true
-			});
-			submitCodeAreaController.setSize("100%", "100%");
 			flushProblemNewWin();
 		})
 		problemNewWin.on("closed", function(){

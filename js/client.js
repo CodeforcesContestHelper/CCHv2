@@ -494,12 +494,38 @@ function flushsingleProblemlistDisplayList(sub, prob, pb){
 
 function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 	if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
+	if(problemNewWinLoaded){
+		$.ajax({
+			url: settings.mainURL + "/contest/" + ci,
+			success: function(d){
+				var q = $(d).find(".question-response");
+				if(singleAnnouncementLength == -1)
+					singleAnnouncementLength = q.length;
+				if(singleAnnouncementLength != q.length && q.length != 0){
+					singleAnnouncementLength = q.length;
+					q = q.eq(0);
+					var alt = "";
+					q.contents().each(function(){
+						if($(this).prop("outerHTML") == "<br>")
+							alt += '\n';
+						else
+							alt += $(this).text();
+					});
+					q = $('<div>' + alt + '</div>').text();
+					problemNewWinJQ.append(`<script>announcementDisplay(\`${q}\`)</script>`);
+					if(1){
+						new Notification(`Notification of CF #${ci}`, {body: q, icon: '../favicon.png'});
+					}
+				}
+			}
+		})
+	}
 	if(singleContestUnrated == "Unrated"){
 		$(".singleContestProgressRatingChangesDisplayer > span:last-child").html(localize("Unrated"));
 		if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
 		return;
 	}
-	var reloadIf = function(url, callbacks){
+	var reloadIf = function(url, callbacks, ID){
 		if(!contestEnterInPage)
 			return;
 		singleLoadType = 1;
@@ -512,6 +538,10 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 			success: function(json){
 				if(typeof(json) == "string")
 					json = JSON.parse(json);
+				if(json.length == 0 && ID == 0){
+					callbacks();
+					return;
+				}
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
 				json = json.result;
@@ -539,6 +569,14 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 					callbacks();
 					return;
 				}
+				var e = jqXHR.responseJSON.comment;
+				if(e == "contestId: Rating changes are unavailable for this contest"){
+					singleLoadType = 4;
+					reloadSingleMemoryUsed();
+					$(".singleContestProgressRatingChangesDisplayer > span:last-child").html(localize("Unrated"));
+					if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
+					return;
+				}
 				//Network Error
 				singleLoadType = 3;
 				reloadSingleMemoryUsed();
@@ -563,10 +601,10 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 		reloadIf(settings.predictorURL, function(){
 			$(".singleContestProgressRatingChangesDisplayer > span:last-child").html("<i class='fas fa-unlink red'></i>");
 			if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
-		});
-	})
+		}, 1);
+	}, 0)
 }
-var bigIsComing = null;
+var bigIsComing = [null, null, null, null, null, null, null];
 function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, error, S, E, loadStandings){
 	var s = 0, e = 0, c = 4;
 	var Q = 0;
@@ -574,7 +612,7 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 		if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
-		bigIsComing = $.ajax({
+		bigIsComing[id] = $.ajax({
 			url: u,
 			type: "GET",
 			timeout : id == 5 ? settings.largeTimeLimit : settings.smallTimeLimit,
@@ -792,13 +830,7 @@ function flushContestantProgressBarInner(){
 	}
 }
 
-function getContestType(x){
-	if(x.indexOf("Div. 1 + Div. 2") >= 0)	return "Div. 1+2";
-	if(x.indexOf("Rated for Div. 2") >= 0)	return "Rated for Div. 2";
-	for(var i=1; i<=4; i++)
-		if(x.indexOf("Div. " + i) >= 0)	return "Div. " + i;
-	return undefined;
-}
+
 var singleContestantTimeCountdownTimeCnt = 0;
 function singleContestantTimeCountdown(tc){
 	if(singleContestantTimeCountdownTimeCnt != tc)	return;
@@ -808,11 +840,11 @@ function singleContestantTimeCountdown(tc){
 	d = getTimeLength2(d);
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
-		.html(languageOption.general.contestRunning.format(d));
+		.html(languageOption.general.contestRunning.format([d]));
 	if(contestNewWinLoaded)
 		contestNewWinJQ.find(".singleContestRunningType")
 		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
-		.html(languageOption.general.contestRunning.format(d));
+		.html(languageOption.general.contestRunning.format([d]));
 	var p = (new Date()).getTime() - contestStartTime.getTime();
 	var q = contestEndTime.getTime() - contestStartTime.getTime();
 	$(".singleContestProgressBackground").css("width", `${p/q*100}%`);
@@ -1257,7 +1289,7 @@ function loadProblemStatusBar(uno){
 	return ret;
 }
 function loadStandingsService(un, ci, forced){
-	if(forced == true || (settings.openRankPredict >= 1 && inContest == 2)){
+	if(forced == true || (settings.openRankPredict >= 1 && (inContest == 2 || singleContestUnrated == "Virtual"))){
 		contestCalculatingRank[0] = true;
 		flushRankDisplayer();
 		var g = function(ret){
@@ -1325,6 +1357,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 	contestStangingLoadTime = new Date(0);
 	contestRunningStatus = "", contestRunningType = "";
 	contestSubmissionList = [];
+	singleAnnouncementLength = -1;
 	inContest = false;
 	setTimeout(function(){
 		$(".singleContent > div > div > .loadingInterface > div > i").css("opacity", 0);
@@ -1470,16 +1503,16 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 			singleContestantMainTrack(currLastTimeUpdate, un, ci);
 			return;
 		}
-		q.html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
+		q.html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format([getTimeLength2(startTime - (new Date()).getTime())])}</span>`);
 		if(contestNewWinLoaded)
-			contestNewWinJQ.find(".singleContestRunningType").html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
+			contestNewWinJQ.find(".singleContestRunningType").html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format([getTimeLength2(startTime - (new Date()).getTime())])}</span>`);
 		u = setTimeout(reloadTimeCount, 500);
 	}
 	var reloadMonitor = function(){
 		q.css("opacity", 0);
 		setTimeout(function(){
 			if(u)	killTimeout(u);
-			q.html(`<span info="tipContestStartIn">${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
+			q.html(`<span info="tipContestStartIn">${languageOption.tip.tipContestStartIn.format([getTimeLength2(startTime - (new Date()).getTime())])}</span>`);
 			q.css("opacity", 1); u = reloadTimeCount();
 		}, 500)
 	}
@@ -1706,16 +1739,16 @@ function singleVirtualWaitToStart(currLastTimeUpdate, un, ci, tm){
 			singleVirtualMainTrack(currLastTimeUpdate, un, ci, tm);
 			return;
 		}
-		q.html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
+		q.html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format([getTimeLength2(startTime - (new Date()).getTime())])}</span>`);
 		if(contestNewWinLoaded)
-			contestNewWinJQ.find(".singleContestRunningType").html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
+			contestNewWinJQ.find(".singleContestRunningType").html(`<span info="tipContestStartIn" argv='["${getTimeLength2(startTime - (new Date()).getTime())}"]'>${languageOption.tip.tipContestStartIn.format([getTimeLength2(startTime - (new Date()).getTime())])}</span>`);
 		u = setTimeout(reloadTimeCount, 500);
 	}
 	var reloadMonitor = function(){
 		q.css("opacity", 0);
 		setTimeout(function(){
 			if(u)	killTimeout(u);
-			q.html(`<span info="tipContestStartIn">${languageOption.tip.tipContestStartIn.format(getTimeLength2(startTime - (new Date()).getTime()))}</span>`);
+			q.html(`<span info="tipContestStartIn">${languageOption.tip.tipContestStartIn.format([getTimeLength2(startTime - (new Date()).getTime())])}</span>`);
 			q.css("opacity", 1); u = reloadTimeCount();
 		}, 500)
 	}
@@ -1740,7 +1773,7 @@ function loadSingleVirtualAll(un, ci, tm){
 		if(currLastTimeUpdate != singleLastTimeUpdate)	return;
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
-		bigIsComing = $.ajax({
+		bigIsComing[6] = $.ajax({
 			url: U,
 			type: "GET",
 			data: D,
@@ -2149,6 +2182,10 @@ $(".singleProblemlistTypeContainer > div > div").click(function(){
 	$(".singleProblemlistDisplayer > div").addClass("closed");
 	$(".singleProblemlistDisplayer > div").eq(Number($(this).attr("for"))).removeClass("closed");
 })
+$(".searchArgumentsItem").click(function(){
+	$(this).parent().find(".chosen").removeClass("chosen");
+	$(this).addClass("chosen");
+})
 
 
 var timeLoader, ifInObserve;
@@ -2174,7 +2211,10 @@ $(".singleHeadBack > span").mousedown(function(e){
 			ifInObserve = false;
 			contestEnterInPage = false;
 			singleLastTimeUpdate = new Date();
-			if(bigIsComing)	bigIsComing.abort();
+			for(var i=0; i<bigIsComing.length; i++){
+				if(bigIsComing[i] != null)	bigIsComing[i].abort();
+				bigIsComing[i] = null;
+			}
 			if(contestRatingChangesHook)	contestRatingChangesHook.abort();
 			if(contestNewWinOpened){
 				contestNewWinOpened = contestNewWinLoaded = false;
