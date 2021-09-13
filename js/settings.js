@@ -16,7 +16,7 @@ var settings = localStorage.getItem("CCH_Settings");
 var submissionLangs = localStorage.getItem("CCH_Languages");
 if(submissionLangs == undefined)
 	submissionLangs = JSON.stringify(Langs);
-localStorage.setItem("CCH_Languages", JSON.stringify(submissionLangs));
+localStorage.setItem("CCH_Languages", submissionLangs);
 submissionLangs = JSON.parse(submissionLangs);
 function saveSettings(){
 	initFonts();

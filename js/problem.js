@@ -474,7 +474,8 @@ function initProblemNewWin(){
 							setTimeout(function(){
 								problemNewWinJQ.find(".submitWindow").css("display", "none");
 							}, 500);
-					 		addWatcher(id, problemCurrentPageList[problemFocusOn][0]);
+					 		if(id != undefined)
+					 			addWatcher(id, problemCurrentPageList[problemFocusOn][0]);
 					 	}, 1000);
 					 }
 					 , function(x, y){
