@@ -167,7 +167,7 @@ function submitSolution(ci, idx, code, lang, S, E){
 						E('errorSubmitFailed', languageOption.error.errorSubmitFailed);
 						return;
 					}
-					S($(d).find(`[submissionid]`).eq(0).attr("submissionid"));
+					S($(d).find(`[data-submission-id]`).eq(0).attr("data-submission-id"));
 				},
 				error: function(){
 					E('errorLoginFailed', languageOption.error.errorLoginFailed);

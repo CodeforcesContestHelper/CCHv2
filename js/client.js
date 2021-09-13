@@ -1187,8 +1187,10 @@ function getPredictedRank(points, penalty, time, sl, hl, uno){
 				_points += hl[sl[i].party.members[0].handle][j][1];
 			}
 		}
-		if(points < _points || (points == _points && penalty > _penalty))
+		if(points < _points || (points == _points && penalty > _penalty)){
+			console.log(_points, _penalty, sl[i].party.members[0].handle);
 			++ returnValue;
+		}
 	}
 	return returnValue;
 }
