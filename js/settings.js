@@ -845,7 +845,7 @@ function getProblemIndexes(x){
 	if(q < 0)	return [-1, -1];
 	++q;
 	for(var i=0; i<x.length; i++)
-		if((x < q || x > p) && !(/0-9/.test(x[i])))
+		if((i < q || i > p) && !(/[0-9]/.test(x[i])))
 			return [-1, -1];
 	return [x.substring(0, q), x.substring(q)];
 }
