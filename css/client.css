@@ -20,8 +20,8 @@ body{
 	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
 }
 .HtmlContainer{
-	width: 700px;
-	height: 518px;
+	width: 1000px;
+	height: 668px;
 	overflow: hidden;
 	margin: 0px;
 	user-select:none;
@@ -30,6 +30,8 @@ body{
 	-webkit-app-region: drag;
 	transition: background-color 0.3s, color 0.3s;
 	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
 }
 .NavBar{
 	position: relative;
@@ -68,7 +70,7 @@ body{
 .ToolList{
 	-webkit-app-region: drag;
 	position: relative;
-	height: 28px;
+	height: 38px;
 }
 .ToolListTitle{
 	margin: 8px 12px;
@@ -94,8 +96,8 @@ body{
 .contentWrapper{
 	overflow: hidden;
 	transition: 0.2s;
-	width: 620px;
-	height: 480px;
+	width: 920px;
+	height: 630px;
 	position: absolute;
 	top: 100%;
 	max-height: 0px;
@@ -103,7 +105,7 @@ body{
 .contentWrapperChosen{
 	-webkit-app-region: no-drag;
 	top: 0 !important;
-	max-height: 480px;
+	max-height: 680px;
 }
 .NavBarCurr{
 	transition: 0.2s;
@@ -114,7 +116,7 @@ body{
 	height: 80px;
 }
 .contentRowInfo{
-	height: 480px;
+	height: 680px;
 	display: flex;
 	flex-direction: row;
 	position: absolute;
@@ -125,8 +127,8 @@ body{
 .contentPage{
 	display: grid;
 	place-items: center;
-	width: 620px;
-	height: 480px;
+	width: 920px;
+	height: 630px;
 	position: relative;
 }
 .MajorTitle{
@@ -134,8 +136,8 @@ body{
 	margin-bottom: 30px;
 }
 .singleContestTypeSelector{
-	width: 580px;
-	height: 300px;
+	width: 880px;
+	height: 450px;
 	display: flex;
 	flex-direction: row;
 }
@@ -182,15 +184,15 @@ body{
 	cursor: pointer;
 }
 .singleContestant > div > i, .singleVirtual > div > i{
-	font-size: 96px;
+	font-size: 120px;
 	padding-bottom: 20px;
 	transition: 0.2s;
 }
 .singleContestant > div > .remainSinglePart,
 .singleVirtual > div > .remainSinglePart{
 	transition: 0.2s;
-	height: 270px;
-	width: 340px;
+	height: 320px;
+	width: 420px;
 	transform: scale(0.0);
 	max-height: 0px;
 	max-width:  0px;
@@ -221,24 +223,24 @@ body{
 .singleContestant.singleTypeChosen > div > .remainSinglePart,
 .singleVirtual.singleTypeChosen > div > .remainSinglePart{
 	transform: scale(1.0);
-	max-height: 270px;
-	max-width:  340px;
+	max-height: 320px;
+	max-width:  420px;
 }
 .singleUserAvatar{
-	width: 150px;
-	height: 150px;
+	width: 180px;
+	height: 180px;
 	border-radius: 10px;
 	margin: 7px 0px;
 }
 .singleUsernameDisplayer{
 	height: 32px;
 	font-size: 26px;
-	width: 420px;
+	width: 690px;
 	margin-left: 10px;
 }
 .singleRatingDisplayer{
 	font-size: 16px;
-	width: 420px;
+	width: 670px;
 	padding: 5px 10px;
 }
 .singleRatingDisplayer > div:last-child{
@@ -247,7 +249,7 @@ body{
 .singleContestTags{
 	padding: 5px 0px;
 	padding-left: 10px;
-	width: 420px;
+	width: 670px;
 }
 .singleContestTag{
 	font-size: 12px;
@@ -262,7 +264,7 @@ body{
 .singleContestName{
 	padding-left: 10px;
 	height: 18px;
-	width: 420px;
+	width: 670px;
 	font-size: 16px;
 	-webkit-line-clamp: 1;
 	display: -webkit-box;
@@ -294,9 +296,20 @@ body{
 .singleContestProgressRatingChangesDisplayer > span:last-child{
 	float: right;
 }
+.singleContestMoreOption{
+	width: 100%;
+	font-size: 16px;
+}
+.singleContestMoreOption>div{
+	display: inline-block;
+}
+.singleContestMoreOption>div:last-child{
+	float: right;
+}
+
 .singleMainDisplayer{
-	height: 250px;
-	width: 600px;
+	height: 370px;
+	width: 900px;
 	margin: 10px;
 	padding: 0px !important;
 	overflow: hidden;
@@ -387,7 +400,7 @@ body{
 	place-items: center;
 }
 .blockManagerContent{
-	width: 590px;
+	width: 890px;
 	overflow: hidden;
 	flex: 1;
 	display: flex;
@@ -504,7 +517,7 @@ body{
 	max-height: 0px;
 }
 img[src=""],img:not([src]){opacity:0;}
-#singleRankGraphContainer{
+#singleRankGraphContainer, #singleRankGraphContainerMini{
 	position: relative;
 }
 .singleContestProgressBackground{
@@ -586,7 +599,7 @@ img[src=""],img:not([src]){opacity:0;}
 .singleProblemlistlistDisplayGrid,
 .singleProblemlistDisplayList,
 .singleProblemlistDisplayEvent{
-	height: calc(100% - 30px);
+	height: 100%;
 	overflow-y: scroll;
 }
 .singleProblemlistDisplayEvent{
@@ -604,18 +617,18 @@ img[src=""],img:not([src]){opacity:0;}
 .singleProblemlistDisplayerGridItem{
 	position: relative;
 	padding: 3px 0px;
-	height: calc(33.33% - 20px - 10px);
-	width: calc(25% - 15px);
+	height: calc(25% - 20px - 10px);
+	width: calc(20% - 15px);
 	margin: 5px 7.5px;
 	display: inline-block;
 	border-radius: 5px;
 	margin-top: 12px;
-	padding-top: 10px;
+	padding-top: 15px;
 	text-align: center;
 	font-size: 16px;
 }
 .singleProblemlistDisplayerGridItem > div:last-child{
-	font-size: 12px;
+	font-size: 13px;
 }
 .singleProblemlistDisplayerGridItemVerdict{
 	font-size: 15px;
@@ -630,11 +643,8 @@ img[src=""],img:not([src]){opacity:0;}
 	padding: 0px 10px;
 }
 .singleProblemlistBottom{
-	position: absolute;
 	width: 100%;
 	height: 24px;
-	bottom: 0px;
-	left: 0px;
 	border-bottom-right-radius: 5px;
 	display: flex;
 	flex-direction: row;
@@ -731,7 +741,7 @@ img[src=""],img:not([src]){opacity:0;}
 	display: flex;
 	flex-direction: row;
 	padding: 3px 10px;
-	font-size: 14px;
+	font-size: 16px;
 	width: calc(100% - 20px);
 	text-align: center;
 }
@@ -755,8 +765,7 @@ img[src=""],img:not([src]){opacity:0;}
 	margin: 10px;
 	font-size: 16px;
 }
-.singleProblemlistTempSettings > div{
-	margin: 10px 0px;
+.singleContestMoreOption > div{
 	cursor: pointer;
 }
 .submissionDisplayer{
@@ -1015,7 +1024,8 @@ pre{
 	overflow-y: scroll;
 }
 .searchPageTip{
-	height: 30px;
+	height: 40px;
+	padding-top: 5px;
 	width: 100%;
 	display: flex;
 	flex-direction: row;
@@ -1115,7 +1125,20 @@ pre{
 .contestCardTimeRunningType{
 	float: right;
 }
-
+.contestSecondPageInfo{
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	overflow: hidden;
+}
+.contestSecondPageProgress{
+	width: 100%;
+	height: 40px;
+	display: flex;
+	flex-direction: row;
+}
 
 
 
@@ -1181,11 +1204,11 @@ pre{
 	margin-right: 18px;
 }
 ::-webkit-scrollbar{
-	width: 5px;
-	height: 5px;
+	width: 8px;
+	height: 8px;
 }
 ::-webkit-scrollbar-thumb{
-	border-radius: 1px;
+	border-radius: 2px;
 }
 ::-webkit-scrollbar-corner{
 	display: none;

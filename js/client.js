@@ -205,7 +205,7 @@ function killSingleTrack(){
 
 }
 
-var rankChart;
+var rankChart, rankChartMini;
 function generateRankGraph(rankData){
 	Highcharts.setOptions((DarkMode) ? DarkUnica : DefaultStyle);
 	var chart = {
@@ -215,7 +215,7 @@ function generateRankGraph(rankData){
 	};
 	var title = {
 		text: null
-	};	
+	};
 	var xAxis = {
 		type: 'datetime',
 		dateTimeLabelFormats: {
@@ -302,6 +302,69 @@ function generateRankGraph(rankData){
 		}
 	});
 	rankChart = Highcharts.chart("singleRankGraphContainer", json);
+	chart = {
+		type: 'spline',
+		animation: Highcharts.svg, // don't animate in IE < IE 10.
+	};
+	xAxis = {
+		lineWidth: 0,
+        tickWidth: 0,
+		labels: {
+			enabled: false
+		},
+		type: 'datetime',
+		dateTimeLabelFormats: {
+			millisecond: '%H:%M:%S.%L',
+			second: '%H:%M:%S',
+			minute: '%H:%M',
+			hour: '%H:%M',
+			day: '%m-%d',
+			week: '%m-%d',
+			month: '%Y-%m',
+			year: '%Y'
+		}
+	};
+	yAxis = {
+		lineWidth: 0,
+		gridLineWidth: 0,
+		tickWidth: 0,
+		labels: {
+			enabled: false
+		},
+		reversed: true,
+		title: {
+			text: null
+		},
+		plotLines: [],
+		dateTimeLabelFormats: {
+			millisecond: '%H:%M:%S.%L',
+			second: '%H:%M:%S',
+			minute: '%H:%M',
+			hour: '%H:%M',
+			day: '%Y-%m-%d',
+			week: '%m-%d',
+			month: '%Y-%m',
+			year: '%Y'
+		},
+	};
+
+	json.chart = chart; 
+	json.title = title;	  
+	json.tooltip = tooltip;
+	json.xAxis = xAxis;
+	json.yAxis = yAxis; 
+	json.legend = legend;  
+	json.exporting = exporting;	
+	json.series = series;
+	json.plotOptions = plotOptions;
+	json.credits = credits;
+
+	if(rankData.length <= 1)
+		$("#singleRankGraphContainerMini").css("display", "none");
+	else{
+		$("#singleRankGraphContainerMini").css("display", "block");
+		rankChartMini = Highcharts.chart("singleRankGraphContainerMini", json);
+	}
 }
 
 var singleLastTimeUpdate = new Date(0);
@@ -316,6 +379,7 @@ var loadTypeReaction = [
 	" <i class='fas fa-unlink red'></i>",
 	" <i class='fas fa-check green'></i>",
 ];
+
 function reloadSingleMemoryUsed(){
 	if(singleLoadType == singleLoadTypeLast)
 		$(".singleMemoryUsed > span > span").html(toMemoryInfo(singleMemoryUsed));
@@ -530,11 +594,12 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 			return;
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
+		
 		contestRatingChangesHook = $.ajax({
 			url: url,
 			type: "GET",
 			timeout : settings.largeTimeLimit,
-			data: {contestId: ci},
+			data: {contestId: ci, handles: un},
 			success: function(json){
 				if(typeof(json) == "string")
 					json = JSON.parse(json);
@@ -588,6 +653,7 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
 					 singleMemoryUsed += (e.loaded - q);
+					 singleLoadType = 1;
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
 				});
@@ -687,6 +753,7 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
 					 singleMemoryUsed += (e.loaded - q);
+					 singleLoadType = 1;
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
 				});
@@ -836,7 +903,7 @@ function singleContestantTimeCountdown(tc){
 	if(singleContestantTimeCountdownTimeCnt != tc)	return;
 	var d = contestEndTime.getTime() - (new Date()).getTime();
 	if(d < 0)	return;
-	setTimeout(function(){singleContestantTimeCountdown(tc)}, 500);
+	setTimeout(function(){singleContestantTimeCountdown(tc)}, 100);
 	d = getTimeLength2(d);
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
@@ -1187,10 +1254,8 @@ function getPredictedRank(points, penalty, time, sl, hl, uno){
 				_points += hl[sl[i].party.members[0].handle][j][1];
 			}
 		}
-		if(points < _points || (points == _points && penalty > _penalty)){
-			console.log(_points, _penalty, sl[i].party.members[0].handle);
+		if(points < _points || (points == _points && penalty > _penalty))
 			++ returnValue;
-		}
 	}
 	return returnValue;
 }
@@ -1469,7 +1534,22 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 	func();
 }
 
-
+function singleRegisterContest(){
+	$(".singleRegisterType").html(`<span info="tipLoading">${languageOption.tip.tipLoading}</span>`);
+	var ci = contestContestId;
+	registerContest(ci, function(){
+		$(".singleRegisterType").css("opacity", 0);
+		setTimeout(function(){
+			$(".singleRegisterType").html(`<span info="tipHaveARest">${languageOption.tip.tipHaveARest}</span>`);
+			$(".singleRegisterType").css("opacity", 1);
+		}, 500);
+	}, function(){
+		$(".singleRegisterType").html(`<span info="errorRegisterFailed">${languageOption.error.errorRegisterFailed}</span>`);
+		setTimeout(function(){
+			$(".singleRegisterType").html(`<span info="tipNotRegtered">${languageOption.tip.tipNotRegtered}</span>`);
+		}, 1000);
+	})
+}
 function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 	if(settings.openProblems)
 		openProblemWin([]);
@@ -1487,8 +1567,8 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 		q = $(`<div class='popTip closed'></div>`);
 		q.html(`<span info="tipContestNotStarted">${languageOption.tip.tipContestNotStarted}</span>`);
 		$(".singleContent > div > div > .loadingInterface > div").append(q);
-		r = $(`<div class='popTip closed small'></div>`);
-		r.html(`<span info="tipHaveARest">${languageOption.tip.tipHaveARest}</span>`);
+		r = $(`<div class='popTip closed small singleRegisterType'></div>`);
+		r.html(`<span info="tipLoading">${languageOption.tip.tipLoading}</span>`);
 		$(".singleContent > div > div > .loadingInterface > div").append(r);
 	}, 900);
 	setTimeout(function(){
@@ -1574,6 +1654,8 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 					singleLoadType = 1; reloadSingleMemoryUsed();
 					xhr.addEventListener('progress', function (e) {
 						 singleMemoryUsed += (e.loaded - q);
+						 singleLoadType = 1;
+						 singleLoadType = 1;
 						 reloadSingleMemoryUsed();
 						 q = e.loaded;
 					});
@@ -1625,6 +1707,7 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 					singleLoadType = 1; reloadSingleMemoryUsed();
 					xhr.addEventListener('progress', function (e) {
 						 singleMemoryUsed += (e.loaded - q);
+						 singleLoadType = 1;
 						 reloadSingleMemoryUsed();
 						 q = e.loaded;
 					});
@@ -1633,6 +1716,22 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 			});
 	}
 	setTimeout(reloadStartTime, 1500);
+	setTimeout(function(){
+		checkRegistation(ci, function(t){
+			$(".singleRegisterType").css("opacity", 0);
+			setTimeout(function(){
+				$(".singleRegisterType").html(`<span info="tipHaveARest">${languageOption.tip.tipHaveARest}</span>`);
+				$(".singleRegisterType").css("opacity", 1);
+			}, 500);
+		},
+		function(){
+			$(".singleRegisterType").css("opacity", 0);
+			setTimeout(function(){
+				$(".singleRegisterType").html(`<span info="tipNotRegtered">${languageOption.tip.tipNotRegtered}</span>`);
+				$(".singleRegisterType").css("opacity", 1);
+			}, 500);
+		})
+	}, 1500);
 }
 function loadSingleContestantAll(un, ci){
 	var currLastTimeUpdate = singleLastTimeUpdate;
@@ -1691,6 +1790,7 @@ function loadSingleContestantAll(un, ci){
 				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
 					 singleMemoryUsed += (e.loaded - q);
+					 singleLoadType = 1;
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
 				});
@@ -1808,6 +1908,7 @@ function loadSingleVirtualAll(un, ci, tm){
 				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
 					 singleMemoryUsed += (e.loaded - q);
+					 singleLoadType = 1;
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
 				});
@@ -1869,7 +1970,7 @@ function loadSingleInformation(type, un, ci, tm, started){
 	inContest = false;
 	++ singleContestantTimeCountdownTimeCnt;
 	contestEnterInPage = true;
-	$(".contentRowInfo").eq(0).css("left", "-620px");
+	$(".contentRowInfo").eq(0).css("left", "-920px");
 	$(".singleTypeChosen").removeClass("singleTypeChosen");
 	initSinglePage();
 	if(type == 0)	loadSingleContestantAll(un, ci);
@@ -2352,6 +2453,7 @@ $(".forceLoadStandings").click(function(){
 				singleLoadType = 1; reloadSingleMemoryUsed();
 				xhr.addEventListener('progress', function (e) {
 					 singleMemoryUsed += (e.loaded - q);
+					 singleLoadType = 1;
 					 reloadSingleMemoryUsed();
 					 q = e.loaded;
 				});

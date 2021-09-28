@@ -164,8 +164,8 @@ function initProblemPageInfo(page, data, id){
 		}
 		else if(qq.eq(i).attr("class") == "sample-tests"){
 			var inp = [], oup = [];
-			qq.eq(i).find(".input pre").each(function(){inp.push($(this).text());});
-			qq.eq(i).find(".output pre").each(function(){oup.push($(this).text());});
+			qq.eq(i).find(".input pre").each(function(){inp.push($(this).html().replace(/<br>/g, '\n'));});
+			qq.eq(i).find(".output pre").each(function(){oup.push($(this).html().replace(/<br>/g, '\n'));});
 			problemCurrentPageList[id][3] = [inp, oup];
 			var rnd = "";
 			var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
@@ -205,7 +205,7 @@ function loadProblem(x){
 	var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 	problemNewWinJQ.find(".innerContent > div").eq(p).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div>`)
 	problemCurrentPageList[p][2] = 1;
-	problemNewWinJQ.find(".sideBarItem").eq(p).html(`<i class="fas ${loadType[problemCurrentPageList[p][2]]}"></i>${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${problemCurrentPageList[p][0]}></i></div>`);
+	problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${problemCurrentPageList[p][0]}></i></div>`);
 	problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
 		problemFocusOn = Number($(this).attr("id"));
@@ -227,7 +227,7 @@ function loadProblem(x){
 			problemCurrentPageList[p][4].contestName = $(data).find("#sidebar").eq(0).find("a").eq(0).html();
 			initProblemPageInfo(problemNewWinJQ.find(".innerContent > div").eq(p), $(data).find(".ttypography > .problem-statement"), p);
 			problemCurrentPageList[p][2] = 0;
-			problemNewWinJQ.find(".sideBarItem").eq(p).html(`<i class="fas ${loadType[problemCurrentPageList[p][2]]}"></i>${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${problemCurrentPageList[p][0]}></i>`);
+			problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${problemCurrentPageList[p][0]}></i>`);
 			problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 				problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
 				problemFocusOn = Number($(this).attr("id"));
@@ -246,8 +246,8 @@ function loadProblem(x){
 			if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
 			var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 			problemCurrentPageList[p][2] = 3;
-			problemNewWinJQ.find(".sideBarItem").eq(p).html(`<i class="fas ${loadType[problemCurrentPageList[p][2]]}"></i>${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${problemCurrentPageList[p][0]}></i></div></div>`);
-			problemNewWinJQ.find(".innerContent > div").eq(p).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-unlink red"></i></div>`);
+			problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${problemCurrentPageList[p][0]}></i></div></div>`);
+			problemNewWinJQ.find(".innerContent > div").eq(p).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-unlink red fa-3x"></i></div>`);
 			problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 				problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
 				problemFocusOn = Number($(this).attr("id"));
@@ -269,7 +269,7 @@ function loadProblem(x){
 				if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
 				var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 				problemCurrentPageList[p][2] = 2;
-				problemNewWinJQ.find(".sideBarItem").eq(p).html(`<i class="fas ${loadType[problemCurrentPageList[p][2]]}"></i>${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${problemCurrentPageList[p][0]}></i></div></div>`);
+				problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${problemCurrentPageList[p][0]}></i></div></div>`);
 				problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 					problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
 					problemFocusOn = Number($(this).attr("id"));
@@ -320,7 +320,13 @@ function killProblemListItem(x){
 	if(problemFocusOn >= x)	--problemFocusOn;
 	if(problemFocusOn < 0)	problemFocusOn = 0;
 }
-var loadType = ["fa-circle", "fa-hourglass-half", "fa-spin fa-sync-alt", "fa-unlink red"];
+var loadTypes = ["fa-circle", "fa-hourglass-half", "fa-spin fa-sync-alt", "fa-unlink red"];
+var loadType = [
+function(x){ return `<span>${getProblemIndexes(x)[1]}</span>` }
+, function(){ return `<i class="fas ${loadTypes[1]}"></i>`; }
+, function(){ return `<i class="fas ${loadTypes[2]}"></i>`; }
+, function(){ return `<i class="fas ${loadTypes[3]}"></i>`; }
+];
 function flushProblemNewWin(){
 	if(problemCurrentPageList.length == 0)
 		problemNewWinJQ.find(".problemPageRightContent").css("display", "none");
@@ -328,7 +334,7 @@ function flushProblemNewWin(){
 		problemNewWinJQ.find(".problemPageRightContent").css("display", "flex");
 	problemNewWinJQ.find(".sideBar > div").html("");
 	for(var i=0; i<problemCurrentPageList.length; i++)
-		problemNewWinJQ.find(".sideBar > div").append(`<div class="sideBarItem" id="${i}"><i class="fas ${loadType[problemCurrentPageList[i][2]]}"></i>${problemCurrentPageList[i][0]}<div><i class="fas fa-times closeCurrentProblemPage"id=${problemCurrentPageList[i][0]}></i></div></div>`);
+		problemNewWinJQ.find(".sideBar > div").append(`<div class="sideBarItem" id="${i}">${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div><i class="fas fa-times closeCurrentProblemPage"id=${problemCurrentPageList[i][0]}></i></div></div>`);
 	if(problemFocusOn < problemCurrentPageList.length && problemFocusOn >= 0)
 		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen"),
 		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
@@ -463,7 +469,7 @@ function initProblemNewWin(){
 					 , getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[1]
 					 , problemNewWinJQ.find("#submitCodeArea").val()
 					 , problemNewWinJQ.find(".submitLanguageChoser").val()
-					 , function(id){
+					 , function(id, cid){
 					 	problemNewWinJQ.find(".submitButton > button").removeClass("primaryColor").addClass("successColor");
 					 	problemNewWinJQ.find(".submitButton > button").html(`<span info="submitSuccess">${languageOption.general.submitSuccess}</span>`);
 					 	setTimeout(function(){
@@ -475,7 +481,7 @@ function initProblemNewWin(){
 								problemNewWinJQ.find(".submitWindow").css("display", "none");
 							}, 500);
 					 		if(id != undefined)
-					 			addWatcher(id, problemCurrentPageList[problemFocusOn][0]);
+					 			addWatcher(id, cid);
 					 	}, 1000);
 					 }
 					 , function(x, y){
