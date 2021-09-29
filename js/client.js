@@ -205,8 +205,16 @@ function killSingleTrack(){
 
 }
 
-var rankChart, rankChartMini;
+var rankChart = null, rankChartMini = null;
 function generateRankGraph(rankData){
+	if(rankChart != null){
+		rankChart.destroy();
+		rankChart = null;
+	}
+	if(rankChartMini != null){
+		rankChartMini.destroy();
+		rankChartMini = null;
+	}
 	Highcharts.setOptions((DarkMode) ? DarkUnica : DefaultStyle);
 	var chart = {
 		type: 'spline',
@@ -460,6 +468,14 @@ function initSinglePage(){
 	$(".singleProblemlistDisplayList").html("");
 	$(".singleProblemlistDisplayEvent").html("");
 	$(".singleProblemlistBottom").html("");
+	if(rankChart != null){
+		rankChart.destroy();
+		rankChart = null;
+	}
+	if(rankChartMini != null){
+		rankChartMini.destroy();
+		rankChartMini = null;
+	}
 }
 function flushsingleProblemlistDisplayGrid(json, prob){
 	if(json.length == 0)	return;
@@ -2157,9 +2173,12 @@ function verifySingleInformation(type, un, ci, tm){
 var queryUsrename = /^[a-zA-Z0-9_.-]*$/;
 var queryNumber = /^[0-9]+$/;
 var queryTime = new RegExp("^([0-9]{4,4})/([0-9]{1,2})/([0-9]{1,2})\\s([0-9]{1,2}):([0-9]{1,2})$");
-$(".singleContestantButton").click(function(){
+$(".singleContestantButton").click(function(event){
+	event.stopPropagation();
 	singleLastTimeUpdate = new Date();
 	var un = $(".singleContestantUsernameInput").val();
+	if(un == "")
+		un = currentLoginHandle;
 	if(un.length < 3 || un.length > 24 || !queryUsrename.test(un)){
 		$(".singleContestantButton").html(`<i class="fas fa-exclamation-triangle"></i><span info="errorUsernameError">${languageOption.error.errorUsernameError}</span>`);
 		$(".singleContestantButton").removeClass("primaryColor").addClass("dangerColor").attr("disabled", true);
@@ -2184,9 +2203,12 @@ $(".singleContestantButton").click(function(){
 function isLoopYear(x) {
 	return (new Date(x, 1, 29).getDate() == 29);
 }
-$(".singleVirtualButton").click(function(){
+$(".singleVirtualButton").click(function(event){
+	event.stopPropagation();
 	singleLastTimeUpdate = new Date();
 	var un = $(".singleVirtualUsernameInput").val();
+	if(un == "")
+		un = currentLoginHandle;
 	if(un.length < 3 || un.length > 24 || !queryUsrename.test(un)){
 		$(".singleVirtualButton").html(`<i class="fas fa-exclamation-triangle"></i><span info="errorUsernameError">${languageOption.error.errorUsernameError}</span>`);
 		$(".singleVirtualButton").removeClass("primaryColor").addClass("dangerColor").attr("disabled", true);

@@ -871,3 +871,16 @@ function getOpResult(op, x, y){
 	if(op == "=")	return x == y;
 	return x != y;
 }
+$(".singleContestTypeSelector > div > div > .remainSinglePart > .bigInputArea > input")
+	.bind('keydown',function(event){
+    if(event.keyCode == "13"){
+    	var t = $(this).parent().next();
+    	if(t.hasClass("bigInputArea")){
+    		t.find("input").focus();
+    		t.find("input").select();
+    	}
+    	else{
+    		t.parent().find(".bigButton").click();
+    	}
+    }
+});  
