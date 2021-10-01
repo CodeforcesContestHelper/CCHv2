@@ -11,7 +11,7 @@ body{
     padding-left: 5px;
     border-left: 5px solid #ed9970;
 }
-.sideBarItem > div:last-child:hover{
+.sideBarItem > div:last-child:hover, .sideBarGroup > div:last-child:hover{
     background: #ff456b;
     color: white;
 }
@@ -70,7 +70,9 @@ table > tr > th, table > tr > td { border-color:black; }
 .singleWatchContent{
     background: rgba(255, 255, 255, 0.85);
 }
-
+.sideBarGroupContents{
+    background: #aaa;
+}
 
 
 

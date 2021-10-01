@@ -883,4 +883,17 @@ $(".singleContestTypeSelector > div > div > .remainSinglePart > .bigInputArea > 
     		t.parent().find(".bigButton").click();
     	}
     }
-});  
+});
+$(".settingsUI[for=accountHandleOrEmail] input")
+	.bind('keydown',function(event){
+    if(event.keyCode == "13"){
+    	var t = $(".settingsUI[for=accountPassword] input")
+    	t.focus(); t.select();
+    }
+});
+$(".settingsUI[for=accountPassword] input")
+	.bind('keydown',function(event){
+    if(event.keyCode == "13"){
+    	submitLogin();
+    }
+});

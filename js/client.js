@@ -619,13 +619,13 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 			success: function(json){
 				if(typeof(json) == "string")
 					json = JSON.parse(json);
+				singleLoadType = 4;
+				reloadSingleMemoryUsed();
+				json = json.result;
 				if(json.length == 0 && ID == 0){
 					callbacks();
 					return;
 				}
-				singleLoadType = 4;
-				reloadSingleMemoryUsed();
-				json = json.result;
 				for(var i=0; i<json.length; i++) if(json[i].handle == un){
 					$(".singleContestProgressRatingChangesDisplayer > span:last-child")
 						.html(`<span class="${ratingToClass(json[i].oldRating)}">${json[i].oldRating}</span> <span class="${json[i].newRating>=json[i].oldRating?"green":"red"}">${json[i].newRating>=json[i].oldRating?'+':'-'}${Math.abs(Number(json[i].newRating)-Number(json[i].oldRating))}</span> <i class="fas fa-angle-double-right"></i> <span class="${ratingToClass(json[i].newRating)}">${json[i].newRating}</span>`)
@@ -919,7 +919,7 @@ function singleContestantTimeCountdown(tc){
 	if(singleContestantTimeCountdownTimeCnt != tc)	return;
 	var d = contestEndTime.getTime() - (new Date()).getTime();
 	if(d < 0)	return;
-	setTimeout(function(){singleContestantTimeCountdown(tc)}, 100);
+	setTimeout(function(){singleContestantTimeCountdown(tc)}, 300);
 	d = getTimeLength2(d);
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
@@ -954,7 +954,7 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		contestRankLast[0] = contestRanks[0];
 		contestRanks[0] = json.rows[0].rank;
 		if(json.contest.phase == "CODING" || contestRankInfo[0].length == 0)
-			contestRankInfo[0].push([(new Date).getTime(), json.rows[0].rank]);
+			contestRankInfo[0].push([(new Date()).getTime(), json.rows[0].rank]);
 		flushsingleProblemlistDisplayGrid(json.rows[0].problemResults, json.problems);
 		flushsingleProblemlistBottom(json.rows[0]);
 	}
@@ -1009,7 +1009,7 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 			var l = [];
 			for(var i=0; i<contestJsonProblems.length; i++)
 				l.push(contestContestId + contestJsonProblems[i].index);
-			openProblemWin(l);
+			openProblemWin(l, contestContestId);
 		}
 	}
 }
@@ -1056,7 +1056,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			contestRanks[1] = json.rows[i].rank;
 			singleContestUnrated = "Contestant";
 			if(json.contest.phase == "CODING" || contestRankInfo[1].length == 0)
-				contestRankInfo[1].push([(new Date).getTime(), json.rows[i].rank]);
+				contestRankInfo[1].push([(new Date()).getTime(), json.rows[i].rank]);
 			inContest = 2;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
@@ -1068,7 +1068,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			contestRanks[1] = json.rows[i].rank;
 			singleContestUnrated = "Unrated";
 			if(json.contest.phase == "CODING" || contestRankInfo[1].length == 0)
-				contestRankInfo[1].push([(new Date).getTime(), json.rows[i].rank]);
+				contestRankInfo[1].push([(new Date()).getTime(), json.rows[i].rank]);
 			inContest = 1;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
@@ -1106,7 +1106,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			var l = [];
 			for(var i=0; i<contestJsonProblems.length; i++)
 				l.push(contestContestId + contestJsonProblems[i].index);
-			openProblemWin(l);
+			openProblemWin(l, contestContestId);
 		}
 	}
 }
@@ -1146,8 +1146,8 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 			contestRanks[0] = getPredictedRank(json.rows[i].points, json.rows[i].penalty, ((new Date()).getTime() - contestStartTime.getTime()) / 1000, contestStandingList.rows, contestHacks, false);
 			contestRanks[1] = getPredictedRank(json.rows[i].points, json.rows[i].penalty, ((new Date()).getTime() - contestStartTime.getTime()) / 1000, contestStandingList.rows, contestHacks, true);
 			if(contestRunningStatus == "CODING" || contestRankInfo[0].length == 0)
-				contestRankInfo[0].push([(new Date).getTime(), contestRanks[0]]),
-				contestRankInfo[1].push([(new Date).getTime(), contestRanks[1]]);
+				contestRankInfo[0].push([(new Date()).getTime(), contestRanks[0]]),
+				contestRankInfo[1].push([(new Date()).getTime(), contestRanks[1]]);
 			inContest = 1;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
@@ -1159,8 +1159,8 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 		contestRanks[0] = getPredictedRank(0, 0, ((new Date()).getTime() - contestStartTime.getTime()) / 1000, contestStandingList.rows, contestHacks, false);
 		contestRanks[1] = getPredictedRank(0, 0, ((new Date()).getTime() - contestStartTime.getTime()) / 1000, contestStandingList.rows, contestHacks, true);
 		if(contestRunningStatus == "CODING" || contestRankInfo[0].length == 0)
-			contestRankInfo[0].push([(new Date).getTime(), contestRanks[0]]),
-			contestRankInfo[1].push([(new Date).getTime(), contestRanks[1]]);
+			contestRankInfo[0].push([(new Date()).getTime(), contestRanks[0]]),
+			contestRankInfo[1].push([(new Date()).getTime(), contestRanks[1]]);
 		inContest = 1;
 		flushsingleProblemlistDisplayList(contestSubmissionList, [], contestJsonProblems);
 		flushsingleProblemlistDisplayGrid([], json.problems);
@@ -1194,7 +1194,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 			var l = [];
 			for(var i=0; i<contestJsonProblems.length; i++)
 				l.push(contestContestId + contestJsonProblems[i].index);
-			openProblemWin(l);
+			openProblemWin(l, contestContestId);
 		}
 	}
 }
@@ -2175,6 +2175,9 @@ var queryNumber = /^[0-9]+$/;
 var queryTime = new RegExp("^([0-9]{4,4})/([0-9]{1,2})/([0-9]{1,2})\\s([0-9]{1,2}):([0-9]{1,2})$");
 $(".singleContestantButton").click(function(event){
 	event.stopPropagation();
+	if($(this).attr("disabled"))
+		return;
+	$(".singleContestantButton").attr("disabled", true);
 	singleLastTimeUpdate = new Date();
 	var un = $(".singleContestantUsernameInput").val();
 	if(un == "")
@@ -2205,6 +2208,9 @@ function isLoopYear(x) {
 }
 $(".singleVirtualButton").click(function(event){
 	event.stopPropagation();
+	if($(this).attr("disabled"))
+		return;
+	$(".singleVirtualButton").attr("disabled", true);
 	singleLastTimeUpdate = new Date();
 	var un = $(".singleVirtualUsernameInput").val();
 	if(un == "")
@@ -2493,5 +2499,5 @@ $(".openProblems").click(function(){
 	var l = [];
 	for(var i=0; i<contestJsonProblems.length; i++)
 		l.push(contestContestId + contestJsonProblems[i].index);
-	openProblemWin(l);
+	openProblemWin(l, contestContestId);
 })
