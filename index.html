@@ -45,7 +45,7 @@
 		<div class="HtmlContainer">
 			<div class="ToolList">
 				<div class="ToolListTitle" info="title"></div>
-				<div style="position: absolute; top: -8px; right: 0px; display: flex; flex-direction: row">
+				<div style="position: absolute; top: 0px; right: 0px; display: flex; flex-direction: row">
 					<div class="ToolListButton ToolListMinimize">
 						<i class="fas fa-minus"></i>
 					</div>
@@ -54,7 +54,7 @@
 					</div>
 				</div>
 			</div>
-			<div style="display: flex; flex-direction: row; position: relative">
+			<div style="display: flex; flex-direction: row; position: relative; flex: 1">
 				<div class="loadingInterface" style="display: none; opacity: 0; z-index: 999">
 					<div><i></i><div class="popTip submissionCloser" info="tipClickToGoBack"></div></div>
 					<div style="display: none" class="submissionDisplayer">
@@ -120,7 +120,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="InnerContent" style="flex: 1">
+				<div class="InnerContent" style="flex: 1;">
 					<div class="contentWrapper singleContent contentWrapperChosen">
 						<div class="contentRowInfo">
 							<div class="contentPage"> <div style="text-align: center;">
@@ -186,7 +186,7 @@
 								<div style="display: flex; flex-direction: column;">
 									<div style="display: flex; flex-direction: row; padding: 0px 15px">
 										<img src="https://userpic.codeforces.org/422/title/50a270ed4a722867.jpg" alt="User Avatar" class="singleUserAvatar" />
-										<div>
+										<div style="flex: 1">
 											<div class="singleUsernameDisplayer user-legendary">tourist</div>
 											<div class="singleRatingDisplayer">
 												<div class="user-legendary setInlineBlock">Legendary Grandmaster</div>
@@ -239,6 +239,10 @@
 													<span>Running</span>
 													<span>1234 +123 <i class="fas fa-angle-double-right"></i> 1234</span>
 												</div>
+												<div class="singleContestMoreOption">
+													<div class="forceLoadStandings"><i class='fas fas fa-list-ol'></i> <span info='forceLoadStandings'></span></div>
+													<div class="openProblems"><i class='fas fa-external-link-square-alt'></i> <span info='openProblems'></span></div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -260,12 +264,13 @@
 																		<i class="fas fa-caret-up red"></i><br/>
 																		<span>1</span>
 																	</div>
+																	<div id="singleRankGraphContainerMini" style="width: 350px; height: 180px"></div>
 																</div>
 															</div>
 														</div>
 														<div class="singleParticipateTypeContainer">
-															<div><div class="selectButton selected" for="0"><i class="fas fa-user"></i></div></div>
-															<div><div class="selectButton" for="1"><i class="fas fa-users"></i></div></div>
+															<div><div class="selectButton selected" for="0"><span><i class="fas fa-user"></i> <span info="ratedRank"></span></span></div></div>
+															<div><div class="selectButton" for="1"><span><i class="fas fa-users"></i> <span info="unratedRank"></span></span></div></div>
 														</div>
 													</div>
 												</div><div class="blockManagerRight" id="singleRankGraphContainer">
@@ -274,7 +279,7 @@
 											</div>
 										</div>
 										<div class="blockManager singleProblemDisplayer">
-											<div class="blockManagerTitle"><i class="fas fa-tasks"></i> <span info="Problem"></span><div class="folderButton singleProblemButton"><i class="fas fa-angle-left"></i></div></div>
+											<div class="blockManagerTitle"><i class="fas fa-tasks"></i> <span info="Problem"></span></div>
 											<div class="blockManagerContent">
 												<div class="blockManagerRight singleProblemlistDisplayer">
 													<div class="singleProblemlistlistDisplayGrid closed">
@@ -320,18 +325,12 @@
 															<div class="singleProblemlistDisplayEventItemInfoTestType">PRET</div>
 														</div>
 													</div>
-												</div><div class="blockManagerLeft singleProblemDisplayerTypeChoser">
-													<div class="singleProblemlistTempSettings">
-														<div class="forceLoadStandings"><i class='fas fas fa-list-ol'></i> <span info='forceLoadStandings'></span></div>
-														<div class="openProblems"><i class='fas fa-external-link-square-alt'></i> <span info='openProblems'></span></div>
-
-													</div>
-													<div class="singleProblemlistTypeContainer">
-														<div><div class="selectButton" for="0"><i class="fas fa-check-square"></i></div></div>
-														<div><div class="selectButton selected" for="1"><i class="fas fa-clipboard-list"></i></div></div>
-														<div><div class="selectButton" for="2"><i class="fas fa-book"></i></div></div>
-													</div>
 												</div>
+											</div>
+											<div class="singleProblemlistTypeContainer">
+												<div><div class="selectButton" for="0"><span><i class="fas fa-check-square"></i> <span info="boxButton"></span></span></div></div>
+												<div><div class="selectButton selected" for="1"><span><i class="fas fa-clipboard-list"></i> <span info="listButton"></span></span></div></div>
+												<div><div class="selectButton" for="2"><span><i class="fas fa-book"></i> <span info="eventButton"></span></span></div></div>
 											</div>
 											<div class="singleProblemlistBottom"></div>
 										</div>
@@ -437,7 +436,35 @@
 								</div>
 							</div>
 							<div class="contentPage">
-								
+								<div class="contestSecondPageInfo">
+									<div class="contestInfoCard">
+										<div class="contestCardRealInfo">
+											<div class="contestCardNameContainer">
+												<div class="contestCardName">Codeforces Round balabalabalabalabalabalabalabalabalabala</div>
+												<div class="contestCardTags">
+													<span class="contestCardTag">#1234</span>
+													<span class="contestCardTag">Div. 1</span>
+												</div>
+											</div>
+											<div class="contestPassedCount">
+												<span class="contestCardPassedCount green">6</span>
+												<div class="contestCardOverall"><div class="contestCardUACCount red">123</div><div class="contestCardOverallCount">/10</div></div>
+											</div>
+										</div>
+										<div class="contestCardTime">
+											<span class="contestCardTimeSE"></span>
+											<span class="contestCardTimeRunningType">
+												<span class="red"><span class="fas fa-running"></span> Running</span>
+											</span>
+										</div>
+									</div>
+									<div style="flex: 1; width: 100%">
+
+									</div>
+									<div class="contestSecondPageProgress">
+
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

@@ -60,7 +60,11 @@ body{
 .sideBar:hover{
 	width: 160px;
 }
-.sideBarItem{
+.sideBarGroupContents{
+	border-radius: 10px;
+	overflow: hidden;
+}
+.sideBarItem, .sideBarGroup{
 	transition: 0.2s;
 	font-size: 16px;
 	padding: 10px;
@@ -71,12 +75,15 @@ body{
 	user-select: none;
 	cursor: pointer;
 }
-.sideBarItem > i{
+.sideBarItem > i, .sideBarItem > span
+, .sideBarGroup > i, .sideBarGroup > span{
 	text-align: center;
+	display: inline-block;
 	width: 16px;
 	margin-right: 10px;
 }
-.sideBarItem > div:last-child{
+.sideBarItem > div:last-child
+, .sideBarGroup > div:last-child{
 	float: right;
 	transition: 0.2s;
 	margin-right: 3px;
@@ -86,7 +93,8 @@ body{
 	cursor: pointer;
 	position: relative;
 }
-.sideBarItem > div:last-child > i{
+.sideBarItem > div:last-child > i
+, .sideBarGroup > div:last-child > i{
 	position: absolute;
 	top: 50%;
 	left: 50%;
@@ -151,6 +159,12 @@ body{
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+.progressBarMain{
+	display: grid;
+	place-items: center;
+	margin-left: 20px;
+	margin-right: 20px;
 }
 .innerContentPage{
 	padding: 10px;
@@ -455,11 +469,11 @@ ul, ol{
 
 
 ::-webkit-scrollbar{
-	width: 5px;
-	height: 5px;
+	width: 8px;
+	height: 8px;
 }
 ::-webkit-scrollbar-thumb{
-	border-radius: 1px;
+	border-radius: 2px;
 }
 ::-webkit-scrollbar-corner{
 	display: none;

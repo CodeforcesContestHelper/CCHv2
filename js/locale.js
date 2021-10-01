@@ -76,6 +76,11 @@ var lang_en = {
 		contestListStart: "Not started",
 		contestListRun: "Running",
 		contestListEnd: "Ended",
+		ratedRank: "Rated",
+		unratedRank: "Unrated",
+		boxButton: "Box",
+		listButton: "List",
+		eventButton: "Event",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -100,7 +105,8 @@ var lang_en = {
 		errorLoginFailed: "<span class='fas fa-exclamation-triangle red'></span> Login Failed",
 		errorLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> Load Failed",
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' Load Failed",
-		errorSubmitFailed: "Submit Failed"
+		errorSubmitFailed: "Submit Failed",
+		errorRegisterFailed: "Register contest failed!",
 	},
 	tip: {
 		tipInitializing: "Initializing...",
@@ -113,7 +119,8 @@ var lang_en = {
 		tipFetchingStandings: "Fetching standings...",
 		tipFetchingHacks: "Fetching hacks...",
 		tipVirtualTime: "Insert 'auto' to get the latest virtual round <span class='red'>with at least one submission</span>.",
-		tipClickToGoBack: "Click here to go back."
+		tipClickToGoBack: "Click here to go back.",
+		tipNotRegtered: "You are not registered. <span onclick='singleRegisterContest()' style='cursor: pointer; text-decoration: underline'>Click here to register</span>."
 	},
 	settings: {
 		fontFamily: [
@@ -295,6 +302,11 @@ var lang_zh = {
 		contestListStart: "未开始",
 		contestListRun: "进行中",
 		contestListEnd: "已结束",
+		ratedRank: "Rated",
+		unratedRank: "Unrated",
+		boxButton: "方格",
+		listButton: "列表",
+		eventButton: "事件",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -321,6 +333,7 @@ var lang_zh = {
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' 加载失败",
 		sendAnswer: "提交答案",
 		errorSubmitFailed: "提交失败",
+		errorRegisterFailed: "报名比赛失败！"
 	},
 	tip: {
 		tipInitializing: "初始化中......",
@@ -333,7 +346,8 @@ var lang_zh = {
 		tipFetchingStandings: "获取排行榜信息......",
 		tipFetchingHacks: "获取 hack 记录......",
 		tipVirtualTime: "输入 'auto' 以获取最近的<span class='red'>提交至少一次的</span>虚拟赛时间。",
-		tipClickToGoBack: "点此以返回。"
+		tipClickToGoBack: "点此以返回。",
+		tipNotRegtered: "你还没有报名这场比赛。<span onclick='singleRegisterContest()' style='cursor: pointer; text-decoration: underline'>点此报名</span>。"
 	},
 	settings: {
 		fontFamily: [

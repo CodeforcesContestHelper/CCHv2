@@ -34,7 +34,6 @@ function loadLoginType(){
 var queryCsrf = new RegExp(`<meta name="X-Csrf-Token" content="([0-9a-f]*)"`);
 var queryHandle = new RegExp(`handle = "([\s\S]+?)"`);
 var queryHandle2 = new RegExp(`<title>([0-9a-zA-Z-_.]+?) - Codeforces</title>`);
-// <title>tiger2005 - Codeforces</title>
 function getFtaa(){
 	var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
 	var ret = "";
@@ -167,7 +166,7 @@ function submitSolution(ci, idx, code, lang, S, E){
 						E('errorSubmitFailed', languageOption.error.errorSubmitFailed);
 						return;
 					}
-					S($(d).find(`[data-submission-id]`).eq(0).attr("data-submission-id"));
+					S($(d).find(`[data-submission-id]`).eq(0).attr("data-submission-id"), ci + idx);
 				},
 				error: function(){
 					E('errorLoginFailed', languageOption.error.errorLoginFailed);
@@ -239,6 +238,74 @@ function loadContestPassedStatus(){
 					displayContestListPage();
 				}
 			})
+		}
+	});
+}
+// You have been successfully registered
+function checkRegistation(ci, S, E){
+	if(currentLoginHandle == ""){
+		S(false); return;
+	}
+	$.ajax({
+		url: settings.mainURL + '/contests',
+		success: function(d){
+			var q = $(d).find(`[data-contestid=${ci}]`);
+			var flg = false;
+			q.each(function(){
+				if(flg)	return;
+				var h = $(this).find(".red-link");
+				h.each(function(){
+					if(flg)	return;
+					if($(this).html() == "Register »"){
+						E(); flg = true;
+					}
+				})
+			});
+			if(flg)	return;
+			S(true);
+		},
+		error: function(){
+			S(false); return;
+		}
+	});
+}
+function registerContest(ci, S, E){
+	$.ajax({
+		url: settings.mainURL,
+		success: function(data){
+			var csrf = queryCsrf.exec(data)[1];
+			$.ajax({
+				url: settings.mainURL + '/contestRegistration/' + ci,
+				type: "POST",
+				data: {
+					csrf_token: csrf,
+					action: "formSubmitted",
+					ftaa: getFtaa(),
+					bfaa: "f1b3f18c715565b589b7823cda7448ce",
+					takePartAs: "personal",
+					_tta: 370
+				},
+				success: function(d){
+					var q = $(d).find(".lang-chooser > div").eq(1);
+					if(q.children("a").eq(1).html() == "Register"){
+						currentLoginHandle = "";
+						if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
+						getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
+						E();
+						return;
+					}
+					if(d.indexOf("You have been successfully registered") == -1){
+						E(); return;
+					}
+					S();
+				},
+				error: function(){
+					E();
+				}
+			})
+		},
+		error: function(){
+			E();
 		}
 	});
 }

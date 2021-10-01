@@ -845,7 +845,7 @@ function getProblemIndexes(x){
 	if(q < 0)	return [-1, -1];
 	++q;
 	for(var i=0; i<x.length; i++)
-		if((x < q || x > p) && !(/0-9/.test(x[i])))
+		if((i < q || i > p) && !(/[0-9]/.test(x[i])))
 			return [-1, -1];
 	return [x.substring(0, q), x.substring(q)];
 }
@@ -871,3 +871,29 @@ function getOpResult(op, x, y){
 	if(op == "=")	return x == y;
 	return x != y;
 }
+$(".singleContestTypeSelector > div > div > .remainSinglePart > .bigInputArea > input")
+	.bind('keydown',function(event){
+    if(event.keyCode == "13"){
+    	var t = $(this).parent().next();
+    	if(t.hasClass("bigInputArea")){
+    		t.find("input").focus();
+    		t.find("input").select();
+    	}
+    	else{
+    		t.parent().find(".bigButton").click();
+    	}
+    }
+});
+$(".settingsUI[for=accountHandleOrEmail] input")
+	.bind('keydown',function(event){
+    if(event.keyCode == "13"){
+    	var t = $(".settingsUI[for=accountPassword] input")
+    	t.focus(); t.select();
+    }
+});
+$(".settingsUI[for=accountPassword] input")
+	.bind('keydown',function(event){
+    if(event.keyCode == "13"){
+    	submitLogin();
+    }
+});
