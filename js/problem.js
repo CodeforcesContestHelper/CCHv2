@@ -168,6 +168,10 @@ function initProblemPageInfo(page, data, id){
 			var inp = [], oup = [];
 			qq.eq(i).find(".input pre").each(function(){inp.push($(this).html().replace(/<br>/g, '\n'));});
 			qq.eq(i).find(".output pre").each(function(){oup.push($(this).html().replace(/<br>/g, '\n'));});
+			for(var O=0; O<inp.length; O++){
+				inp[O] = $(`<span>${inp[O]}</span>`).text();
+				oup[O] = $(`<span>${oup[O]}</span>`).text();
+			}
 			problemCurrentPageList[id][3] = [inp, oup];
 			var rnd = "";
 			var str = "0123456789qwertyuiopasdfghjklzxcvbnm";

@@ -1,7 +1,6 @@
 var loginTypeLoader = null;
 function loadLoginType(){
 	currentLoginHandle = "";
-	if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
 	getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
 	$(".settingsLoginType").html(`<span info='settingsLoadingLoginType'>${languageOption.general.settingsLoadingLoginType}</span>`);
 	if(loginTypeLoader != null)
@@ -13,14 +12,11 @@ function loadLoginType(){
 			if(q.children("a").eq(1).html() == "Logout"){
 				var hdl = q.children("a").eq(0).html();
 				currentLoginHandle = hdl;
-				if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
-				loadContestPassedStatus();
 				if(problemNewWinLoaded)	initProblemNewWin();
 				$(".settingsLoginType").html(`<span info='currentUser' argv=["${hdl}"]>${languageOption.general.currentUser.format([hdl])}</span>`);
 			}
 			else{
 				currentLoginHandle = "";
-				if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
 				getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
 				if(problemNewWinLoaded)	initProblemNewWin();
 				$(".settingsLoginType").html(`<span info='notLoggedIn' style="cursor: pointer" onclick="loadLoginType()">${languageOption.general.notLoggedIn}</span>`);
@@ -53,7 +49,6 @@ function submitLogout(cb){
 				url: settings.mainURL + q.children("a").eq(1).attr("href") + '?locale=en',
 				success: function(){
 					currentLoginHandle = "";
-					if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
 					getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
 					if(problemNewWinLoaded)	initProblemNewWin();
 					$(".settingsLoginType").html(`<span info='notLoggedIn'>${languageOption.general.notLoggedIn}</span>`);
@@ -95,7 +90,6 @@ function submitLogin(){
 					var q = $(d).find(".lang-chooser > div").eq(1);
 					if(q.children("a").eq(1).html() == "Register"){
 						currentLoginHandle = "";
-						if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
 						getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
 						$(".settingsLoginType").html(`<span info='notLoggedIn'>${languageOption.general.notLoggedIn}</span>`);
 						$(".settingsLoginButton").html(`<span info='errorLoginFailed'>${languageOption.error.errorLoginFailed}</span>`);
@@ -110,8 +104,6 @@ function submitLogin(){
 					}, 2000);
 					var hdl = q.children("a").eq(0).html();
 					currentLoginHandle = hdl;
-					if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
-					loadContestPassedStatus();
 					if(problemNewWinLoaded)	initProblemNewWin();
 					$(".settingsLoginType").html(`<span info='currentUser' argv=["${hdl}"]>${languageOption.general.currentUser.format([hdl])}</span>`);
 				},
@@ -157,7 +149,6 @@ function submitSolution(ci, idx, code, lang, S, E){
 					var q = $(d).find(".lang-chooser > div").eq(1);
 					if(q.children("a").eq(1).html() == "Register"){
 						currentLoginHandle = "";
-						if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
 						getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
 						E('errorLoginFailed', languageOption.error.errorLoginFailed);
 						return;
@@ -218,10 +209,11 @@ function reloadLanguages(){
 	})
 }
 
-var loadContestPassedStatusTimeout = null;
-function loadContestPassedStatus(){
-	loadContestPassedStatusTimeout = setTimeout(loadContestPassedStatus, 2 * 60 * 1000);
-	if(currentLoginHandle == "")	return;
+function loadContestPassedStatus(S, E){
+	if(currentLoginHandle == ""){
+		S();
+		return;
+	}
 	$.ajax({
 		url: settings.mainURL + '/contests',
 		success: function(data){
@@ -236,12 +228,15 @@ function loadContestPassedStatus(){
 				success: function(d){
 					getSolvedProblemsByContest = d;
 					displayContestListPage();
+					S();
+				},
+				error: function(){
+					E();
 				}
 			})
 		}
 	});
 }
-// You have been successfully registered
 function checkRegistation(ci, S, E){
 	if(currentLoginHandle == ""){
 		S(false); return;
@@ -289,7 +284,6 @@ function registerContest(ci, S, E){
 					var q = $(d).find(".lang-chooser > div").eq(1);
 					if(q.children("a").eq(1).html() == "Register"){
 						currentLoginHandle = "";
-						if(loadContestPassedStatusTimeout != null)	clearTimeout(loadContestPassedStatusTimeout);
 						getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
 						E();
 						return;
