@@ -916,10 +916,11 @@ function flushContestantProgressBarInner(){
 
 var singleContestantTimeCountdownTimeCnt = 0;
 function singleContestantTimeCountdown(tc){
+	tc = Number(tc);
 	if(singleContestantTimeCountdownTimeCnt != tc)	return;
 	var d = contestEndTime.getTime() - (new Date()).getTime();
 	if(d < 0)	return;
-	setTimeout(function(){singleContestantTimeCountdown(tc)}, 300);
+	setTimeout(`singleContestantTimeCountdown(${tc})`, 1000);
 	d = getTimeLength2(d);
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
@@ -962,7 +963,7 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		flushsingleProblemlistDisplayGrid([], json.problems);
 	}
 	flushRankDisplayer();
-	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
+	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(++ singleContestantTimeCountdownTimeCnt);}
 	else if(json.contest.phase == "PENDING_SYSTEM_TEST")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestPendingSystemTest")
@@ -1026,7 +1027,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	contestRunningStatus = json.contest.phase;
 	contestRunningType = json.contest.type;
 	contestJsonProblems = json.problems;
-	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
+	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(++ singleContestantTimeCountdownTimeCnt);}
 	else if(json.contest.phase == "PENDING_SYSTEM_TEST")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestPendingSystemTest")
@@ -1125,7 +1126,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	contestJsonProblems = json.problems;
 	contestRealStartTime = new Date(json.contest.startTimeSeconds * 1000);
 	contestRealEndTime = new Date((json.contest.startTimeSeconds + json.contest.durationSeconds) * 1000);
-	if(contestRunningStatus == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
+	if(contestRunningStatus == "CODING"){singleContestantTimeCountdown(++ singleContestantTimeCountdownTimeCnt);}
 	else if(contestRunningStatus == "FINISHED")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestFinished")
@@ -1984,7 +1985,6 @@ function loadSingleInformation(type, un, ci, tm, started){
 	contestRunningStatus = "", contestRunningType = "";
 	contestSubmissionList = [];
 	inContest = false;
-	++ singleContestantTimeCountdownTimeCnt;
 	contestEnterInPage = true;
 	$(".contentRowInfo").eq(0).css("left", "-920px");
 	$(".singleTypeChosen").removeClass("singleTypeChosen");

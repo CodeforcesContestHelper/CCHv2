@@ -151,17 +151,21 @@ function loadContestList(){
 		success: function(data){
 			var _contestAllList = [];
 			data = data.result;
-			for(var i=0; i<data.length; i++)
+			loadContestPassedStatus(function(){
+				for(var i=0; i<data.length; i++)
 				_contestAllList.push([data[i].name, data[i].id, data[i].type, data[i].startTimeSeconds, data[i].durationSeconds]);
-			contestAllList = _contestAllList;
-			contestListCurrentPage = 1;
-			var q = $(".contestListSearchArea > input").val();
-			contestListFilter(q);
-			var x = $(".contestSortOption").children().eq(0).hasClass("chosen");
-			var y = $(".contestDirectionOption").children().eq(1).hasClass("chosen");
-			contestListSort(x, y);
-			displayContestListPage();
-			$(".contestListLoadIf").html(`<span class='fas fa-check green'></span> ` + localize("success"));
+				contestAllList = _contestAllList;
+				contestListCurrentPage = 1;
+				var q = $(".contestListSearchArea > input").val();
+				contestListFilter(q);
+				var x = $(".contestSortOption").children().eq(0).hasClass("chosen");
+				var y = $(".contestDirectionOption").children().eq(1).hasClass("chosen");
+				contestListSort(x, y);
+				displayContestListPage();
+				$(".contestListLoadIf").html(`<span class='fas fa-check green'></span> ` + localize("success"));
+			}, function(){
+				$(".contestListLoadIf").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
+			})
 		},
 		error: function(){
 			$(".contestListLoadIf").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
