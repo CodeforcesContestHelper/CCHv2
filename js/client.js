@@ -1108,7 +1108,8 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 					}
 					if(aced)	q = "successColor";
 					else if(inq)	q = "idleColor";
-					else	q = "dangerColor";
+					else if(waed)	q = "dangerColor";
+					else	q = "";
 				}
 				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
 			}
@@ -1212,7 +1213,8 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 					}
 					if(aced)	q = "successColor";
 					else if(inq)	q = "idleColor";
-					else	q = "dangerColor";
+					else if(waed)	q = "dangerColor";
+					else	q = "";
 				}
 				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
 			}

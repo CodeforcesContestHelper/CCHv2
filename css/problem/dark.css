@@ -16,7 +16,7 @@ body{
     color: white;
 }
 .sideBarItem:hover{
-    background: #777;
+    background: #999;
 }
 .ToolList{
     border-bottom: 2px solid #555;
