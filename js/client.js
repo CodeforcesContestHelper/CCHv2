@@ -2,6 +2,9 @@ var DefaultStyle = JSON.parse(JSON.stringify(Highcharts.getOptions()));
 DefaultStyle.chart.style = {};
 DefaultStyle.chart.backgroundColor = {color: "#ddd"};
 DefaultStyle.chart.style.fontFamily = "var(--font-family)";
+DefaultStyle.xAxis = {gridLineColor: "#ccd6eb",labels: {style: {color: '#666'}},lineColor: '#ccd6eb',minorGridLineColor: '#ccd6eb',tickColor: '#ccd6eb',};
+DefaultStyle.yAxis = {tickWidth: 1, gridLineColor: "#ccd6eb",labels: {style: {color: '#666'}},lineColor: '#ccd6eb',minorGridLineColor: '#ccd6eb',tickColor: '#ccd6eb',};
+DefaultStyle.plotOptions.series = {dataLabels: {color: '#000',style: {fontSize: '13px'}},marker: {lineColor: '#fff'}};
 var DarkUnica = {
      colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
          '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
@@ -242,11 +245,6 @@ function generateRankGraph(rankData){
 		title: {
 			text: null
 		},
-		plotLines: [{
-			value: 0,
-			width: 1,
-			color: '#808080'
-		}],
 		dateTimeLabelFormats: {
 			millisecond: '%H:%M:%S.%L',
 			second: '%H:%M:%S',
@@ -916,10 +914,11 @@ function flushContestantProgressBarInner(){
 
 var singleContestantTimeCountdownTimeCnt = 0;
 function singleContestantTimeCountdown(tc){
+	tc = Number(tc);
 	if(singleContestantTimeCountdownTimeCnt != tc)	return;
 	var d = contestEndTime.getTime() - (new Date()).getTime();
 	if(d < 0)	return;
-	setTimeout(function(){singleContestantTimeCountdown(tc)}, 300);
+	setTimeout(`singleContestantTimeCountdown(${tc})`, 1000);
 	d = getTimeLength2(d);
 	$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 		.attr("info", "contestRunning").attr("argv", `["${d}"]`)
@@ -962,7 +961,7 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		flushsingleProblemlistDisplayGrid([], json.problems);
 	}
 	flushRankDisplayer();
-	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
+	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(++ singleContestantTimeCountdownTimeCnt);}
 	else if(json.contest.phase == "PENDING_SYSTEM_TEST")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestPendingSystemTest")
@@ -1026,7 +1025,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	contestRunningStatus = json.contest.phase;
 	contestRunningType = json.contest.type;
 	contestJsonProblems = json.problems;
-	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
+	if(json.contest.phase == "CODING"){singleContestantTimeCountdown(++ singleContestantTimeCountdownTimeCnt);}
 	else if(json.contest.phase == "PENDING_SYSTEM_TEST")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestPendingSystemTest")
@@ -1095,6 +1094,23 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 					else if(contestProblemResult[i].rejectedAttemptCount)	q = "dangerColor";
 					else q = "idleColor";
 				}
+				if(json.contest.phase == "SYSTEM_TEST"){
+					var aced = false, inq = false, waed = false;
+					for(var j=0; j<contestSubmissionList.length; j++){
+						if(contestSubmissionList[j].problem.index != contestJsonProblems[i].index)
+							continue;
+						if(contestSubmissionList[j].verdict == undefined
+						|| contestSubmissionList[j].verdict == "TESTING")
+							inq = true;
+						else if(contestSubmissionList[j].verdict == "OK")
+							aced = true;
+						else waed = true;
+					}
+					if(aced)	q = "successColor";
+					else if(inq)	q = "idleColor";
+					else if(waed)	q = "dangerColor";
+					else	q = "";
+				}
 				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
 			}
 		}
@@ -1125,7 +1141,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	contestJsonProblems = json.problems;
 	contestRealStartTime = new Date(json.contest.startTimeSeconds * 1000);
 	contestRealEndTime = new Date((json.contest.startTimeSeconds + json.contest.durationSeconds) * 1000);
-	if(contestRunningStatus == "CODING"){singleContestantTimeCountdown(singleContestantTimeCountdownTimeCnt);}
+	if(contestRunningStatus == "CODING"){singleContestantTimeCountdown(++ singleContestantTimeCountdownTimeCnt);}
 	else if(contestRunningStatus == "FINISHED")
 		$(".singleContestProgressRatingChangesDisplayer > span:first-child")
 			.attr("info", "contestFinished")
@@ -1182,6 +1198,23 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 					if(contestProblemResult[i].points != 0)	q = "successColor";
 					else if(contestProblemResult[i].rejectedAttemptCount)	q = "dangerColor";
 					else q = "idleColor";
+				}
+				if(json.contest.phase == "SYSTEM_TEST"){
+					var aced = false, inq = false, waed = false;
+					for(var j=0; j<contestSubmissionList.length; j++){
+						if(contestSubmissionList[j].problem.index != contestJsonProblems[i].index)
+							continue;
+						if(contestSubmissionList[j].verdict == undefined
+						|| contestSubmissionList[j].verdict == "TESTING")
+							inq = true;
+						else if(contestSubmissionList[j].verdict == "OK")
+							aced = true;
+						else waed = true;
+					}
+					if(aced)	q = "successColor";
+					else if(inq)	q = "idleColor";
+					else if(waed)	q = "dangerColor";
+					else	q = "";
 				}
 				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
 			}
@@ -1984,7 +2017,6 @@ function loadSingleInformation(type, un, ci, tm, started){
 	contestRunningStatus = "", contestRunningType = "";
 	contestSubmissionList = [];
 	inContest = false;
-	++ singleContestantTimeCountdownTimeCnt;
 	contestEnterInPage = true;
 	$(".contentRowInfo").eq(0).css("left", "-920px");
 	$(".singleTypeChosen").removeClass("singleTypeChosen");

@@ -73,10 +73,10 @@ function openSubmission(c, u){
 		if(ctL.children().eq(4).children().eq(0).hasClass("verdict-failed"))
 			$(".submissionVerdict").addClass("red");
 		if(ctN.children().eq(5).text() == "Time")
-			$(".submissionTime").html(ctL.children().eq(5).text());
+			$(".submissionTime").html(ctL.children().eq(5).text().replace(/\s+/g,""));
 		else $(".submissionTime").html("?");
 		if(ctN.children().eq(6).text() == "Memory")
-			$(".submissionMemory").html(toMemoryInfo(Number(getF(ctL.children().eq(6).text().split(" "))) * 1024));
+			$(".submissionMemory").html(ctL.children().eq(6).text().replace(/\s+/g,""));
 		else $(".submissionMemory").html("?");
 		$(".submissionCode > code").html(allHtmlSpecialChars(data.find("#program-source-text").text()));
 		$(".submissionCode").html("<code></code>");
