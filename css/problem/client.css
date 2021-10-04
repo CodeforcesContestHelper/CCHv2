@@ -478,3 +478,6 @@ ul, ol{
 ::-webkit-scrollbar-corner{
 	display: none;
 }
+::-webkit-scrollbar{
+	transition: 0.3s;
+}

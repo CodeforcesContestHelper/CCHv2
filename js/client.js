@@ -2,6 +2,9 @@ var DefaultStyle = JSON.parse(JSON.stringify(Highcharts.getOptions()));
 DefaultStyle.chart.style = {};
 DefaultStyle.chart.backgroundColor = {color: "#ddd"};
 DefaultStyle.chart.style.fontFamily = "var(--font-family)";
+DefaultStyle.xAxis = {gridLineColor: "#ccd6eb",labels: {style: {color: '#666'}},lineColor: '#ccd6eb',minorGridLineColor: '#ccd6eb',tickColor: '#ccd6eb',};
+DefaultStyle.yAxis = {tickWidth: 1, gridLineColor: "#ccd6eb",labels: {style: {color: '#666'}},lineColor: '#ccd6eb',minorGridLineColor: '#ccd6eb',tickColor: '#ccd6eb',};
+DefaultStyle.plotOptions.series = {dataLabels: {color: '#000',style: {fontSize: '13px'}},marker: {lineColor: '#fff'}};
 var DarkUnica = {
      colors: ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
          '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
@@ -242,11 +245,6 @@ function generateRankGraph(rankData){
 		title: {
 			text: null
 		},
-		plotLines: [{
-			value: 0,
-			width: 1,
-			color: '#808080'
-		}],
 		dateTimeLabelFormats: {
 			millisecond: '%H:%M:%S.%L',
 			second: '%H:%M:%S',
@@ -1096,6 +1094,22 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 					else if(contestProblemResult[i].rejectedAttemptCount)	q = "dangerColor";
 					else q = "idleColor";
 				}
+				if(json.contest.phase == "SYSTEM_TEST"){
+					var aced = false, inq = false, waed = false;
+					for(var j=0; j<contestSubmissionList.length; j++){
+						if(contestSubmissionList[j].problem.index != contestJsonProblems[i].index)
+							continue;
+						if(contestSubmissionList[j].verdict == undefined
+						|| contestSubmissionList[j].verdict == "TESTING")
+							inq = true;
+						else if(contestSubmissionList[j].verdict == "OK")
+							aced = true;
+						else waed = true;
+					}
+					if(aced)	q = "successColor";
+					else if(inq)	q = "idleColor";
+					else	q = "dangerColor";
+				}
 				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
 			}
 		}
@@ -1183,6 +1197,22 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 					if(contestProblemResult[i].points != 0)	q = "successColor";
 					else if(contestProblemResult[i].rejectedAttemptCount)	q = "dangerColor";
 					else q = "idleColor";
+				}
+				if(json.contest.phase == "SYSTEM_TEST"){
+					var aced = false, inq = false, waed = false;
+					for(var j=0; j<contestSubmissionList.length; j++){
+						if(contestSubmissionList[j].problem.index != contestJsonProblems[i].index)
+							continue;
+						if(contestSubmissionList[j].verdict == undefined
+						|| contestSubmissionList[j].verdict == "TESTING")
+							inq = true;
+						else if(contestSubmissionList[j].verdict == "OK")
+							aced = true;
+						else waed = true;
+					}
+					if(aced)	q = "successColor";
+					else if(inq)	q = "idleColor";
+					else	q = "dangerColor";
 				}
 				contestNewWinJQ.find(".problemDisplayer").append(`<div class="smallSubmissionInfo ${q}"><span>${contestJsonProblems[i].index}</span></div>`)
 			}

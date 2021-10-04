@@ -602,9 +602,6 @@ img[src=""],img:not([src]){opacity:0;}
 	height: 100%;
 	overflow-y: scroll;
 }
-.singleProblemlistDisplayEvent{
-	padding: 5px 0px;
-}
 .singleProblemlistDisplayList{
 	padding-top: 2px;
 }
@@ -1210,4 +1207,7 @@ pre{
 }
 ::-webkit-scrollbar-corner{
 	display: none;
+}
+::-webkit-scrollbar{
+	transition: 0.3s;
 }
