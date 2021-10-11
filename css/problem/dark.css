@@ -1,11 +1,11 @@
 body{
     color: #fff;
 }
-.HtmlContainer{
-    background: #333;
+.HtmlContainer, .innerContentPage{
+    background: rgb(29, 33, 37);
 }
 .sideBar{
-    background: #555;
+    background: #2a2a2a;
 }
 .sideBarItem.chosen{
     padding-left: 5px;
@@ -15,8 +15,8 @@ body{
     background: #ff456b;
     color: white;
 }
-.sideBarItem:hover{
-    background: #999;
+.sideBarItem:hover, .addProblemSidebar:hover{
+    background: #888;
 }
 .ToolList{
     border-bottom: 2px solid #555;
@@ -25,7 +25,7 @@ body{
     background: #666;
 }
 .progressBar{
-    background: #616161;
+    background: #444;
 }
 .progressBar > div > div.actions:hover{
     background: #777;
@@ -40,18 +40,22 @@ input{
     background: #404040;
 }
 .blockManagerContent{
-    background: #474747;
+    background: #333;
 }
-.submitInterface{
-    background: #555;
+.submitInterface, .addProblemInterface{
+    background: #302e35;
 }
 .bigButton{
     background: transparent;
     border: 1px solid #777;
     color: white;
 }
+.inputButtonSplitter > button{
+    border: 1px solid #777;
+    color: white;
+}
 select{
-    background: #555;
+    background: #302e35;
 }
 a {color: #55d015;}
 a:hover {color: #42c100;}
@@ -68,7 +72,7 @@ table > tr > th, table > tr > td { border-color:#fff; }
     background: rgba(0, 0, 0, 0.85);
 }
 .sideBarGroupContents{
-    background: #777;
+    background: #555;
 }
 
 

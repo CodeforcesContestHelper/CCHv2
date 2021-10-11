@@ -143,6 +143,8 @@ function displayContestListPage(){
 }
 
 function loadContestList(){
+	$(".contestListLoadIf").css("cursor", "default");
+	$(".contestListLoadIf").unbind("click");
 	$(".contestListLoadIf").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loading"));
 	$.ajax({
 		url: settings.codeforcesApiUrl + '/contest.list',
@@ -151,6 +153,7 @@ function loadContestList(){
 		success: function(data){
 			var _contestAllList = [];
 			data = data.result;
+			$(".contestListLoadIf").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loadingAcCount"));
 			loadContestPassedStatus(function(){
 				for(var i=0; i<data.length; i++)
 				_contestAllList.push([data[i].name, data[i].id, data[i].type, data[i].startTimeSeconds, data[i].durationSeconds]);
@@ -163,8 +166,16 @@ function loadContestList(){
 				contestListSort(x, y);
 				displayContestListPage();
 				$(".contestListLoadIf").html(`<span class='fas fa-check green'></span> ` + localize("success"));
+				$(".contestListLoadIf").css("cursor", "pointer");
+				$(".contestListLoadIf").unbind("click").click(function(){
+					loadContestList();
+				})
 			}, function(){
 				$(".contestListLoadIf").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
+				$(".contestListLoadIf").css("cursor", "pointer");
+				$(".contestListLoadIf").unbind("click").click(function(){
+					loadContestList();
+				})
 			})
 		},
 		error: function(){
@@ -172,10 +183,13 @@ function loadContestList(){
 		}
 	})
 }
+var ifInitContestPage = false;
 $(".NavBarContent").eq(2).click(function(){
 	if(!contestInSecondPage){
 		displayContestListPage();
-		loadContestList();
+		if(!ifInitContestPage)
+			loadContestList();
+		ifInitContestPage = true;
 		return;
 	}
 })

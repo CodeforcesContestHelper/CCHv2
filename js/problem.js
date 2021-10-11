@@ -91,7 +91,7 @@ function addWatcher(id, idx){
 	fadeIn();
 	function loadWatchType(){
 		$.ajax({
-			url: settings.mainURL + '/contest/' + getProblemIndexes(idx)[0] + '/submission/' + id,
+			url: settings.mainURL + `/${getProblemIndexes(idx)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(idx)[0] + '/submission/' + id,
 			success: function(data){
 				var ctL = $(data).find("table").eq(0).find("tr").eq(1);
 				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-accepted")){
@@ -211,7 +211,7 @@ function loadProblem(x){
 	var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 	problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div>`)
 	problemCurrentPageList[p][2] = 1;
-	problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${p}></i></div>`);
+	problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
 	problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
 		problemFocusOn = Number($(this).attr("id"));
@@ -226,14 +226,14 @@ function loadProblem(x){
 		flushProblemNewWin();
 	})
 	problemCurrentPageList[p][1] = $.ajax({
-		url: settings.mainURL + '/contest/' + getProblemIndexes(x)[0] + '/problem/' + getProblemIndexes(x)[1] + '?locale=en',
+		url: settings.mainURL + `/${getProblemIndexes(x)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(x)[0] + '/problem/' + getProblemIndexes(x)[1] + '?locale=en',
 		success: function(data){
 			if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
 			var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 			problemCurrentPageList[p][4].contestName = $(data).find("#sidebar").eq(0).find("a").eq(0).html();
 			initProblemPageInfo(problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`), $(data).find(".ttypography > .problem-statement"), p);
 			problemCurrentPageList[p][2] = 0;
-			problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${p}></i>`);
+			problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
 			problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 				problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
 				problemFocusOn = Number($(this).attr("id"));
@@ -252,7 +252,7 @@ function loadProblem(x){
 			if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
 			var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 			problemCurrentPageList[p][2] = 3;
-			problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${p}></i></div></div>`);
+			problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
 			problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-unlink red fa-3x"></i></div>`);
 			problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 				problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
@@ -275,7 +275,7 @@ function loadProblem(x){
 				if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
 				var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 				problemCurrentPageList[p][2] = 2;
-				problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div><i class="fas fa-times closeCurrentProblemPage" id=${p}></i></div></div>`);
+				problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
 				problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 					problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
 					problemFocusOn = Number($(this).attr("id"));
@@ -381,9 +381,11 @@ function(x){ return `<span>${getProblemIndexes(x)[1]}</span>` }
 ];
 function flushProblemNewWin(){
 	if(problemCurrentPageList.length == 0)
-		problemNewWinJQ.find(".problemPageRightContent").css("display", "none");
+		problemNewWinJQ.find(".innerContent").css("display", "none"),
+		problemNewWinJQ.find(".progressBar").css("display", "none");
 	else
-		problemNewWinJQ.find(".problemPageRightContent").css("display", "flex");
+		problemNewWinJQ.find(".innerContent").css("display", "block"),
+		problemNewWinJQ.find(".progressBar").css("display", "flex");
 	problemNewWinJQ.find(".sideBar > div").html("");
 	var lastContestFolder = false;
 	for(var i=0; i<problemCurrentPageList.length; i++){
@@ -394,10 +396,10 @@ function flushProblemNewWin(){
 				curr.css("padding-bottom", "10px");
 			if(lastContestFolder)
 				curr.css("margin-top", "10px");
-			var T = $(`<div class="sideBarGroup" id="${cid}">${problemGroupRange[cid][2] ? "<i class='fas fa-folder-open'></i>" : "<i class='fas fa-folder'></i>"}${cid}<div><i class="fas fa-times closeCurrentGroup" id="${cid}"></i></div></div>`)
+			var T = $(`<div class="sideBarGroup" id="${cid}">${problemGroupRange[cid][2] ? "<i class='fas fa-folder-open'></i>" : "<i class='fas fa-folder'></i>"}${cid}<div class="closeCurrentGroup" id=${cid}><i class="fas fa-times"></i></div></div>`)
 			curr.append(T);
 			for(var j=0; j<problemGroupRange[cid][1]; j++, i++){
-				curr.append(`<div class="sideBarItem" id="${i}" ${problemGroupRange[cid][2] ? "" : " style='display: none'"}>${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div><i class="fas fa-times closeCurrentProblemPage" id="${i}"></i></div></div>`);
+				curr.append(`<div class="sideBarItem" id="${i}" ${problemGroupRange[cid][2] ? "" : " style='display: none'"}>${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div class="closeCurrentProblemPage" id=${i}><i class="fas fa-times"></i></div></div>`);
 			}
 			--i;
 			lastContestFolder = true;
@@ -405,8 +407,9 @@ function flushProblemNewWin(){
 			continue;
 		}
 		lastContestFolder = false;
-		problemNewWinJQ.find(".sideBar > div").append(`<div class="sideBarItem" id="${i}">${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div><i class="fas fa-times closeCurrentProblemPage" id="${i}"></i></div></div>`);
+		problemNewWinJQ.find(".sideBar > div").append(`<div class="sideBarItem" id="${i}">${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div class="closeCurrentProblemPage" id=${i}><i class="fas fa-times"></i></div></div>`);
 	}
+	// problemNewWinJQ.find(".sideBar > div").append(`<div class="addProblemSidebar"><i class='fas fa-add'></i><span info='add'>${languageOption.general.add}</span></div>`);
 	if(problemFocusOn < problemCurrentPageList.length && problemFocusOn >= 0)
 		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen"),
 		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
@@ -456,6 +459,16 @@ function flushProblemNewWin(){
 		delete problemGroupRange[cid];
 		flushProblemNewWin();
 	})
+	problemNewWinJQ.find(".closeAddProblemPage").unbind("click").click(function(){
+		problemNewWinJQ.find(".addProblemWindow").css("opacity", "0");
+		setTimeout(function(){
+			problemNewWinJQ.find(".addProblemWindow").css("display", "none");
+		}, 500);
+	})
+	problemNewWinJQ.find(".addProblemSidebar").unbind("click").click(function(){
+		problemNewWinJQ.find(".addProblemWindow").css("opacity", "1");
+		problemNewWinJQ.find(".addProblemWindow").css("display", "grid");
+	})
 }
 function sampleWrapper(x, y){
 	var ret = [];
@@ -467,7 +480,6 @@ function initProblemNewWin(){
 	problemNewWinJQ.find(".ToolListTitle").html("Codeforces Problems");
 	problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/problem/dark.css" : "./css/problem/default.css");
 	if(currentLoginHandle == ""){
-		problemNewWinJQ.find(".submitCode").css("display", "none");
 		if(problemNewWinJQ.find(".submitWindow").css("opacity") != 0){
 			problemNewWinJQ.find(".submitWindow").css("opacity", "0");
 			setTimeout(function(){
@@ -506,7 +518,7 @@ function initProblemNewWin(){
 				data: JSON.stringify({
 					"name": problemCurrentPageList[problemFocusOn][4].title,
 				    "group": problemCurrentPageList[problemFocusOn][4].contestName,
-				    "url": `https://codeforces.com/contest/${getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[0]}/problem/${getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[1]}`,
+				    "url": `https://codeforces.com/${getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[0] >= 100000 ? "gym" : "contest"}/${getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[0]}/problem/${getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[1]}`,
 				    "interactive": false,
 				    "memoryLimit": problemCurrentPageList[problemFocusOn][4].memoryLimit,
 				    "timeLimit": problemCurrentPageList[problemFocusOn][4].timelimit,
@@ -536,7 +548,7 @@ function initProblemNewWin(){
 			var info = JSON.stringify({
 							"name": problemCurrentPageList[i][4].title,
 						    "group": problemCurrentPageList[i][4].contestName,
-						    "url": `https://codeforces.com/contest/${getProblemIndexes(problemCurrentPageList[i][0])[0]}/problem/${getProblemIndexes(problemCurrentPageList[i][0])[1]}`,
+						    "url": `https://codeforces.com/${getProblemIndexes(problemCurrentPageList[i][0])[0] >= 100000 ? "gym" : "contest"}/{getProblemIndexes(problemCurrentPageList[i][0])[0]}/problem/${getProblemIndexes(problemCurrentPageList[i][0])[1]}`,
 						    "interactive": false,
 						    "memoryLimit": problemCurrentPageList[i][4].memoryLimit,
 						    "timeLimit": problemCurrentPageList[i][4].timelimit,

@@ -574,7 +574,7 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 	if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
 	if(problemNewWinLoaded){
 		$.ajax({
-			url: settings.mainURL + "/contest/" + ci,
+			url: settings.mainURL + `/${ci >= 100000 ? "gym" : "contest"}/` + ci,
 			success: function(d){
 				var q = $(d).find(".question-response");
 				if(singleAnnouncementLength == -1)
@@ -895,7 +895,7 @@ function flushContestantProgressBarInner(){
 	$(".singleContestProgressPart").unbind("mouseover").mouseover(function(){
 		$(".singleContestPoptip").removeClass("closed");
 		var argv = JSON.parse($(this).attr("sinfo"));
-		$(".singleContestPoptip").css("left", 30 * argv[0] + '%');
+		$(".singleContestPoptip").css("left", 50 * argv[0] + '%');
 		$(".singleContestPoptipTail").css("left", `calc(${5 + 90 * argv[0]}% - 10px)`);
 		$(".singlePoptipIndex").html(argv[1]);
 		$(".singlePoptipVerdictBlock").attr("class", "singlePoptipVerdictBlock " + judgeToClass(argv[2])).html(toSmallInfo(argv[2]));
@@ -1653,7 +1653,7 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 		reloadSingleMemoryUsed();
 		if(RunInNwjs)
 			$.ajax({
-				url: settings.mainURL + "/contest/" + ci + "/countdown",
+				url: settings.mainURL + `/${ci >= 100000 ? "gym" : "contest"}/` + ci + "/countdown",
 				timeout : settings.largeTimeLimit,
 				data: {gym: ci >= 100000},
 				success: function(json){
@@ -2398,7 +2398,10 @@ function singleButtonMouseUp(){
 	 $("body").attr("onmouseup", "");
 	 $(".singleHeadBackProgress").removeClass("selected");
 	 setTimeout(function(){
-		if(!ifInObserve)	window.onmousemove = function(){}
+		if(!ifInObserve){
+			window.onmousemove = function(){}
+			$(".singleHeadBackProgress").css("top", -10).css("left", -10);
+		}
 	}, 300);
 }
 
