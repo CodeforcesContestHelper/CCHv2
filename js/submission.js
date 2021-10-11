@@ -15,7 +15,7 @@ function openSubmission(c, u){
 	var data;
 	function loader(callback){
 		$.ajax({
-			url: settings.mainURL + '/contest/' + c + '/submission/' + u,
+			url: settings.mainURL + `/${c >= 100000 ? "gym" : "contest"}/` + c + '/submission/' + u,
 			success: function(j){
 				if(T.getTime() != submissionLastOperated.getTime())	return;
 				data = $(j);

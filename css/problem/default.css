@@ -1,7 +1,7 @@
 body{
     color: #000;
 }
-.HtmlContainer{
+.HtmlContainer, .innerContentPage{
     background: #eee;
 }
 .sideBar{
@@ -15,7 +15,7 @@ body{
     background: #ff456b;
     color: white;
 }
-.sideBarItem:hover{
+.sideBarItem:hover, .addProblemSidebar:hover{
     background: #eee;
 }
 .ToolList{
@@ -46,10 +46,14 @@ input{
     background: rgba(200, 200, 200, 0.95);
     color: black;
 }
-.submitInterface{
+.submitInterface, .addProblemInterface{
     background: #ddd;
 }
 .bigButton{
+    border: 1px solid #777;
+    color: white;
+}
+.inputButtonSplitter > button{
     border: 1px solid #777;
     color: white;
 }

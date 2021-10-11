@@ -129,7 +129,7 @@ function submitSolution(ci, idx, code, lang, S, E){
 		success: function(data){
 			var csrf = queryCsrf.exec(data)[1];
 			$.ajax({
-				url: settings.mainURL + '/contest/' + ci + '/submit',
+				url: settings.mainURL + `/${ci >= 100000 ? "gym" : "contest"}/` + ci + '/submit',
 				type: "POST",
 				data: {
 					csrf_token: csrf,
@@ -211,8 +211,7 @@ function reloadLanguages(){
 
 function loadContestPassedStatus(S, E){
 	if(currentLoginHandle == ""){
-		S();
-		return;
+		S(); return;
 	}
 	$.ajax({
 		url: settings.mainURL + '/contests',

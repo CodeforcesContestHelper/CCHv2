@@ -2,13 +2,13 @@ body{
 	color: #fff;
 }
 .HtmlContainer{
-	background: #333;
+	background: rgb(29, 33, 37);
 }
 .NavBarContent:hover{
-	background: #444;
+	background: rgb(36, 41, 46);
 }
 .NavBarChosen, .InnerContent{
-	background: #444;
+	background: rgb(36, 41, 46);
 }
 .ToolListMinimize:hover{
 	background: #666;
@@ -35,16 +35,16 @@ body{
     border-bottom: 1px solid #777;
 }
 .selectButton{
-    background: #666;
+    background: #424254;
 }
 .selectButton:hover{
-    background: #777;
+    background: #666;
 }
 .selectButton.selected{
-    background: #888;
+    background: #666;
 }
 .singleRankChangesDisplayer{
-    background: #666;
+    background: #455055;
 }
 .singleContestProgressBackground{
     background: #777;
@@ -56,21 +56,21 @@ body{
      border-color: #111 transparent transparent transparent;
 }
 .singleProblemlistDisplayerGridItem{
-    background: #666;
+    background: #434348;
 }
 .singleProblemlistDisplayerGridItemIndex{
-    background: #888;
+    background: #555;
 }
 .singleProblemlistBottom{
     background: #333;
 }
 .singleProblemlistDisplayListItemInfo, .singleProblemlistDisplayListItemStatus, .singleProblemlistDisplayEventItem{
-    background: #666;
+    background: #474747;
 }
 .singleProblemlistDisplayListItemInfo:hover, 
 .singleProblemlistDisplayListItemStatus:hover, 
 .singleProblemlistDisplayEventItem:hover{
-    background: #444;
+    background: #373737;
 }
 .singleProblemlistDisplayListItemProgress{
     background: #777;
@@ -95,27 +95,27 @@ body{
     cursor: default;
 }
 .settingsInputPartContent{
-    background: #444;
+    background: rgb(36, 41, 46);
     border: 0;
     border-bottom: 1px solid #888;
     color: white;
     outline: none;
 }
 .submissionDisplayer > div:first-child > div:first-child{
-    background: #555;
+    background: rgb(35, 40, 45);
 }
 .submissionCodeDisplayer{
-    background: #333;
+    background: rgb(35, 40, 45);
 }
 .settingsLoginButton, .settingsLoginType{
     color: white;
     
 }
 .settingsSelectBigPartContent{
-    background: #444;
+    background: rgb(36, 41, 46);;
 }
 .searchPageTop, .searchPageTip{
-    background: #555;
+    background: rgb(45, 50, 55);
 }
 .searchArgumentsChoser{
     background: #444;
@@ -133,7 +133,7 @@ body{
     border-left-color: rgb(255, 204, 102);
 }
 .highlightedContestList{
-    background: #585858;
+    background: #444;
 }
 
 
@@ -146,10 +146,10 @@ body{
 
 
 .blockManager{
-    background: #555;
+    background: rgb(46, 51, 56);
 }
 .blockManagerTitle{
-    background: #4d4d4d;
+    background: rgb(51, 56, 61);
 }
 .folderButton{
     background: #666;

@@ -339,7 +339,7 @@ body{
 }
 .singleOpenSmallWindow{
 	cursor: pointer;
-	right: 10px;
+	right: 20px;
 }
 .singleHeadBackProgress {
     width: 0px;
@@ -552,7 +552,7 @@ img[src=""],img:not([src]){opacity:0;}
 	place-items: center;
 	transition: 0.2s;
 	position: absolute;
-	width: 70%;
+	width: 50%;
 	height: 30px;
 	border-radius: 3px;
 	top: -40px;
@@ -819,7 +819,6 @@ pre{
 .submissionCloser{
 	cursor: pointer;
 }
-
 
 
 
@@ -1157,7 +1156,7 @@ pre{
 	display: inline-block;
 }
 .bigInputArea{
-	width: calc(100% - 60px);
+	width: calc(100% - 57px);
 	padding: 3px 0px;
 	position: relative;
 }

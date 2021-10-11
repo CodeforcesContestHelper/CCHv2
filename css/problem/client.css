@@ -64,7 +64,7 @@ body{
 	border-radius: 10px;
 	overflow: hidden;
 }
-.sideBarItem, .sideBarGroup{
+.sideBarItem, .sideBarGroup, .addProblemSidebar{
 	transition: 0.2s;
 	font-size: 16px;
 	padding: 10px;
@@ -76,7 +76,8 @@ body{
 	cursor: pointer;
 }
 .sideBarItem > i, .sideBarItem > span
-, .sideBarGroup > i, .sideBarGroup > span{
+, .sideBarGroup > i, .sideBarGroup > span
+, .addProblemSidebar > i{
 	text-align: center;
 	display: inline-block;
 	width: 16px;
@@ -102,7 +103,8 @@ body{
 }
 .innerContent{
 	flex: 1;
-	overflow: hidden
+	overflow: hidden;
+	z-index: 1;
 }
 .ToolList{
 	-webkit-app-region: drag;
@@ -233,6 +235,9 @@ body{
 	width: 16px;
 	margin-right: 12px;
 }
+.submitInterface{
+	border-radius: 5px;
+}
 .submitInterfaceTitle{
 	font-size: 18px;
 }
@@ -266,6 +271,53 @@ select{
     border-radius: 4px;
     margin-right: 10px;
 }
+.addProblemInterface{
+	border-radius: 5px;
+}
+.inputButtonSplitter{
+	margin: 10px 0px;
+	display: flex;
+	flex-direction: row;
+	height: 50px;
+	width: calc(100% - 10px);
+	padding: 5px;
+	border-radius: 5px;
+	background: rgba(127, 127, 127, 0.4);
+	position: relative;
+}
+.inputButtonSplitterTitle{
+	position: absolute;
+	top: 0px;
+	height: 22px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(127, 127, 127, 1);
+	font-size: 16px;
+	padding: 0px 10px;
+	border-radius: 5px;
+}
+.inputButtonSplitter > input{
+	margin-top: 10px;
+	background: transparent;
+	width: calc(100% - 40px);
+	font-family: var(--font-family);
+	font-size: 20px;
+}
+.inputButtonSplitter > button{
+	margin-top: 10px;
+	cursor: pointer;
+	margin-left: 10px;
+	width: 40px;
+	transition: 0.2s;
+	height: 40px;
+	border-radius: 5px;
+	font-size: 20px;
+	display: grid;
+	place-items: center;
+	outline: 0;
+}
+
+
 .problemTag > i{
 	margin-right: 10px;
 }

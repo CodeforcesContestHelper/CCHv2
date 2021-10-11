@@ -2,7 +2,7 @@ body{
 	color: #fff;
 }
 .HtmlContainer{
-	background: #333;
+	background: rgb(29, 33, 37);
 }
 .singleContestProgressBarDisplayer{
     background: #555;
@@ -11,7 +11,7 @@ body{
     background: #777;
 }
 .styleBlock{
-    background: #555;
+    background: #444;
 }
 .idleColor{
     border: 1px solid #888;

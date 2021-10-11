@@ -494,6 +494,40 @@ function initLanguage(){
 			$(`.settingsUI[for=${name}] > div:first-child > div:first-child`).html(languageOption.settings[name][0]);
 			$(`.settingsUI[for=${name}] > div:first-child > div:last-child`).html(languageOption.settings[name][1]);
 		}
+	if(contestNewWinLoaded){
+		for(var name in languageOption.general)
+			if(languageOption.general.hasOwnProperty(name)){
+				if(languageOption.general[name].format(["", "", ""]) != languageOption.general[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
+					contestNewWinJQ.find(`[info=${name}]`).each(function(){
+						$(this).html(languageOption.general[name].format(JSON.parse($(this).attr("argv"))));
+					})
+				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.general[name]);
+			}
+		for(var name in languageOption.error)
+			if(languageOption.error.hasOwnProperty(name)){
+				if(languageOption.error[name].format(["", "", ""]) != languageOption.error[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
+					contestNewWinJQ.find(`[info=${name}]`).each(function(){
+						$(this).html(languageOption.error[name].format(JSON.parse($(this).attr("argv"))));
+					})
+				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.error[name]);
+			}
+		for(var name in languageOption.input)
+			if(languageOption.input.hasOwnProperty(name))
+				$(`[info=${name}]`).attr("placeholder", languageOption.input[name]);
+		for(var name in languageOption.tip)
+			if(languageOption.tip.hasOwnProperty(name)){
+				if(languageOption.tip[name].format(["", "", ""]) != languageOption.tip[name] && contestNewWinJQ.find(`[info=${name}]`).attr("argv") != undefined)
+					contestNewWinJQ.find(`[info=${name}]`).each(function(){
+						$(this).html(languageOption.tip[name].format(JSON.parse($(this).attr("argv"))));
+					})
+				else	contestNewWinJQ.find(`[info=${name}]`).html(languageOption.tip[name]);
+			}
+		for(var name in languageOption.settings)
+			if(languageOption.settings.hasOwnProperty(name)){
+				$(`.settingsUI[for=${name}] > div:first-child > div:first-child`).html(languageOption.settings[name][0]);
+				$(`.settingsUI[for=${name}] > div:first-child > div:last-child`).html(languageOption.settings[name][1]);
+			}
+	}
 }
 initLanguage();
 if(settings == undefined)	settings = {};
