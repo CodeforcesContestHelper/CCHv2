@@ -675,7 +675,7 @@ function initProblemNewWin(){
 			var info = JSON.stringify({
 							"name": problemCurrentPageList[i][4].title,
 						    "group": problemCurrentPageList[i][4].contestName,
-						    "url": `https://codeforces.com/${getProblemIndexes(problemCurrentPageList[i][0])[0] >= 100000 ? "gym" : "contest"}/{getProblemIndexes(problemCurrentPageList[i][0])[0]}/problem/${getProblemIndexes(problemCurrentPageList[i][0])[1]}`,
+						    "url": `https://codeforces.com/${getProblemIndexes(problemCurrentPageList[i][0])[0] >= 100000 ? "gym" : "contest"}/${getProblemIndexes(problemCurrentPageList[i][0])[0]}/problem/${getProblemIndexes(problemCurrentPageList[i][0])[1]}`,
 						    "interactive": false,
 						    "memoryLimit": problemCurrentPageList[i][4].memoryLimit,
 						    "timeLimit": problemCurrentPageList[i][4].timelimit,
