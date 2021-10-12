@@ -204,6 +204,7 @@ body{
 	padding: 5px;
 }
 .loadingInterface{
+	-webkit-app-region: no-drag;
 	transition: 0.2s;
 	position: absolute;
 	z-index: 99;
@@ -275,7 +276,7 @@ select{
 	border-radius: 5px;
 }
 .inputButtonSplitter{
-	margin: 10px 0px;
+	margin-top: 30px;
 	display: flex;
 	flex-direction: row;
 	height: 50px;

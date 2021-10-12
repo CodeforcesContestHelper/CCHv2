@@ -372,6 +372,16 @@ var settingsFunctions = {
 			return settings.openProblems;
 		}
 	},
+	openNotification: {
+		initial: function(){
+			return settings.openNotification;
+		},
+		change: function(){
+			settings.openNotification = !settings.openNotification;
+			saveSettings();
+			return settings.openNotification;
+		}
+	},
 	showProblemStatus: {
 		initial: function(){
 			return settings.showProblemStatus;
@@ -412,7 +422,8 @@ var currentDefaultSettings = {
 	openProblems: false,
 	transformPort: "1327,4244,6174,10042,10043,10045,27121",
 	statementFontSize: 16,
-	statementDefaultLanguage: 50
+	statementDefaultLanguage: 50,
+	openNotification: true,
 };
 function setAsDefault(op){
 	if(op == undefined)	op = false;
@@ -881,6 +892,8 @@ function getProblemIndexes(x){
 	for(var i=0; i<x.length; i++)
 		if((i < q || i > p) && !(/[0-9]/.test(x[i])))
 			return [-1, -1];
+	if(x.substring(q).length > 2)
+		return [-1, -1];
 	return [x.substring(0, q), x.substring(q)];
 }
 function getContestType(x){
