@@ -87,6 +87,7 @@ var lang_en = {
 		addIntoProblems: "Add Problem / Contest",
 		add_problem: "<i class='fas fa-question-circle'></i> Add Problem",
 		add_contest: "<i class='fas fa-calendar'></i> Add Contest",
+		openProblems: "<i class='fas fa-book'></i> Open Problem Page",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -229,6 +230,10 @@ var lang_en = {
 			"<span class='fas fa-cloud-upload-alt'></span> Submit Default Language",
 			"Set default language while submitting."
 		],
+		openNotification: [
+			"<span class='fas fa-bell'></span> Open Notification",
+			"Choose if notifications of hacks, contest notifications or submission results should be sent."
+		]
 	}
 };
 var lang_zh = {
@@ -321,6 +326,7 @@ var lang_zh = {
 		addIntoProblems: "添加题目或比赛",
 		add_problem: "<i class='fas fa-question-circle'></i> 添加题目",
 		add_contest: "<i class='fas fa-calendar'></i> 添加比赛",
+		openProblems: "<i class='fas fa-book'></i> 打开题目界面",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -464,6 +470,10 @@ var lang_zh = {
 			"<span class='fas fa-cloud-upload-alt'></span> 默认提交语言",
 			"设置提交时的默认语言。"
 		],
+		openNotification: [
+			"<span class='fas fa-bell'></span> 开启提醒",
+			"选择是否发送包含 hack，比赛通知或者提交结果的提醒。"
+		]
 	}
 };
 var lang_list = ["English", "简体中文"];

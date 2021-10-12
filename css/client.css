@@ -937,7 +937,7 @@ pre{
 .settingsInputPartContent:focus{
 	width: calc(100% + 5px);
 }
-.settingsSetAsDefault{
+.settingsSetAsDefault, .settingsOpenProblems{
 	cursor: pointer;
 	font-size: 16px;
 }

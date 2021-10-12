@@ -108,7 +108,7 @@ function addWatcher(id, idx){
 				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-waiting")
 				|| lastJudgement == "In queue")
 					setTimeout(loadWatchType, 1000);
-				else{
+				else if(settings.openNotification){
 					new Notification(`Result of CF${idx}`, {body: ctL.children().eq(4).text().trim(), icon: '../favicon.png'});
 				}
 			},
@@ -228,6 +228,27 @@ function loadProblem(x){
 	problemCurrentPageList[p][1] = $.ajax({
 		url: settings.mainURL + `/${getProblemIndexes(x)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(x)[0] + '/problem/' + getProblemIndexes(x)[1] + '?locale=en',
 		success: function(data){
+			if(data.indexOf(`data-entityId="${getProblemIndexes(x)[0]}"`) == -1){
+				if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
+				var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
+				problemCurrentPageList[p][2] = 3;
+				problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
+				problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-unlink red fa-3x"></i></div>`);
+				problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
+					problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
+					problemFocusOn = Number($(this).attr("id"));
+					problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
+					problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
+					problemNewWinJQ.find(".innerContent > div").css("display", "none");
+					problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
+				})
+				problemNewWinJQ.find(".closeCurrentProblemPage").unbind("click").click(function(){
+					event.stopPropagation();
+					killProblemListItem($(this).attr("id"));
+					flushProblemNewWin();
+				})
+				return;
+			}
 			if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
 			var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 			problemCurrentPageList[p][4].contestName = $(data).find("#sidebar").eq(0).find("a").eq(0).html();
@@ -267,7 +288,6 @@ function loadProblem(x){
 				killProblemListItem($(this).attr("id"));
 				flushProblemNewWin();
 			})
-			setTimeout(function(){loadProblem(x)}, 10000);
 		},
 		xhr: function() {
 			var xhr = new XMLHttpRequest();
@@ -307,6 +327,7 @@ function addProblems(x, gid){
 		for(var i=0; i<x.length; i++){
 			if(getProblemIndexes(x[i])[0] == -1)	continue;
 			if(problemCurrentPageList.find(function(q){return q[0] == x[i]}) != undefined)	continue;
+			problemFocusOn = problemCurrentPageList.length;
 			problemCurrentPageList.push([x[i], null, 1, [[], []], {}]);
 			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
 			loadProblem(x[i]);
@@ -379,6 +400,31 @@ function(x){ return `<span>${getProblemIndexes(x)[1]}</span>` }
 , function(){ return `<i class="fas ${loadTypes[2]}"></i>`; }
 , function(){ return `<i class="fas ${loadTypes[3]}"></i>`; }
 ];
+
+function loadContestProblemset(cid, S, E){
+	if(! /^\d+$/.test(cid)){
+		E(); return;
+	}
+	cid = Number(cid);
+	$.ajax({
+		url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid,
+		success: function(data){
+			if(data.indexOf(`data-entityId="${cid}"`) == -1){
+				E(); return;
+			}
+			var q = $(data).find("table.problems");
+			var ret = [];
+			q.find("td.id a").each(function(){
+				ret.push(String(cid) + $.trim($(this).html()));
+			})
+			S(ret);
+		},
+		error: function(){
+			E();
+		}
+	})
+}
+
 function flushProblemNewWin(){
 	if(problemCurrentPageList.length == 0)
 		problemNewWinJQ.find(".innerContent").css("display", "none"),
@@ -409,7 +455,7 @@ function flushProblemNewWin(){
 		lastContestFolder = false;
 		problemNewWinJQ.find(".sideBar > div").append(`<div class="sideBarItem" id="${i}">${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div class="closeCurrentProblemPage" id=${i}><i class="fas fa-times"></i></div></div>`);
 	}
-	// problemNewWinJQ.find(".sideBar > div").append(`<div class="addProblemSidebar"><i class='fas fa-add'></i><span info='add'>${languageOption.general.add}</span></div>`);
+	problemNewWinJQ.find(".sideBar > div").append(`<div class="addProblemSidebar"><i class='fas fa-add'></i><span info='add'>${languageOption.general.add}</span></div>`);
 	if(problemFocusOn < problemCurrentPageList.length && problemFocusOn >= 0)
 		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen"),
 		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
@@ -468,7 +514,88 @@ function flushProblemNewWin(){
 	problemNewWinJQ.find(".addProblemSidebar").unbind("click").click(function(){
 		problemNewWinJQ.find(".addProblemWindow").css("opacity", "1");
 		problemNewWinJQ.find(".addProblemWindow").css("display", "grid");
+		problemNewWinJQ.find(".problemInfoInputArea input").val("");
+		problemNewWinJQ.find(".contestInfoInputArea input").val("");
 	})
+	problemNewWinJQ.find(".problemInfoInputArea button").unbind('click').click(function(){
+		if(typeof($(this).attr("disabled")) != "undefined")
+			return;
+		problemNewWinJQ.find(".problemInfoInputArea button").attr("disabled", "true");
+		problemNewWinJQ.find(".contestInfoInputArea button").attr("disabled", "true");
+		problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
+		problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
+		var R = problemNewWinJQ.find(".problemInfoInputArea input").val();
+		if(getProblemIndexes(R)[0] != -1){
+			problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
+			problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
+			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+			problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+			problemNewWinJQ.find(".addProblemWindow").css("opacity", "0");
+			setTimeout(function(){
+				problemNewWinJQ.find(".addProblemWindow").css("display", "none");
+			}, 500);
+			addProblems([R]);
+		}
+		else{
+			problemNewWinJQ.find(".problemInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
+			problemNewWinJQ.find(".contestInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
+			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-exclamation-triangle"></i>`);
+			problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-exclamation-triangle"></i>`);
+			setTimeout(function(){
+				problemNewWinJQ.find(".problemInfoInputArea button").addClass("primaryColor").removeClass("dangerColor");
+				problemNewWinJQ.find(".contestInfoInputArea button").addClass("primaryColor").removeClass("dangerColor");
+				problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+				problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+				problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
+				problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
+			}, 1000)
+		}
+	})
+	problemNewWinJQ.find(".problemInfoInputArea input")
+		.bind('keydown',function(event){
+	    if(event.keyCode == "13"){
+	    	problemNewWinJQ.find(".problemInfoInputArea button").click();
+	    }
+	});
+	problemNewWinJQ.find(".contestInfoInputArea button").unbind('click').click(function(){
+		if(typeof($(this).attr("disabled")) != "undefined")
+			return;
+		problemNewWinJQ.find(".problemInfoInputArea button").attr("disabled", "true");
+		problemNewWinJQ.find(".contestInfoInputArea button").attr("disabled", "true");
+		problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
+		problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
+		var R = problemNewWinJQ.find(".contestInfoInputArea input").val();
+		loadContestProblemset(R, function(data){
+			problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
+			problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
+			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+			problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+			problemNewWinJQ.find(".addProblemWindow").css("opacity", "0");
+			setTimeout(function(){
+				problemNewWinJQ.find(".addProblemWindow").css("display", "none");
+			}, 500);
+			addProblems(data, R);
+		}, function(){
+			problemNewWinJQ.find(".problemInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
+			problemNewWinJQ.find(".contestInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
+			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-exclamation-triangle"></i>`);
+			problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-exclamation-triangle"></i>`);
+			setTimeout(function(){
+				problemNewWinJQ.find(".problemInfoInputArea button").addClass("primaryColor").removeClass("dangerColor");
+				problemNewWinJQ.find(".contestInfoInputArea button").addClass("primaryColor").removeClass("dangerColor");
+				problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+				problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+				problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
+				problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
+			}, 1000)
+		});
+	})
+	problemNewWinJQ.find(".contestInfoInputArea input")
+		.bind('keydown',function(event){
+	    if(event.keyCode == "13"){
+	    	problemNewWinJQ.find(".contestInfoInputArea button").click();
+	    }
+	});
 }
 function sampleWrapper(x, y){
 	var ret = [];
