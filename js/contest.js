@@ -180,6 +180,10 @@ function loadContestList(){
 		},
 		error: function(){
 			$(".contestListLoadIf").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
+			$(".contestListLoadIf").css("cursor", "pointer");
+			$(".contestListLoadIf").unbind("click").click(function(){
+				loadContestList();
+			})
 		}
 	})
 }

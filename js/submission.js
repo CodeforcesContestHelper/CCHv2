@@ -2,7 +2,7 @@
 var submissionLastOperated = new Date(0);
 function openSubmission(c, u){
 	if(!RunInNwjs){
-		openURL(settings.mainURL + '/contest/' + c + '/submission/' + u);
+		openURL(settings.mainURL + `/${c >= 100000 ? "gym" : "contest"}/` + c + '/submission/' + u);
 		return;
 	}
 	submissionLastOperated = new Date();
@@ -80,7 +80,7 @@ function openSubmission(c, u){
 		else $(".submissionMemory").html("?");
 		$(".submissionCode > code").html(allHtmlSpecialChars(data.find("#program-source-text").text()));
 		$(".submissionCode").html("<code></code>");
-		$(".jumpToSubmission").attr("onclick", `openURL('${settings.mainURL + '/contest/' + c + '/submission/' + u}')`);
+		$(".jumpToSubmission").attr("onclick", `openURL('${settings.mainURL + `/${c >= 100000 ? 'gym' : 'contest'}/` + c + '/submission/' + u}')`);
 		var nL = [];
 		var curr = ctL.children().eq(1).find("a");
 		curr.each(function(){
