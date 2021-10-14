@@ -19,6 +19,8 @@ function openSubmission(c, u){
 			success: function(j){
 				if(T.getTime() != submissionLastOperated.getTime())	return;
 				data = $(j);
+				if(j.indexOf(`data-entityId="${u}"`) == -1)
+					data = $("<body></body>");
 				setTimeout(callback, 100);
 			},
 			error: function(){

@@ -790,10 +790,10 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 	setTimeout(function(){
 		loadStandings = loadStandings || (settings.openStandings == 2 || (settings.openStandings == 1 && getContestType($(".singleContestName").html()) == "Div. 1"));
 		if(success.length == 4)	loadStandings = false;
-		if(loadStandings && contestStandingLoadTime.getTime() < (new Date()).getTime() - settings.standingsLoadingGap){
+		if(loadStandings && contestStangingLoadTime.getTime() < (new Date()).getTime() - settings.standingsLoadingGap){
 			Q = ++contestStandingsIndex;
 			contestStandingLoader = 0;
-			contestStandingLoadTime = new Date();
+			contestStangingLoadTime = new Date();
 			loadInfo(settings.codeforcesApiUrl + "/contest.hacks", {contestId: ci}, ["result"], 4, true);
 			if((inContest == 2 && settings.openRankPredict >= 1) || (inContest >= 1 && settings.openRankPredict == 2))
 				setTimeout(function(){loadInfo(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, showUnofficial: settings.openRankPredict == 2}, ["result"], 5, false);}, 500);
@@ -831,7 +831,7 @@ var singleContestType, singleContestUnrated;
 var contestEndTime, contestStartTime;
 var contestHacks, contestStandingList;
 var contestStandingsIndex = 0, contestStandingLoader = 0;
-var contestStandingLoadTime = new Date(0);
+var contestStangingLoadTime = new Date(0);
 var contestRunningStatus, contestRunningType;
 var contestSubmissionList = [];
 var inContest;
@@ -933,19 +933,7 @@ function singleContestantTimeCountdown(tc){
 	if(contestNewWinLoaded)
 		contestNewWinJQ.find(".singleContestProgressBackground").css("width", `${p/q*100}%`);
 }
-function resetProblemPointInfo(json){
-	console.log(json);
-	for(var i=0; i<json.rows.length; i++)
-		if(json.rows[i].pointsInfo != undefined)
-			json.rows[i].points = Number(json.rows[i].pointsInfo);
-	for(var i=0; i<json.rows.length; i++)
-		for(var j=0; j<json.rows[i].problemResults.length; j++)
-			if(json.rows[i].problemResults[j].pointsInfo != undefined)
-			json.rows[i].problemResults[j].points = Number(json.rows[i].problemResults[j].pointsInfo);
-	return json;
-}
 function singleContestantSyncOfficialSettings(un, ci, json, p){
-	json = resetProblemPointInfo(json);
 	$(".singleContestTags").html("");
 	var nam = $(`<div class="singleContestTag primaryColor"><i class="fas fa-calendar"></i>#${ci}</div>`);
 	$(".singleContestTags").append(nam);
@@ -997,10 +985,6 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
 		$(".singleContestTags").append(unk);
 	}
-	if(json.rows.length > 0 && json.rows[0].party.members.length > 1){
-		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}</div>`);
-		$(".singleContestTags").append(unk);
-	}
 	if(contestNewWinLoaded)
 		if(contestJsonProblems.length != 0){
 			contestNewWinJQ.find(".problemDisplayer").html("");
@@ -1029,7 +1013,6 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 	}
 }
 function singleContestantSyncUnofficialSettings(un, ci, json, p){
-	json = resetProblemPointInfo(json);
 	$(".singleContestTags").html("");
 	var nam = $(`<div class="singleContestTag primaryColor"><i class="fas fa-calendar"></i>#${ci}</div>`);
 	$(".singleContestTags").append(nam);
@@ -1064,7 +1047,6 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	}
 	singleContestUnrated = "Unranked";
 	inContes = false;
-	var inTeam = false;
 	for(var i=0; i<json.rows.length; i++)
 		if(json.rows[i].party.participantType == "CONTESTANT"){
 			contestProblemResult = json.rows[i].problemResults;
@@ -1077,7 +1059,6 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			inContest = 2;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
-			inTeam |= (json.rows[i].party.members.length > 1);
 		}
 		else if(json.rows[i].party.participantType == "OUT_OF_COMPETITION"){
 			contestProblemResult = json.rows[i].problemResults;
@@ -1090,7 +1071,6 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			inContest = 1;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
-			inTeam |= (json.rows[i].party.members.length > 1);
 		}
 	if(!inContest){
 		flushsingleProblemlistDisplayList(contestSubmissionList, [], contestJsonProblems);
@@ -1100,10 +1080,6 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	flushRankDisplayer();
 	if(singleContestUnrated != undefined){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
-		$(".singleContestTags").append(unk);
-	}
-	if(inContest && inTeam){
-		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}</div>`);
 		$(".singleContestTags").append(unk);
 	}
 	if(contestNewWinLoaded)
@@ -1151,7 +1127,6 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	}
 }
 function singleVirtualSyncUnofficialSettings(un, ci, json, p){
-	json = resetProblemPointInfo(json);
 	$(".singleContestTags").html("");
 	var nam = $(`<div class="singleContestTag primaryColor"><i class="fas fa-calendar"></i>#${ci}</div>`);
 	$(".singleContestTags").append(nam);
@@ -1178,7 +1153,6 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	}
 	singleContestUnrated = "Virtual";
 	inContest = false;
-	var inTeam = false;
 	for(var i=0; i<json.rows.length; i++){
 		if(json.rows[i].party.participantType == "VIRTUAL" && json.rows[i].party.startTimeSeconds * 1000 == virtualProvidedStartTime.getTime()){
 			contestProblemResult = json.rows[i].problemResults;
@@ -1193,7 +1167,6 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 			inContest = 1;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
-			inTeam |= (json.rows[i].party.members.length > 1);
 		}
 	}
 	if(!inContest){
@@ -1212,10 +1185,6 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	flushRankDisplayer();
 	if(singleContestUnrated != undefined){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
-		$(".singleContestTags").append(unk);
-	}
-	if(inContest && inTeam){
-		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}</div>`);
 		$(".singleContestTags").append(unk);
 	}
 	if(contestNewWinLoaded)
@@ -1480,7 +1449,6 @@ function singleContestantSyncHacks(un, ci, json, p){
 		loadStandingsService(un, ci, false);
 }
 function singleContestantSyncStandings(un, ci, json, p){
-	json = resetProblemPointInfo(json);
 	if(p != contestStandingsIndex)	return;
 	contestStandingList = json;
 	++contestStandingLoader;
@@ -1491,7 +1459,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 	contestRanks = [0, 0];
 	contestRankLast = [0, 0];
 	contestRankInfo = [[], []];
-	contestStandingLoadTime = new Date(0);
+	contestStangingLoadTime = new Date(0);
 	contestProblemResult = [];
 	contestProblemStatusBarInfo = [[], []];
 	contestSubmissionList = [];
@@ -1502,7 +1470,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 	contestHacks = contestStandingList = undefined;
 	contestCalculatingRank = [false, false];
 	contestStandingsIndex = 0, contestStandingLoader = 0;
-	contestStandingLoadTime = new Date(0);
+	contestStangingLoadTime = new Date(0);
 	contestRunningStatus = "", contestRunningType = "";
 	contestSubmissionList = [];
 	singleAnnouncementLength = -1;
@@ -1551,7 +1519,7 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 	contestRanks = [0, 0];
 	contestRankLast = [0, 0];
 	contestRankInfo = [[], []];
-	contestStandingLoadTime = new Date(0);
+	contestStangingLoadTime = new Date(0);
 	contestProblemResult = [];
 	contestProblemStatusBarInfo = [[], []];
 	contestSubmissionList = [];
@@ -1561,7 +1529,7 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 	singleContestType = "";
 	contestCalculatingRank = [false, false];
 	contestStandingsIndex = 0, contestStandingLoader = 0;
-	contestStandingLoadTime = new Date(0);
+	contestStangingLoadTime = new Date(0);
 	contestRunningStatus = "", contestRunningType = "";
 	contestSubmissionList = [];
 	inContest = false;
@@ -2034,7 +2002,7 @@ function loadSingleInformation(type, un, ci, tm, started){
 	contestRanks = [0, 0];
 	contestRankLast = [0, 0];
 	contestRankInfo = [[], []];
-	contestStandingLoadTime = new Date(0);
+	contestStangingLoadTime = new Date(0);
 	contestProblemResult = [];
 	contestProblemStatusBarInfo = [[], []];
 	contestSubmissionList = [];
@@ -2045,7 +2013,7 @@ function loadSingleInformation(type, un, ci, tm, started){
 	contestHacks = contestStandingList = undefined;
 	contestCalculatingRank = [false, false];
 	contestStandingsIndex = 0, contestStandingLoader = 0;
-	contestStandingLoadTime = new Date(0);
+	contestStangingLoadTime = new Date(0);
 	contestRunningStatus = "", contestRunningType = "";
 	contestSubmissionList = [];
 	inContest = false;
@@ -2558,7 +2526,7 @@ $(".forceLoadStandings").click(function(){
 	}
 	Q = ++contestStandingsIndex;
 	contestStandingLoader = 0;
-	contestStandingLoadTime = new Date();
+	contestStangingLoadTime = new Date();
 	loadInfo(settings.codeforcesApiUrl + "/contest.hacks", {contestId: ci}, ["result"], 0, true);
 	setTimeout(function(){loadInfo(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, showUnofficial: settings.openRankPredict == 2}, ["result"], 1, false);}, 500);
 })

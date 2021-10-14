@@ -339,7 +339,7 @@ body{
 }
 .singleOpenSmallWindow{
 	cursor: pointer;
-	right: 20px;
+	right: 10px;
 }
 .singleHeadBackProgress {
     width: 0px;
@@ -362,7 +362,7 @@ body{
 	top: 0px;
 	left: 0px;
 }
-.singleHeadBack > span > i{
+.singleHeadBack > span > i, .singleOpenSmallWindow > i{
 	padding: 3px 5px;
 }
 .blockManager{

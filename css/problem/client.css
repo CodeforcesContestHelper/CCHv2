@@ -464,12 +464,13 @@ ul, ol{
 	border: 1px solid #777;
 	border-radius: 5px;
 	padding: 5px;
+	padding-bottom: 0px;
 	width: calc(100% - 12px);
 	height: 100%;
 	overflow-x: scroll;
 	font-family: var(--editor-font-family);
 	font-size: var(--editor-font-size);
-	white-space: pre-line;
+	white-space: pre;
 }
 @media only screen and (max-width: 520px){
 	.sampleBlock{
@@ -508,9 +509,6 @@ ul, ol{
 	font-size: 16px;
 	text-align: center;
 }
-.katex-mathml, .vlist-s{
-	user-select: none;
-}
 .copyInfo{
 	margin-left: 10px;
 	user-select: none;
@@ -519,6 +517,14 @@ ul, ol{
 	padding: 2px;
 	border-radius: 5px;
 }
+.katex,
+.katex-display {
+    user-select: all;
+    -moz-user-select: all;
+    -webkit-user-select: all;
+    -ms-user-select: all;
+}
+
 
 
 ::-webkit-scrollbar{

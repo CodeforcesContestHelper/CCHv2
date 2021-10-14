@@ -37,7 +37,6 @@ var lang_en = {
 		tagContestant: "Contestant",
 		tagUnrated: "Unrated",
 		tagVirtual: "Virtual",
-		tagTeam: "In group",
 		Unrated: "Unrated",
 		System: "System",
 		Light: "Light",
@@ -89,6 +88,8 @@ var lang_en = {
 		add_problem: "<i class='fas fa-question-circle'></i> Add Problem",
 		add_contest: "<i class='fas fa-calendar'></i> Add Contest",
 		openProblems: "<i class='fas fa-book'></i> Open Problem Page",
+		contestPageBeforeStart: "Before start",
+		contestPageRunning: "Running",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -276,7 +277,6 @@ var lang_zh = {
 		tagContestant: "参赛者",
 		tagUnrated: "不计 Rating",
 		tagVirtual: "虚拟赛",
-		tagTeam: "组队",
 		Unrated: "Unrated",
 		System: "跟随系统",
 		Light: "亮色",
@@ -329,6 +329,8 @@ var lang_zh = {
 		add_problem: "<i class='fas fa-question-circle'></i> 添加题目",
 		add_contest: "<i class='fas fa-calendar'></i> 添加比赛",
 		openProblems: "<i class='fas fa-book'></i> 打开题目界面",
+		contestPageBeforeStart: "开始于",
+		contestPageRunning: "进行中",
 	},
 	input: {
 		singleContestantUsername: "用户名",
