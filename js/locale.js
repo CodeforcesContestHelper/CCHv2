@@ -90,6 +90,7 @@ var lang_en = {
 		openProblems: "<i class='fas fa-book'></i> Open Problem Page",
 		contestPageBeforeStart: "Before start",
 		contestPageRunning: "Running",
+		tagTeam: "In group",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -331,6 +332,7 @@ var lang_zh = {
 		openProblems: "<i class='fas fa-book'></i> 打开题目界面",
 		contestPageBeforeStart: "开始于",
 		contestPageRunning: "进行中",
+		tagTeam: "组队",
 	},
 	input: {
 		singleContestantUsername: "用户名",
