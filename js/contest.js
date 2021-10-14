@@ -132,20 +132,27 @@ function displayContestListPage(){
 					, `<span class="red"><span class="fas fa-running"></span> ${localize('contestListRun')}</span>`
 					, `<span class="green"><span class="fas fa-check"></span> ${localize('contestListEnd')}</span>`];
 		if((new Date()).getTime() <= x[3] * 1000)
-			rep[6] = 0;
+			rep[6] = 0, rep[5] += ` | <span class='dangerColor' style="padding: 0px 5px">${localize('contestPageBeforeStart')}<span class="contestPageCountdown" time="${x[3] * 1000}" style="padding-left: 10px"></span></span>`;
 		else if((new Date()).getTime() <= (x[3] + x[4]) * 1000)
-			rep[6] = 1;
+			rep[6] = 1, rep[5] += ` | <span class='warningColor' style="padding: 0px 5px">${localize('contestPageRunning')}<span class="contestPageCountdown" time="${(x[3] + x[4]) * 1000}" style="padding-left: 10px"></span></span>`;
 		else
 			rep[6] = 2;
 		rep[6] = rtList[rep[6]];
 		$(".contestSearch .searchPageBottom").append(contestListFormatString.format(rep));
 	}
+	$(".contestPageCountdown").each(function(){
+		var t = Number($(this).attr("time"));
+		var q = (new Date()).getTime();
+		if(q > t)
+			q = t;
+		$(this).html(getTimeLength2(t - q));
+	})
 }
 
 function loadContestList(){
-	$(".contestListLoadIf").css("cursor", "default");
-	$(".contestListLoadIf").unbind("click");
-	$(".contestListLoadIf").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loading"));
+	$(".contestListLoadIf > span").css("cursor", "default");
+	$(".contestListLoadIf > span").unbind("click");
+	$(".contestListLoadIf > span").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loading"));
 	$.ajax({
 		url: settings.codeforcesApiUrl + '/contest.list',
 		type: "GET",
@@ -153,7 +160,7 @@ function loadContestList(){
 		success: function(data){
 			var _contestAllList = [];
 			data = data.result;
-			$(".contestListLoadIf").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loadingAcCount"));
+			$(".contestListLoadIf > span").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loadingAcCount"));
 			loadContestPassedStatus(function(){
 				for(var i=0; i<data.length; i++)
 				_contestAllList.push([data[i].name, data[i].id, data[i].type, data[i].startTimeSeconds, data[i].durationSeconds]);
@@ -165,23 +172,23 @@ function loadContestList(){
 				var y = $(".contestDirectionOption").children().eq(1).hasClass("chosen");
 				contestListSort(x, y);
 				displayContestListPage();
-				$(".contestListLoadIf").html(`<span class='fas fa-check green'></span> ` + localize("success"));
-				$(".contestListLoadIf").css("cursor", "pointer");
-				$(".contestListLoadIf").unbind("click").click(function(){
+				$(".contestListLoadIf > span").html(`<span class='fas fa-check green'></span> ` + localize("success"));
+				$(".contestListLoadIf > span").css("cursor", "pointer");
+				$(".contestListLoadIf > span").unbind("click").click(function(){
 					loadContestList();
 				})
 			}, function(){
-				$(".contestListLoadIf").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
-				$(".contestListLoadIf").css("cursor", "pointer");
-				$(".contestListLoadIf").unbind("click").click(function(){
+				$(".contestListLoadIf > span").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
+				$(".contestListLoadIf > span").css("cursor", "pointer");
+				$(".contestListLoadIf > span").unbind("click").click(function(){
 					loadContestList();
 				})
 			})
 		},
 		error: function(){
-			$(".contestListLoadIf").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
-			$(".contestListLoadIf").css("cursor", "pointer");
-			$(".contestListLoadIf").unbind("click").click(function(){
+			$(".contestListLoadIf > span").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
+			$(".contestListLoadIf > span").css("cursor", "pointer");
+			$(".contestListLoadIf > span").unbind("click").click(function(){
 				loadContestList();
 			})
 		}
@@ -189,6 +196,7 @@ function loadContestList(){
 }
 var ifInitContestPage = false;
 $(".NavBarContent").eq(2).click(function(){
+	displayContestListPage();
 	if(!contestInSecondPage){
 		displayContestListPage();
 		if(!ifInitContestPage)
@@ -232,3 +240,15 @@ $(".contestSearch .searchPagesButton").eq(3).click(function(){
 	contestListCurrentPage = r;
 	displayContestListPage();
 })
+
+function reloadContestPageCountdown(){
+	setTimeout(reloadContestPageCountdown, 500);
+	$(".contestPageCountdown").each(function(){
+		var t = Number($(this).attr("time"));
+		var q = (new Date()).getTime();
+		if(q > t)
+			q = t;
+		$(this).html(getTimeLength2(t - q));
+	})
+}
+reloadContestPageCountdown();
