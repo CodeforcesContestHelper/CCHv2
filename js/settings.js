@@ -293,6 +293,26 @@ var settingsFunctions = {
 			saveSettings();
 		}
 	},
+	apiKey: {
+		initial: function(){
+			return settings.apiKey;
+		},
+		change: function(str){
+			str = $.trim(str);
+			settings.apiKey = str;
+			saveSettings();
+		}
+	},
+	apiSecret: {
+		initial: function(){
+			return settings.apiSecret;
+		},
+		change: function(str){
+			str = $.trim(str);
+			settings.apiSecret = str;
+			saveSettings();
+		}
+	},
 	editorFontSize: {
 		initial: function(){
 			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
@@ -382,6 +402,16 @@ var settingsFunctions = {
 			return settings.openNotification;
 		}
 	},
+	useApiKeys: {
+		initial: function(){
+			return settings.useApiKeys;
+		},
+		change: function(){
+			settings.useApiKeys = !settings.useApiKeys;
+			saveSettings();
+			return settings.useApiKeys;
+		}
+	},
 	showProblemStatus: {
 		initial: function(){
 			return settings.showProblemStatus;
@@ -424,6 +454,9 @@ var currentDefaultSettings = {
 	statementFontSize: 16,
 	statementDefaultLanguage: 50,
 	openNotification: true,
+	useApiKeys: false,
+	apiKey: "",
+	apiSecret: ""
 };
 function setAsDefault(op){
 	if(op == undefined)	op = false;
@@ -447,6 +480,9 @@ function setAsDefault(op){
 		var S = settings.editorFontSize;
 		var P = settings.statementFontFamily;
 		var s = settings.statementDefaultLanguage;
+		var A = settings.useApiKeys;
+		var K = settings.apiKey;
+		var _s = settings.apiSecret;
 		if(L == undefined)	L = currentDefaultSettings.language;
 		if(D == undefined)	D = currentDefaultSettings.styleSelection;
 		if(F == undefined)	F = currentDefaultSettings.fontFamily;
@@ -454,6 +490,9 @@ function setAsDefault(op){
 		if(S == undefined)	S = currentDefaultSettings.editorFontSize;
 		if(P == undefined)	P = currentDefaultSettings.statementFontFamily;
 		if(s == undefined)	s = currentDefaultSettings.statementDefaultLanguage
+		if(A == undefined)	A = currentDefaultSettings.useApiKeys;
+		if(K == undefined)	K = currentDefaultSettings.apiKey;
+		if(_s == undefined)	_s = currentDefaultSettings.apiSecret;
 		settings = JSON.parse(JSON.stringify(currentDefaultSettings));
 		settings.language = L;
 		settings.styleSelection = D;
@@ -462,6 +501,9 @@ function setAsDefault(op){
 		settings.editorFontSize = S;
 		settings.statementFontFamily = P;
 		settings.statementDefaultLanguage = s;
+		settings.useApiKeys = A;
+		settings.apiKey = K;
+		settings.apiSecret = _s;
 	}
 	saveSettings();
 	initSettingsPage();

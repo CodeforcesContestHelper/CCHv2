@@ -60,65 +60,6 @@ function getOutputFileType(x){
 		return {type: x};
 	return {type: "file", fileName: x};
 }
-function addWatcher(id, idx){
-	var p = $(`<div class="singleWatchContent"><div class="singleWatchTitle">#${id} | ${idx}</div><div style="flex: 1; display: flex; flex-direction: row;"><div style="flex: 1; overflow: hidden; display: grid; place-items: center"><span class="singleWatchInfo">Pending...</span></div></div></div>`)
-	p.css("transform", "scale(1, 0)");
-	p.css("max-height", "0px");
-	p.css("margin", "0");
-	p.css("padding", "0");
-	var IN = false;
-	function fadeIn(){
-		if(IN)	return;
-		IN = true;
-		problemNewWinJQ.find(".watchDisplayer").append(p);
-		setTimeout(function(){p.attr("style", "");}, 100);
-	}
-	var lastJudgement = "";
-	function fadeOut(lj){
-		setTimeout(function(){
-			if(!IN)	return;
-			if(lj != lastJudgement)	return;
-			IN = false;
-			p.css("transform", "scale(1, 0)");
-			p.css("max-height", "0px");
-			p.css("margin", "0");
-			p.css("padding", "0");
-			setTimeout(function(){
-				p.remove();
-			}, 200);
-		}, 5000);
-	}
-	fadeIn();
-	function loadWatchType(){
-		$.ajax({
-			url: settings.mainURL + `/${getProblemIndexes(idx)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(idx)[0] + '/submission/' + id,
-			success: function(data){
-				var ctL = $(data).find("table").eq(0).find("tr").eq(1);
-				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-accepted")){
-					p.find(".singleWatchInfo").addClass("green");
-				}
-				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-rejected")
-				|| ctL.children().eq(4).children().eq(0).hasClass("verdict-failed")){
-					p.find(".singleWatchInfo").addClass("red");
-				}
-				p.find(".singleWatchInfo").html(ctL.children().eq(4).text());
-				if(ctL.children().eq(4).text() != lastJudgement)
-					fadeIn(), fadeOut(ctL.children().eq(4).text());
-				lastJudgement = ctL.children().eq(4).text();
-				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-waiting")
-				|| lastJudgement == "In queue")
-					setTimeout(loadWatchType, 1000);
-				else if(settings.openNotification){
-					new Notification(`Result of CF${idx}`, {body: ctL.children().eq(4).text().trim(), icon: '../favicon.png'});
-				}
-			},
-			error: function(){
-				setTimeout(loadWatchType, 1000);
-			}
-		})
-	}
-	setTimeout(function(){loadWatchType()}, 200);
-}
 function initProblemPageInfo(page, data, id){
 	page.html("");
 	page.append(`<div class="problemTitle">${data.find(".title").html()}</div>`);
@@ -628,7 +569,7 @@ function initProblemNewWin(){
 		problemNewWinJQ.find("#submitCodeArea").val("");
 		problemNewWinJQ.find(".submitWindow").css("display", "grid");
 		problemNewWinJQ.find(".submitWindow").css("opacity", "1");
-		problemNewWinJQ.find(".submitUsername").html(currentLoginHandle);
+		// problemNewWinJQ.find(".submitUsername").html(currentLoginHandle);
 		problemNewWinJQ.find(".submitProblemID").html(problemCurrentPageList[problemFocusOn][0]);
 	})
 	problemNewWinJQ.find(".sendCurrData").unbind("click").click(function(){
@@ -707,7 +648,7 @@ function initProblemNewWin(){
 								problemNewWinJQ.find(".submitWindow").css("display", "none");
 							}, 500);
 					 		if(id != undefined)
-					 			addWatcher(id, cid);
+					 			problemNewWinJQ.append(`<script>addWatcher('${id}', '${cid}')</script>`)
 					 	}, 1000);
 					 }
 					 , function(x, y){

@@ -1,6 +1,9 @@
 var loginTypeLoader = null;
+var CodeforcesUserAPIKey, CodeforcesUserAPISeg;
+
 function loadLoginType(){
 	currentLoginHandle = "";
+	if(problemNewWinLoaded)	initProblemNewWin();
 	getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
 	$(".settingsLoginType").html(`<span info='settingsLoadingLoginType'>${languageOption.general.settingsLoadingLoginType}</span>`);
 	if(loginTypeLoader != null)
@@ -301,6 +304,42 @@ function registerContest(ci, S, E){
 			E();
 		}
 	});
+}
+
+function generateAuthorizeURL(url, data){
+	function parseObject(x){
+		var ret = [];
+		for(var v in x)
+			if(x.hasOwnProperty(v))
+				ret.push([v, x[v]]);
+		return ret.sort();
+	}
+	function generateParams(x){
+		var ret = "";
+		for(var i=0; i<x.length; i++){
+			if(i == 0)
+				ret += '?';
+			else
+				ret += "&";
+			ret += (x[i][0] + '=' + x[i][1]);
+		}
+		return ret;
+	}
+	if(!settings.useApiKeys)
+		return url + generateParams(parseObject(data));
+	var method = url.split("/");
+	method = method[method.length - 1];
+	data.time = Math.floor((new Date()).getTime() / 1000);
+	data.apiKey = settings.apiKey;
+	data = parseObject(data);
+	var rnd = "";
+	var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
+	for(var j=0; j<6; j++)
+		rnd += str[Math.floor(Math.random()*str.length)];
+	var shaCode = rnd + '/' + method + generateParams(data) + '#' + settings.apiSecret;
+	shaCode = hex_sha512(shaCode);
+	data.push(["apiSig", rnd + shaCode]);
+	return url + generateParams(data);
 }
 
 if(RunInNwjs)

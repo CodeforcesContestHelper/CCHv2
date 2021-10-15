@@ -9,6 +9,7 @@
 		<link class="ThemeTypeIf" rel="stylesheet" href="./css/default.css">
 		<link rel="stylesheet" href="./css/all.min.css">
 		<script src="./js/highlight.min.js"></script>
+		<script src="./js/sha512.js"></script>
 		<script src="./js/highlightjs-line-numbers.js"></script>
 		<script src="./KaTeX/katex.min.js"></script>
 		<script src="./KaTeX/auto-render.min.js"></script>
@@ -503,6 +504,34 @@
 										</div>
 									</div>
 									<div class="settingsSelectInfoAddition settingsLoginButton"><span info='settingsLoginButton' onclick="submitLogin()"></span></div>
+									<div class="settingsUI settingsRadio" for="useApiKeys">
+										<div class="settingsRadioInfo">
+											<div class="settingsRadioInfoMain">Radio Name</div>
+											<div class="settingsRadioInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsRadioButton">
+											<i class="far fa-square"></i>
+											<i class="fas fa-check-square"></i>
+										</div>
+									</div>
+									<div class="settingsUI settingsInput" for="apiKey">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent" type="password"></input>
+										</div>
+									</div>
+									<div class="settingsUI settingsInput" for="apiSecret">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent" type="password"></input>
+										</div>
+									</div>
 									<div class="settingsHeader" info="settingsPreference"></div>
 									<div class="settingsUI settingsSelect" for="styleSelection">
 										<div class="settingsSelectInfo">
@@ -751,7 +780,7 @@
 										</div>
 									</div>
 									<div class="settingsSelectInfoAddition settingsReloadLanguages"><span info='reloadLanguages' onclick="reloadLanguages()"></span></div>
-									<div style="text-align: center; margin-top: 30px" class="settingsOpenProblems"><span info='openProblems' onclick="openProblemWin([])"></span></div>
+									<div style="text-align: center; margin-top: 30px"><span class="settingsOpenProblems"><span info='openProblems' onclick="openProblemWin([])"></span></span></div>
 									<!-- <div class="settingsUI settingsRadio" for="testRadio">
 										<div class="settingsRadioInfo">
 											<div class="settingsRadioInfoMain">Radio Name</div>

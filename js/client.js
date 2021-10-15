@@ -402,9 +402,8 @@ function initContestNewWinPage(){
 	contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
 	function loadAvatar(){
 		$.ajax({
-			url: settings.codeforcesApiUrl + "/user.info",
+			url: generateAuthorizeURL(settings.codeforcesApiUrl + "/user.info", {handles: contestUsername}),
 			type: "GET",
-			data: {handles: contestUsername},
 			success: function(json){
 				contestNewWinJQ.find(".singleUserAvatar").attr("src", json.result[0].titlePhoto);
 			},
@@ -610,10 +609,9 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 		reloadSingleMemoryUsed();
 		
 		contestRatingChangesHook = $.ajax({
-			url: url,
+			url: generateAuthorizeURL(url, {contestId: ci, handles: un}),
 			type: "GET",
 			timeout : settings.largeTimeLimit,
-			data: {contestId: ci, handles: un},
 			success: function(json){
 				if(typeof(json) == "string")
 					json = JSON.parse(json);
@@ -688,7 +686,7 @@ var bigIsComing = [null, null, null, null, null, null, null];
 function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, error, S, E, loadStandings){
 	var s = 0, e = 0, c = 4;
 	var Q = 0;
-	function loadInfo(u, d, q, id, er){
+	function loadInfo(u, q, id, er){
 		if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
@@ -696,7 +694,6 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 			url: u,
 			type: "GET",
 			timeout : id == 5 ? settings.largeTimeLimit : settings.smallTimeLimit,
-			data: d,
 			success: function(json){
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
@@ -775,10 +772,10 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 			}
 		});
 	}
-	loadInfo(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, handles: un, showUnofficial: false}, ["result"], 0, false);
-	loadInfo(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, handles: un, showUnofficial: true}, ["result"], 1, false);
-	loadInfo(settings.codeforcesApiUrl + "/user.info", {handles: un}, ["result", "0"], 2, false);
-	loadInfo(settings.codeforcesApiUrl + "/contest.status", {contestId: ci, handle: un}, ["result"], 3, false);
+	loadInfo(generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, handles: un, showUnofficial: false}), ["result"], 0, false);
+	loadInfo(generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, handles: un, showUnofficial: true}), ["result"], 1, false);
+	loadInfo(generateAuthorizeURL(settings.codeforcesApiUrl + "/user.info", {handles: un}), ["result", "0"], 2, false);
+	loadInfo(generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.status", {contestId: ci, handle: un}), ["result"], 3, false);
 	if(success.length != 4)
 		setTimeout(function(){
 			getSingleRatingChanges(currSingleLastTimeUpdate, un, ci);
@@ -794,9 +791,9 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 			Q = ++contestStandingsIndex;
 			contestStandingLoader = 0;
 			contestStandingLoadTime = new Date();
-			loadInfo(settings.codeforcesApiUrl + "/contest.hacks", {contestId: ci}, ["result"], 4, true);
+			loadInfo(generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.hacks", {contestId: ci}), ["result"], 4, true);
 			if((inContest == 2 && settings.openRankPredict >= 1) || (inContest >= 1 && settings.openRankPredict == 2))
-				setTimeout(function(){loadInfo(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, showUnofficial: settings.openRankPredict == 2}, ["result"], 5, false);}, 500);
+				setTimeout(function(){loadInfo(generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, showUnofficial: settings.openRankPredict == 2}), ["result"], 5, false);}, 500);
 	}}, 3000);
 }
 function ratingToClass(x){
@@ -997,7 +994,7 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
 		$(".singleContestTags").append(unk);
 	}
-	if(json.rows.length > 0 && json.rows[0].party.members.length > 1){
+	if(json.rows.length > 0 && json.rows[0].party.teamName != undefined){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}</div>`);
 		$(".singleContestTags").append(unk);
 	}
@@ -1077,7 +1074,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			inContest = 2;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
-			inTeam |= (json.rows[i].party.members.length > 1);
+			inTeam |= (json.rows[i].party.teamName != undefined);
 		}
 		else if(json.rows[i].party.participantType == "OUT_OF_COMPETITION"){
 			contestProblemResult = json.rows[i].problemResults;
@@ -1090,7 +1087,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			inContest = 1;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
-			inTeam |= (json.rows[i].party.members.length > 1);
+			inTeam |= (json.rows[i].party.teamName != undefined);
 		}
 	if(!inContest){
 		flushsingleProblemlistDisplayList(contestSubmissionList, [], contestJsonProblems);
@@ -1193,7 +1190,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 			inContest = 1;
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
-			inTeam |= (json.rows[i].party.members.length > 1);
+			inTeam |= (json.rows[i].party.teamName != undefined);
 		}
 	}
 	if(!inContest){
@@ -1687,7 +1684,6 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 			$.ajax({
 				url: settings.mainURL + `/${ci >= 100000 ? "gym" : "contest"}/` + ci + "/countdown",
 				timeout : settings.largeTimeLimit,
-				data: {gym: ci >= 100000},
 				success: function(json){
 					singleLoadType = 4;
 					setTimeout(reloadStartTime, settings.reloadTime);
@@ -1745,10 +1741,9 @@ function singleContestantWaitToStart(currLastTimeUpdate, un, ci){
 			});
 		else
 			$.ajax({
-				url: settings.codeforcesApiUrl + "/contest.list",
+				url: generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.list", {gym: ci >= 100000}),
 				type: "GET",
 				timeout : settings.largeTimeLimit,
-				data: {gym: ci >= 100000},
 				success: function(json){
 					singleLoadType = 4;
 					setTimeout(reloadStartTime, settings.reloadTime);
@@ -1827,10 +1822,9 @@ function loadSingleContestantAll(un, ci){
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
 		$.ajax({
-			url: settings.codeforcesApiUrl + "/contest.standings",
+			url: generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, from: 1, count: 1, showUnofficial: true}),
 			type: "GET",
 			timeout : settings.smallTimeLimit,
-			data: {contestId: ci, from: 1, count: 1, showUnofficial: true},
 			success: function(json){
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
@@ -1957,9 +1951,8 @@ function loadSingleVirtualAll(un, ci, tm){
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
 		bigIsComing[6] = $.ajax({
-			url: U,
+			url: generateAuthorizeURL(U, D),
 			type: "GET",
-			data: D,
 			success: C,
 			error: function(jqXHR, status, errorThrown){
 				if(status == "timeout"){
@@ -2062,17 +2055,15 @@ function verifySingleInformation(type, un, ci, tm){
 	$(forButton).html(`<i class="fas fa-spin fa-sync-alt"></i><span info="singleCheckExist">${languageOption.general.singleCheckExist}</span>`);
 	$(forButton).attr("disabled", true);
 	$.ajax({
-		url: settings.codeforcesApiUrl + "/user.info",
+		url: generateAuthorizeURL(settings.codeforcesApiUrl + "/user.info", {handles: un}),
 		type: "GET",
 		timeout : settings.smallTimeLimit,
-		data: {handles: un},
 		success: function(json){
 			var isGym = Number(ci) >= 100000;
 			$.ajax({
-				url: settings.codeforcesApiUrl + "/contest.standings",
+				url: generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, handles: un, showUnofficial: true}),
 				type: "GET",
 				timeout : settings.smallTimeLimit,
-				data: {contestId: ci, handles: un, showUnofficial: true},
 				success: function(json){
 					json = json.result;
 					if(type == 0){
@@ -2498,10 +2489,9 @@ $(".forceLoadStandings").click(function(){
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
 		bigIsComing = $.ajax({
-			url: u,
+			url: generateAuthorizeURL(u, d),
 			type: "GET",
 			timeout : settings.largeTimeLimit,
-			data: d,
 			success: function(json){
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
