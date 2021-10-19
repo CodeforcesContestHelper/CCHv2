@@ -341,6 +341,11 @@ function generateAuthorizeURL(url, data){
 	data.push(["apiSig", rnd + shaCode]);
 	return url + generateParams(data);
 }
+function openCodeforcesPage(){
+	if(!RunInNwjs)
+		return;
+	window.open(settings.mainURL)
+}
 
 if(RunInNwjs)
 	loadLoginType();

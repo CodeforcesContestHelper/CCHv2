@@ -135,7 +135,9 @@ body{
 .highlightedContestList{
     background: #444;
 }
-
+.multiSettingsBar{
+    background: rgb(46, 51, 56);
+}
 
 
 

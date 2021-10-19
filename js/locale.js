@@ -91,6 +91,7 @@ var lang_en = {
 		contestPageBeforeStart: "Before start",
 		contestPageRunning: "Running",
 		tagTeam: "In group",
+		redirectVerification: "<i class='fas fa-link'></i> Verify Redirection",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -345,6 +346,7 @@ var lang_zh = {
 		contestPageBeforeStart: "开始于",
 		contestPageRunning: "进行中",
 		tagTeam: "组队",
+		redirectVerification: "<i class='fas fa-link'></i> 重定向验证",
 	},
 	input: {
 		singleContestantUsername: "用户名",

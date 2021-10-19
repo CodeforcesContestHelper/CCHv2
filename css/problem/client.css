@@ -273,6 +273,7 @@ select{
     margin-right: 10px;
 }
 .addProblemInterface{
+	user-select: none;
 	border-radius: 5px;
 }
 .inputButtonSplitter{
@@ -318,7 +319,9 @@ select{
 	outline: 0;
 }
 
-
+.problemTag{
+	user-select: none;
+}
 .problemTag > i{
 	margin-right: 10px;
 }
@@ -487,6 +490,7 @@ ul, ol{
 	display: inline-block;
 }
 .watchDisplayer{
+	user-select: none;
 	z-index: 98;
 	width: 370px !important;
 	position: absolute;
@@ -495,6 +499,7 @@ ul, ol{
 	text-align: center;
 }
 .singleWatchContent{
+	user-select: none;
 	transition: 0.2s;
 	padding: 0px 10px;
 	margin: 10px 0px;
@@ -506,6 +511,7 @@ ul, ol{
 	flex-direction: column;
 }
 .singleWatchTitle{
+	user-select: none;
 	font-size: 16px;
 	text-align: center;
 }

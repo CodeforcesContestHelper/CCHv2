@@ -931,14 +931,6 @@ function singleContestantTimeCountdown(tc){
 		contestNewWinJQ.find(".singleContestProgressBackground").css("width", `${p/q*100}%`);
 }
 function resetProblemPointInfo(json){
-	console.log(json);
-	for(var i=0; i<json.rows.length; i++)
-		if(json.rows[i].pointsInfo != undefined)
-			json.rows[i].points = Number(json.rows[i].pointsInfo);
-	for(var i=0; i<json.rows.length; i++)
-		for(var j=0; j<json.rows[i].problemResults.length; j++)
-			if(json.rows[i].problemResults[j].pointsInfo != undefined)
-			json.rows[i].problemResults[j].points = Number(json.rows[i].problemResults[j].pointsInfo);
 	return json;
 }
 function singleContestantSyncOfficialSettings(un, ci, json, p){
