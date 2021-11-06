@@ -147,7 +147,7 @@ function initProblemPageInfo(page, data, id){
 		problemNewWinJQ.append(`<script>loadCopyOption()</script>`)
 	}
 }
-function loadProblem(x){
+function loadProblem(x, info){
 	if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
 	var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
 	problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div>`)
@@ -166,7 +166,12 @@ function loadProblem(x){
 		killProblemListItem($(this).attr("id"));
 		flushProblemNewWin();
 	})
-	problemCurrentPageList[p][1] = $.ajax({
+	if(info != undefined){
+		problemCurrentPageList[p][2] = 0;
+		initProblemPageInfo(problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`), $(info).find(`.problemindexholder[problemindex=${getProblemIndexes(x)[1]}] .problem-statement`), p);
+		return;
+	}
+	problemCurrentPageList[p][1] =$.ajax({
 		url: settings.mainURL + `/${getProblemIndexes(x)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(x)[0] + '/problem/' + getProblemIndexes(x)[1] + '?locale=en',
 		success: function(data){
 			if(data.indexOf(`data-entityId="${getProblemIndexes(x)[0]}"`) == -1){
@@ -263,7 +268,7 @@ function reloadProblem(x){
 	problemCurrentPageList[p][2] = 0;
 	loadProblem(x);
 }
-function addProblems(x, gid){
+function addProblems(x, gid, info){
 	if(gid == undefined){
 		for(var i=0; i<x.length; i++){
 			if(getProblemIndexes(x[i])[0] == -1)	continue;
@@ -271,7 +276,7 @@ function addProblems(x, gid){
 			problemFocusOn = problemCurrentPageList.length;
 			problemCurrentPageList.push([x[i], null, 1, [[], []], {}]);
 			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
-			loadProblem(x[i]);
+			loadProblem(x[i], info);
 		}
 		flushProblemNewWin();
 	}
@@ -287,7 +292,7 @@ function addProblems(x, gid){
 		for(var i=0; i<x.length; i++){
 			problemCurrentPageList.push([x[i], null, 1, [[], []], {}]);
 			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
-			loadProblem(x[i]);
+			loadProblem(x[i], info);
 		}
 		flushProblemNewWin();
 	}
@@ -304,7 +309,7 @@ function addProblems(x, gid){
 			problemCurrentPageList.splice(problemGroupRange[gid][0] + i, 0, [x[i], null, 1, [[], []], {}]);
 			problemNewWinJQ.find(`.innerContent > [problem-id=${x[i]}]`).remove();
 			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
-			loadProblem(x[i]);
+			loadProblem(x[i], info);
 		}
 		flushProblemNewWin();
 	}
@@ -348,17 +353,17 @@ function loadContestProblemset(cid, S, E){
 	}
 	cid = Number(cid);
 	$.ajax({
-		url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid,
+		url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid + '/problems',
 		success: function(data){
-			if(data.indexOf(`data-entityId="${cid}"`) == -1){
+			if(data.indexOf(`class="problem-statement"`) == -1){
 				E(); return;
 			}
-			var q = $(data).find("table.problems");
+			var q = $(data);
 			var ret = [];
-			q.find("td.id a").each(function(){
-				ret.push(String(cid) + $.trim($(this).html()));
+			q.find(".problemindexholder").each(function(){
+				ret.push(String(cid) + $.trim($(this).attr("problemindex")));
 			})
-			S(ret);
+			S(ret, q);
 		},
 		error: function(){
 			E();
@@ -411,22 +416,6 @@ function flushProblemNewWin(){
 	problemNewWinJQ.find(".sideBarItem").unbind("click").click(function(){
 		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
 		problemFocusOn = Number($(this).attr("id"));
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
-		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
-		problemNewWinJQ.find(".innerContent > div").css("display", "none");
-		problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
-	})
-	problemNewWinJQ.find(".prevProblem").unbind("click").click(function(){
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
-		problemFocusOn = Math.max(problemFocusOn - 1, 0);
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
-		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
-		problemNewWinJQ.find(".innerContent > div").css("display", "none");
-		problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
-	})
-	problemNewWinJQ.find(".nextProblem").unbind("click").click(function(){
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
-		problemFocusOn = Math.min(problemFocusOn + 1, problemCurrentPageList.length - 1);
 		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
 		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
 		problemNewWinJQ.find(".innerContent > div").css("display", "none");
@@ -506,7 +495,7 @@ function flushProblemNewWin(){
 		problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
 		problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
 		var R = problemNewWinJQ.find(".contestInfoInputArea input").val();
-		loadContestProblemset(R, function(data){
+		loadContestProblemset(R, function(data, info){
 			problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
 			problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
 			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
@@ -515,7 +504,7 @@ function flushProblemNewWin(){
 			setTimeout(function(){
 				problemNewWinJQ.find(".addProblemWindow").css("display", "none");
 			}, 500);
-			addProblems(data, R);
+			addProblems(data, R, info);
 		}, function(){
 			problemNewWinJQ.find(".problemInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
 			problemNewWinJQ.find(".contestInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
@@ -698,6 +687,60 @@ function openProblemWin(xx, gid){
 			problemLoadID = 0;
 			// problemNewWin.showDevTools();
 			addProblems(xx, gid);
+			problemNewWinLoaded = true;
+			flushProblemNewWin();
+		})
+		problemNewWin.on("closed", function(){
+			problemNewWinOpened = false;
+			problemNewWinLoaded = false;
+			for(var i=0; i<problemCurrentPageList.length; i++)
+				if(problemCurrentPageList[i][1] != null)
+					problemCurrentPageList[i][1].abort();
+		})
+	});
+}
+function addContest(ci){
+	loadContestProblemset(ci, function(data, info){
+		addProblems(data, ci, info);
+	}, function(){});
+}
+function openContestProblems(xx){
+	if(!RunInNwjs)	return;
+	if(problemNewWinOpened){
+		addContest(xx);
+		return;
+	}
+	problemNewWinOpened = true;
+	nw.Window.open("problem.html",{
+	    "title": "Codeforces Problems", 
+	    "icon": "favicon.png",
+	    "width": 600,
+	    "height": 420, 
+	    "position": "center",
+	    "resizable": true,
+	    "min_width": 450,
+	    "min_height": 290,
+	    "fullscreen":false,
+	    "show_in_taskbar":true,
+	    "show":true, 
+	    "kiosk":false,
+	    "always_on_top":false,
+	    "frame":false,
+	    "transparent":true,
+	}, function(x){
+		problemNewWin = x;
+		problemNewWin.on("loaded", function(){
+			problemNewWinJQ = $(problemNewWin.window.document.body);
+			initProblemNewWin();
+			problemCurrentPageList = [];
+			problemFocusOn = 0;
+			problemLoadQueue = [];
+			problemLoadRunning = 0;
+			problemGroupRange = {};
+			problemLoadID = 0;
+			// problemNewWin.showDevTools();
+			addContest(xx);
+			addContest(xx);
 			problemNewWinLoaded = true;
 			flushProblemNewWin();
 		})

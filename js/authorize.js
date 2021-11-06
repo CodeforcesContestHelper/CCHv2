@@ -41,6 +41,10 @@ function getFtaa(){
 	return ret;
 }
 function submitLogout(cb){
+	if(currentLoginHandle == ""){
+		cb();
+		return;
+	}
 	$.ajax({
 		url: settings.mainURL,
 		success: function(data){
@@ -75,7 +79,15 @@ function submitLogin(){
 	submitLogout(function(){$.ajax({
 		url: settings.mainURL,
 		success: function(data){
-			var csrf = queryCsrf.exec(data)[1];
+			var csrf = queryCsrf.exec(data);
+			if(csrf == null){
+				$(".settingsLoginButton").html(`<span info='errorCsrfLoadFailed'>${languageOption.error.errorCsrfLoadFailed}</span>`);
+				setTimeout(function(){
+					$(".settingsLoginButton").html(`<span info='settingsLoginButton' onclick="submitLogin()">${languageOption.general.settingsLoginButton}</span>`);
+				}, 2000)
+				return;
+			}
+			csrf = csrf[1];
 			$.ajax({
 				url: settings.mainURL + '/enter?back=%2F&locale=en',
 				type: "POST",
@@ -130,7 +142,12 @@ function submitSolution(ci, idx, code, lang, S, E){
 	$.ajax({
 		url: settings.mainURL,
 		success: function(data){
-			var csrf = queryCsrf.exec(data)[1];
+			var csrf = queryCsrf.exec(data);
+			if(csrf == null){
+				E('errorCsrfLoadFailed', languageOption.error.errorCsrfLoadFailed);
+				return;
+			}
+			csrf = csrf[1];
 			$.ajax({
 				url: settings.mainURL + `/${ci >= 100000 ? "gym" : "contest"}/` + ci + '/submit',
 				type: "POST",
@@ -219,7 +236,12 @@ function loadContestPassedStatus(S, E){
 	$.ajax({
 		url: settings.mainURL + '/contests',
 		success: function(data){
-			var csrf = queryCsrf.exec(data)[1];
+			var csrf = queryCsrf.exec(data);
+			if(csrf == null){
+				E();
+				return;
+			}
+			csrf = csrf[1];
 			$.ajax({
 				url: settings.mainURL + '/data/contests',
 				type: "POST",
@@ -270,7 +292,12 @@ function registerContest(ci, S, E){
 	$.ajax({
 		url: settings.mainURL,
 		success: function(data){
-			var csrf = queryCsrf.exec(data)[1];
+			var csrf = queryCsrf.exec(data);
+			if(csrf == null){
+				E();
+				return;
+			}
+			csrf = csrf[1];
 			$.ajax({
 				url: settings.mainURL + '/contestRegistration/' + ci,
 				type: "POST",
