@@ -9,6 +9,7 @@
 		<link class="ThemeTypeIf" rel="stylesheet" href="./css/default.css">
 		<link rel="stylesheet" href="./css/all.min.css">
 		<script src="./js/highlight.min.js"></script>
+		<script src="./js/sha512.js"></script>
 		<script src="./js/highlightjs-line-numbers.js"></script>
 		<script src="./KaTeX/katex.min.js"></script>
 		<script src="./KaTeX/auto-render.min.js"></script>
@@ -346,8 +347,22 @@
 						</div>
 					</div>
 					<div class="contentWrapper multiContent">
-						<div class="contentRowInfo">
-							
+						<div class="contentRowInfo"><div class="contentPage">
+							<div style="width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden">
+								<div class="multiInfoDisplayer">
+									<table class="multiInfoTable">
+										<thead class="multiInfoThead">
+											
+										</thead>
+										<tbody class="multiInfoTbody">
+											
+										</tbody>
+									</table>
+								</div>
+								<div class="multiSettingsBar">
+									
+								</div>
+							</div></div>
 						</div>
 					</div>
 					<div class="contentWrapper contestContent">
@@ -483,7 +498,7 @@
 							<div class="contentPage">
 								<div class="settingPage"> <div style="margin: 20px 0px">
 									<div class="settingsHeader" info="settingsAccount"></div>
-									<div class="settingsSelectInfoAddition settingsLoginType">...</div>
+									<div class="settingsSelectInfoAddition" style="position: relative"><span class="settingsLoginType"></span><span info="redirectVerification" style="float: right; cursor: pointer" onclick="openCodeforcesPage()"></span></div>
 									<div class="settingsUI settingsInput" for="accountHandleOrEmail">
 										<div class="settingsInputInfo">
 											<div class="settingsInputInfoMain">Radio Name</div>
@@ -503,6 +518,34 @@
 										</div>
 									</div>
 									<div class="settingsSelectInfoAddition settingsLoginButton"><span info='settingsLoginButton' onclick="submitLogin()"></span></div>
+									<div class="settingsUI settingsRadio" for="useApiKeys">
+										<div class="settingsRadioInfo">
+											<div class="settingsRadioInfoMain">Radio Name</div>
+											<div class="settingsRadioInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsRadioButton">
+											<i class="far fa-square"></i>
+											<i class="fas fa-check-square"></i>
+										</div>
+									</div>
+									<div class="settingsUI settingsInput" for="apiKey">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent" type="password"></input>
+										</div>
+									</div>
+									<div class="settingsUI settingsInput" for="apiSecret">
+										<div class="settingsInputInfo">
+											<div class="settingsInputInfoMain">Radio Name</div>
+											<div class="settingsInputInfoAddition">Radio Addition</div>
+										</div>
+										<div class="settingsInputPart">
+											<input class="settingsInputPartContent" type="password"></input>
+										</div>
+									</div>
 									<div class="settingsHeader" info="settingsPreference"></div>
 									<div class="settingsUI settingsSelect" for="styleSelection">
 										<div class="settingsSelectInfo">
@@ -751,7 +794,7 @@
 										</div>
 									</div>
 									<div class="settingsSelectInfoAddition settingsReloadLanguages"><span info='reloadLanguages' onclick="reloadLanguages()"></span></div>
-									<div style="text-align: center; margin-top: 30px" class="settingsOpenProblems"><span info='openProblems' onclick="openProblemWin([])"></span></div>
+									<div style="text-align: center; margin-top: 30px"><span class="settingsOpenProblems"><span info='openProblems' onclick="openProblemWin([])"></span></span></div>
 									<!-- <div class="settingsUI settingsRadio" for="testRadio">
 										<div class="settingsRadioInfo">
 											<div class="settingsRadioInfoMain">Radio Name</div>

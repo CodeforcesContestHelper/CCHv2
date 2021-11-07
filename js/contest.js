@@ -154,7 +154,7 @@ function loadContestList(){
 	$(".contestListLoadIf > span").unbind("click");
 	$(".contestListLoadIf > span").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loading"));
 	$.ajax({
-		url: settings.codeforcesApiUrl + '/contest.list',
+		url: generateAuthorizeURL(settings.codeforcesApiUrl + '/contest.list', {}),
 		type: "GET",
 		timeout : settings.largeTimeLimit,
 		success: function(data){

@@ -91,6 +91,7 @@ var lang_en = {
 		contestPageBeforeStart: "Before start",
 		contestPageRunning: "Running",
 		tagTeam: "In group",
+		redirectVerification: "<i class='fas fa-link'></i> Verify Redirection",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -236,6 +237,18 @@ var lang_en = {
 		openNotification: [
 			"<span class='fas fa-bell'></span> Open Notification",
 			"Choose if notifications of hacks, contest notifications or submission results should be sent."
+		],
+		useApiKeys: [
+			"<span class='fas fa-user-secret'></span> Use API Keys",
+			"Enable to authorize APIs to fetch private informations. You can go to /settings/api to generate API keys. <span class='red'>We will not use your keys for other purposes.</span>"
+		],
+		apiKey: [
+			"<span class='fas fa-key'></span> API Key",
+			"Your API key."
+		],
+		apiSecret: [
+			"<span class='fas fa-mask'></span> API Secret",
+			"Your API secret."
 		]
 	}
 };
@@ -333,6 +346,7 @@ var lang_zh = {
 		contestPageBeforeStart: "开始于",
 		contestPageRunning: "进行中",
 		tagTeam: "组队",
+		redirectVerification: "<i class='fas fa-link'></i> 重定向验证",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -479,6 +493,18 @@ var lang_zh = {
 		openNotification: [
 			"<span class='fas fa-bell'></span> 开启提醒",
 			"选择是否发送包含 hack，比赛通知或者提交结果的提醒。"
+		],
+		useApiKeys: [
+			"<span class='fas fa-user-secret'></span> 使用 API Keys",
+			"开启后可以给 API 授权以加载私人内容。你可以前往 /settings/api 生成 API Keys。<span class='red'>我们保证不会将其用于其他用途。</span>"
+		],
+		apiKey: [
+			"<span class='fas fa-key'></span> API Key",
+			"你的 API key."
+		],
+		apiSecret: [
+			"<span class='fas fa-mask'></span> API Secret",
+			"你的 API secret."
 		]
 	}
 };
