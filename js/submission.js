@@ -92,7 +92,7 @@ function openSubmission(c, u){
 			else if($(this).hasClass("user-green"))	j.attr("class", "user-pupil");
 			else if($(this).hasClass("user-cyan"))	j.attr("class", "user-specialist");
 			else if($(this).hasClass("user-blue"))	j.attr("class", "user-expert");
-			else if($(this).hasClass("user-voilet"))	j.attr("class", "user-cmaster");
+			else if($(this).hasClass("user-violet"))	j.attr("class", "user-cmaster");
 			else if($(this).hasClass("user-orange"))	j.attr("class", "user-master");
 			else if($(this).hasClass("user-yellow"))	j.attr("class", "user-imaster");
 			else if($(this).hasClass("user-red"))		j.attr("class", "user-grandmaster");

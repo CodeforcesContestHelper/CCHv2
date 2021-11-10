@@ -92,7 +92,7 @@
 					</div>
 					<div class="NavBarContent" for="multiContent">
 						<div class="multiNav" style="text-align: center">
-							<i class="fas fa-users"></i><br/>
+							<i class="fas fa-list-ol"></i><br/>
 							<div info="multiNav"></div>
 						</div>
 					</div>
@@ -185,35 +185,18 @@
 							<div class="contentPage">
 								<div class="loadingInterface" style="display: none; opacity: 0"><div><i class="fas fa-spin fa-sync-alt"></i></div></div>
 								<div style="display: flex; flex-direction: column;">
-									<div style="display: flex; flex-direction: row; padding: 0px 15px">
-										<img src="https://userpic.codeforces.org/422/title/50a270ed4a722867.jpg" alt="User Avatar" class="singleUserAvatar" />
+									<div style="display: flex; flex-direction: row; padding-left: 10px">
+										<img alt="User Avatar" class="singleUserAvatar" />
 										<div style="flex: 1">
-											<div class="singleUsernameDisplayer user-legendary">tourist</div>
+											<div class="singleUsernameDisplayer user-legendary"></div>
 											<div class="singleRatingDisplayer">
-												<div class="user-legendary setInlineBlock">Legendary Grandmaster</div>
-												<div class="setInlineBlock"><div class="currRating user-legendary setInlineBlock">1234</div> ( max. <div class="maxRating user-legendary setInlineBlock"> 5678</div> )</div>
+												<div class="user-legendary setInlineBlock"></div>
+												<div class="setInlineBlock"><div class="currRating user-legendary setInlineBlock"></div> ( max. <div class="maxRating user-legendary setInlineBlock"> </div> )</div>
 											</div>
 											<div class="singleContestInfoDisplayer">
 												<div class="singleContestTags">
-													<div class="singleContestTag primaryColor">
-														<i class="fas fa-calendar"></i>
-														#1234
-													</div>
-													<div class="singleContestTag warningColor">
-														<i class="fas fa-clock"></i>
-														2h30min
-													</div>
-													<div class="singleContestTag successColor">
-														<i class="fas fa-book"></i>
-														Div 1
-													</div>
-													<div class="singleContestTag dangerColor">
-														<i class="fas fa-user-secret"></i>
-														Virtual
-													</div>
 												</div>
 												<div class="singleContestName">
-													Codeforces Round 1234 (Div. 1)
 												</div>
 											</div>
 											<div class="singleContestProgress">
@@ -237,8 +220,8 @@
 
 												</div>
 												<div class="singleContestProgressRatingChangesDisplayer">
-													<span>Running</span>
-													<span>1234 +123 <i class="fas fa-angle-double-right"></i> 1234</span>
+													<span></span>
+													<span></span>
 												</div>
 												<div class="singleContestMoreOption">
 													<div class="forceLoadStandings"><i class='fas fas fa-list-ol'></i> <span info='forceLoadStandings'></span></div>
@@ -349,7 +332,7 @@
 					<div class="contentWrapper multiContent">
 						<div class="contentRowInfo"><div class="contentPage">
 							<div style="width: 100%; height: 100%; display: flex; flex-direction: column; overflow: hidden">
-								<div class="multiInfoDisplayer">
+								<div class="multiInfoDisplayer" style="width: 100%; height: 100%; position: relative;">
 									<table class="multiInfoTable">
 										<thead class="multiInfoThead">
 											
@@ -358,9 +341,98 @@
 											
 										</tbody>
 									</table>
+									<div style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; display: grid; place-items: center; z-index: 999; text-align: center; background: inherit;" class="multiMask">
+										<div>
+											<i class='fas fa-exclamation-triangle fa-4x'></i>
+											<div class="popTip"><span info='multiNoUsers'></span></div>
+										</div>
+									</div>
 								</div>
 								<div class="multiSettingsBar">
-									
+									<div class="multiSettingsUpperContent" style="padding: 3px 5px; display: flex; width: calc(100% - 10px)">
+										<div style="display: flex; width: 100%; flex-direction: row; align-items: center; padding-top: 5px">
+											<div style="text-align: left; flex: 1; padding-left: 5px; display: flex; flex-direction: row;">
+												<div class="multiPageSelecter">
+													<i class="fas fa-list-ol" style="padding-right: 10px"></i>
+													<span class="number">20</span>
+													<span class="number chosen">50</span>
+													<span class="number">100</span>
+													<span class="number">200</span>
+												</div>
+												<div class="multiUnofficialSelecter">
+													<span class="chosen"><i class="fas fa-user"></i></span>
+													<span><i class="fas fa-users"></i></span>
+												</div>
+											</div>
+											<div style="text-align: center; width: 250px; display: flex; flex-direction: row;">
+												<div style="flex: 1"></div>
+												<div class="multiPagePrev">
+													<i class="fas fa-angle-left"></i>
+												</div>
+												<div class="multiPageIndex" style="font-size: 20px; display: grid; place-items: center; padding-left: 10px; padding-right: 10px; width: 120px;">
+													<span class="multiPageIndexNumber" style="cursor: pointer" onclick="multiPageIndexClick()">
+														1
+													</span>
+												</div>
+												<div class="multiPageNext">
+													<i class="fas fa-angle-right"></i>
+												</div>
+												<div style="flex: 1"></div>
+											</div>
+											<div style="text-align: right; flex: 1;">
+												<div class="multiStatusBar" style="font-size: 18px; padding-right: 5px; color: grey">
+													<span info="multiStatus"></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="multiSettingsLowerContent" style="padding: 3px 5px; display: flex; width: calc(100% - 10px)">
+										<div class="multiFetchTypeSelect" style="width: 270px; display: flex">
+											<div class="chosen">
+												<div style="width: calc(100% - 6px); height: calc(100% - 6px); padding: 3px 3px; position: relative;">
+													<div class="multiTypeChosenList warningColor" style="border-radius: 5px">
+														<i class="fas fa-globe"></i>
+														<div class="info" info="multiOverall"></div>
+													</div>
+												</div>
+											</div>
+											<div>
+												<div style="width: calc(100% - 6px); height: calc(100% - 6px); padding: 3px 3px; position: relative;">
+													<div class="multiTypeChosenList dangerColor" style="border-radius: 5px">
+														<i class="fas fa-heart"></i>
+														<div class="info" info="multiFriend"></div>
+													</div>
+												</div>
+											</div>
+											<div>
+												<div style="width: calc(100% - 6px); height: calc(100% - 6px); padding: 3px 3px; position: relative;">
+													<div class="multiTypeChosenList successColor" style="border-radius: 5px">
+														<i class="fas fa-house-user"></i>
+														<div class="info" info="multiRoom"></div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="multiContestSelect" style="width: 150px; margin-left: 3px;">
+											<div class="bigInputArea">
+												<input class="multiContestIdInput" info="multiContestIdInput" type="text" style="text-align: center">
+												<i class="fa fa-calendar"></i>
+											</div>
+										</div>
+										<div class="multiFetchInfoSelect" style="flex: 1; margin-left: 6px">
+											<div class="bigInputArea">
+												<input class="multiContestInfoInput" info="multiContestInfoInput0" type="text">
+												<i class="fa fa-circle-info"></i>
+											</div>
+										</div>
+										<div class="multiClicker" style="width: 54px">
+											<div style="padding: 3px; width: calc(100% - 6px); height: calc(100% - 6px); position: relative;">
+												<div class="primaryColor multiClickToFetch" style="border-radius: 5px; height: 100%;width: 100%; display: grid; place-items: center; cursor: pointer">
+													<i class="fas fa-paper-plane" style="font-size: 20px;"></i>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div></div>
 						</div>
@@ -450,37 +522,6 @@
 									</div>
 								</div>
 							</div>
-							<div class="contentPage">
-								<div class="contestSecondPageInfo">
-									<div class="contestInfoCard">
-										<div class="contestCardRealInfo">
-											<div class="contestCardNameContainer">
-												<div class="contestCardName">Codeforces Round balabalabalabalabalabalabalabalabalabala</div>
-												<div class="contestCardTags">
-													<span class="contestCardTag">#1234</span>
-													<span class="contestCardTag">Div. 1</span>
-												</div>
-											</div>
-											<div class="contestPassedCount">
-												<span class="contestCardPassedCount green">6</span>
-												<div class="contestCardOverall"><div class="contestCardUACCount red">123</div><div class="contestCardOverallCount">/10</div></div>
-											</div>
-										</div>
-										<div class="contestCardTime">
-											<span class="contestCardTimeSE"></span>
-											<span class="contestCardTimeRunningType">
-												<span class="red"><span class="fas fa-running"></span> Running</span>
-											</span>
-										</div>
-									</div>
-									<div style="flex: 1; width: 100%">
-
-									</div>
-									<div class="contestSecondPageProgress">
-
-									</div>
-								</div>
-							</div>
 						</div>
 					</div>
 					<div class="contentWrapper questionContent">
@@ -498,7 +539,7 @@
 							<div class="contentPage">
 								<div class="settingPage"> <div style="margin: 20px 0px">
 									<div class="settingsHeader" info="settingsAccount"></div>
-									<div class="settingsSelectInfoAddition" style="position: relative"><span class="settingsLoginType"></span><span info="redirectVerification" style="float: right; cursor: pointer" onclick="openCodeforcesPage()"></span></div>
+									<div class="settingsSelectInfoAddition" style="position: relative; height: 20px"><span class="settingsLoginType"></span><span info="redirectVerification" style="float: right; cursor: pointer" onclick="openCodeforcesPage()"></span></div>
 									<div class="settingsUI settingsInput" for="accountHandleOrEmail">
 										<div class="settingsInputInfo">
 											<div class="settingsInputInfoMain">Radio Name</div>
@@ -837,14 +878,6 @@
 		</div>
 	</body>
 	<footer>
-		<script src="./js/langs.js"></script>
-		<script src="./js/locale.js"></script>
-		<script src="./js/settings.js"></script>
-		<script src="./js/authorize.js"></script>
-		<script src="./js/submission.js"></script>
-		<script src="./js/client.js"></script>
-		<script src="./js/problem.js"></script>
-		<script src="./js/contest.js"></script>
 		<script>
 			if(!RunInNwjs){
 				if(!DarkMode)
@@ -895,6 +928,17 @@
 				window.matchMedia('(prefers-color-scheme: dark)').addListener(listeners.dark)
 				window.matchMedia('(prefers-color-scheme: light)').addListener(listeners.light)
 			}
+		</script>
+		<script src="./js/langs.js"></script>
+		<script src="./js/locale.js"></script>
+		<script src="./js/settings.js"></script>
+		<script src="./js/authorize.js"></script>
+		<script src="./js/submission.js"></script>
+		<script src="./js/client.js"></script>
+		<script src="./js/problem.js"></script>
+		<script src="./js/contest.js"></script>
+		<script src="./js/multi.js"></script>
+		<script>
 			$(".NavBarContent").click(function(){
 				$(".contentWrapperChosen").removeClass("contentWrapperChosen");
 				$('.' + $(this).attr("for")).addClass("contentWrapperChosen");

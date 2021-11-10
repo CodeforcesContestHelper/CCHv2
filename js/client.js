@@ -684,6 +684,7 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 	}, 0)
 }
 var bigIsComing = [null, null, null, null, null, null, null];
+var singleSavedUserInfo = "";
 function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, error, S, E, loadStandings){
 	var s = 0, e = 0, c = 4;
 	var Q = 0;
@@ -691,11 +692,24 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 		if(currSingleLastTimeUpdate != singleLastTimeUpdate)	return;
 		singleLoadType = 1;
 		reloadSingleMemoryUsed();
+		if(id == 2 && singleSavedUserInfo != ""){
+			var j = JSON.parse(singleSavedUserInfo);
+			for(var i=0; i<q.length; i++)
+				j = j[q[i]];
+			success[id](un, ci, j, Q);
+			if(id <= 3){
+				++s;
+				if(s + e == c)	(s == c) ? S() : E();
+			}
+			return;
+		}
 		bigIsComing[id] = $.ajax({
 			url: u,
 			type: "GET",
 			timeout : id == 5 ? settings.largeTimeLimit : settings.smallTimeLimit,
 			success: function(json){
+				if(id == 2)
+					singleSavedUserInfo = JSON.stringify(json);
 				singleLoadType = 4;
 				reloadSingleMemoryUsed();
 				for(var i=0; i<q.length; i++)
@@ -988,7 +1002,12 @@ function singleContestantSyncOfficialSettings(un, ci, json, p){
 		$(".singleContestTags").append(unk);
 	}
 	if(json.rows.length > 0 && json.rows[0].party.teamName != undefined){
-		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}</div>`);
+		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}${json.rows[0].party.teamId == -1 ? "" : " #" + json.rows[0].party.teamId}</div>`);
+		unk.attr("title", json.rows[0].party.teamName);
+		$(".singleContestTags").append(unk);
+	}
+	if(json.rows.length > 0 && json.rows[0].party.room != undefined){
+		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-house-user"></i>${localize("tagRoom")} #${json.rows[0].party.room}</div>`);
 		$(".singleContestTags").append(unk);
 	}
 	if(contestNewWinLoaded)
@@ -1052,6 +1071,7 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 	singleContestUnrated = "Unranked";
 	inContes = false;
 	var inTeam = false;
+	var roomId = -1, teamId = -1, teamName;
 	for(var i=0; i<json.rows.length; i++)
 		if(json.rows[i].party.participantType == "CONTESTANT"){
 			contestProblemResult = json.rows[i].problemResults;
@@ -1065,6 +1085,12 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
 			inTeam |= (json.rows[i].party.teamName != undefined);
+			if(json.rows[i].party.teamName != undefined)
+				teamName = json.rows[i].party.teamName;
+			if(json.rows[i].party.teamId != undefined)
+				teamId = json.rows[i].party.teamId;
+			if(json.rows[i].party.room != undefined)
+				roomId = json.rows[i].party.room;
 		}
 		else if(json.rows[i].party.participantType == "OUT_OF_COMPETITION"){
 			contestProblemResult = json.rows[i].problemResults;
@@ -1078,6 +1104,12 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
 			inTeam |= (json.rows[i].party.teamName != undefined);
+			if(json.rows[i].party.teamName != undefined)
+				teamName = json.rows[i].party.teamName;
+			if(json.rows[i].party.teamId != undefined)
+				teamId = json.rows[i].party.teamId;
+			if(json.rows[i].party.room != undefined)
+				roomId = json.rows[i].party.room;
 		}
 	if(!inContest){
 		flushsingleProblemlistDisplayList(contestSubmissionList, [], contestJsonProblems);
@@ -1089,8 +1121,14 @@ function singleContestantSyncUnofficialSettings(un, ci, json, p){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
 		$(".singleContestTags").append(unk);
 	}
+	teamId = Number(teamId);
 	if(inContest && inTeam){
-		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}</div>`);
+		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}${teamId == -1 ? "" : ` #` + teamId}</div>`);
+		unk.attr("title", teamName);
+		$(".singleContestTags").append(unk);
+	}
+	if(roomId != -1){
+		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-house-user"></i>${localize("tagRoom")} #${roomId}</div>`);
 		$(".singleContestTags").append(unk);
 	}
 	if(contestNewWinLoaded)
@@ -1163,6 +1201,7 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 	singleContestUnrated = "Virtual";
 	inContest = false;
 	var inTeam = false;
+	var teamName = -1, teamId = -1;
 	for(var i=0; i<json.rows.length; i++){
 		if(json.rows[i].party.participantType == "VIRTUAL" && json.rows[i].party.startTimeSeconds * 1000 == virtualProvidedStartTime.getTime()){
 			contestProblemResult = json.rows[i].problemResults;
@@ -1178,6 +1217,10 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 			flushsingleProblemlistBottom(json.rows[i]);
 			flushsingleProblemlistDisplayGrid(json.rows[i].problemResults, json.problems);
 			inTeam |= (json.rows[i].party.teamName != undefined);
+			if(json.rows[i].party.teamName != undefined)
+				teamName = json.rows[i].party.teamName;
+			if(json.rows[i].party.teamId != undefined)
+				teamId = json.rows[i].party.teamId;
 		}
 	}
 	if(!inContest){
@@ -1198,8 +1241,10 @@ function singleVirtualSyncUnofficialSettings(un, ci, json, p){
 		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-user-secret"></i>${localize("tag"+singleContestUnrated)}</div>`);
 		$(".singleContestTags").append(unk);
 	}
+	teamId = Number(teamId);
 	if(inContest && inTeam){
-		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}</div>`);
+		var unk = $(`<div class="singleContestTag dangerColor"><i class="fas fa-users"></i>${localize("tagTeam")}${teamId == -1 ? "" : ` #` + teamId}</div>`);
+		unk.attr("title", teamName)
 		$(".singleContestTags").append(unk);
 	}
 	if(contestNewWinLoaded)
@@ -1488,6 +1533,7 @@ function singleContestantMainTrack(currSingleLastTimeUpdate, un, ci){
 	contestSubmissionList = [];
 	singleAnnouncementLength = -1;
 	inContest = false;
+	singleSavedUserInfo = "";
 	setTimeout(function(){
 		$(".singleContent > div > div > .loadingInterface > div > i").css("opacity", 0);
 		$(".singleContent > div > div > .loadingInterface > div > .popTip").addClass("closed").css("max-height", 0);
@@ -1548,6 +1594,7 @@ function singleVirtualMainTrack(currSingleLastTimeUpdate, un, ci, tm){
 	contestSubmissionList = [];
 	inContest = false;
 	contestRealEndTime = contestRealEndTime = new Date(0);
+	singleSavedUserInfo = "";
 	setTimeout(function(){
 		$(".singleContent > div > div > .loadingInterface > div > i").css("opacity", 0);
 		$(".singleContent > div > div > .loadingInterface > div > .popTip").addClass("closed").css("max-height", 0);

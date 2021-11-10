@@ -1,9 +1,11 @@
-function loadMultiList(cid, users, room, showUnofficial, S, E){
+function loadMultiList(cid, users, room, showUnofficial, from, count, S, E){
 	var data = {};
+	data.from = from;
+	data.count = count;
 	data.contestId = cid;
 	if(users != undefined && users.length != 0)
-		data.handles = users.join(",");
-	if(room != undefined)
+		data.handles = users.join(";");
+	if(room != 0)
 		data.room = room;
 	data.showUnofficial = showUnofficial;
 	$.ajax({
@@ -17,17 +19,311 @@ function loadMultiList(cid, users, room, showUnofficial, S, E){
 		},
 		error: function(){
 			E();
+		}
+	})
+}
+function loadUserColors(users, S, E){
+	$.ajax({
+		url: generateAuthorizeURL(settings.codeforcesApiUrl + '/user.info', {handles: users.join(";")}),
+		timeout: settings.largeTimeLimit,
+		success: function(json){
+			if(json.status != "OK")
+				E();
+			else{
+				var ret = {};
+				for(var i=0; i<json.result.length; i++){
+					var q = json.result[i];
+					ret[q.handle] = ratingToClass(Number(q.rating));
+				}
+				S(ret);
+			}
 		},
-		xhr: function() {
-			var xhr = new XMLHttpRequest();
-			var q = 0;
-			singleLoadType = 1; reloadSingleMemoryUsed();
-			xhr.addEventListener('progress', function (e) {
-				 // (e.loaded - q);
-				 q = e.loaded;
-			});
-			return xhr;
+		error: function(){
+			E();
+		}
+	})
+}
+function loadFriendList(S, E){
+	$.ajax({
+		url: generateAuthorizeURL(settings.codeforcesApiUrl + '/user.friends', {}),
+		timeout: settings.largeTimeLimit,
+		success: function(json){
+			if(json.status != "OK")
+				E();
+			else
+				S(json.result);
+		},
+		error: function(){
+			E();
 		}
 	})
 }
 
+var multiPlaceholders = ["", "", ""];
+$(".multiFetchTypeSelect > div").click(function(){
+	var t = $(".multiFetchTypeSelect > div.chosen");
+	var i = $(".multiFetchTypeSelect > div").index(t);
+	multiPlaceholders[i] = $(".multiContestInfoInput").val();
+	$(".multiFetchTypeSelect > div").removeClass("chosen");
+	$(this).addClass("chosen");
+	var idx = $(".multiFetchTypeSelect > div").index(this);
+	$(".multiContestInfoInput").attr("info", "multiContestInfoInput" + idx);
+	$(".multiContestInfoInput").attr("placeholder", languageOption.input["multiContestInfoInput" + idx]);
+	$(".multiContestInfoInput").removeAttr("disabled");
+	if(idx == 1){
+		$(".multiContestInfoInput").attr("disabled", "true");
+		if(i == 1){
+			if(!settings.useApiKeys){
+				flushMultiStatusBar(localize("multiApiError"), true);
+			}
+			else{
+				flushMultiStatusBar(localize("multiLoadingFriends"), false);
+				loadFriendList(function(data){
+					flushMultiStatusBar(localize("multiFriendsOk"), false);
+					var l = data.join(";");
+					multiPlaceholders[1] = l;
+					var _t = $(".multiFetchTypeSelect > div.chosen");
+					var _i = $(".multiFetchTypeSelect > div").index(_t);
+					if(_i == 1)
+						$(".multiContestInfoInput").val(l);
+				}, function(){
+					flushMultiStatusBar(localize("multiFriendsError"), true);
+				})
+			}
+		}
+	}
+	$(".multiContestInfoInput").val(multiPlaceholders[idx]);
+});
+
+var multiCurrentPage = 1;
+
+function flushMultiStatusBar(info, error){
+	if(error)
+		$(".multiStatusBar").html("<span class='red'>" + info + "</span>");
+	else
+		$(".multiStatusBar").html(info);
+}
+function getMultiHack(x, y){
+	if(x == 0 && y == 0)
+		return "";
+	if(x == 0)
+		return `<span class='red'>-${y}</span>`;
+	if(y == 0)
+		return `<span class='green'>+${x}</span>`;
+	return `<span class='green'>+${x}</span> : <span class='red'>-${y}</span>`;
+}
+
+function multiRenderList(data){
+	if(data.rows.length == 0){
+		flushMultiStatusBar(localize("ok"), false);
+		$(".multiMask").css("display", "grid");
+		$(".multiInfoTable").css("display", "none");
+		return;
+	}
+	var userList = [];
+	for(var i=0; i<data.rows.length; i++){
+		var q = data.rows[i].party.members;
+		for(var j=0; j<q.length; j++)
+			userList.push(q[j].handle);
+	}
+	loadUserColors(userList, function(colors){
+		function calcUserBlock(un){
+			return `<div style="display: inline-block" class="${colors[un]}">${un}</div>`;
+		}
+		function getVirtualTag(u){
+			var len = Math.floor((new Date()).getTime() / 1000) - u;
+			if(len < data.contest.durationSeconds)
+				return getTimeLength(len * 1000);
+			return '#';
+		}
+		flushMultiStatusBar(localize("ok"), false);
+		$(".multiMask").css("display", "none");
+		$(".multiInfoTable").css("display", "table");
+		var hd = $(".multiInfoThead");
+		hd.html("");
+		var p = `<th>#</th><th>${localize("multiUser")}</th>`;
+		if(data.contest.type == "IOI")
+			p += `<th style='width: 2em'>=</th>`;
+		else if(data.contest.type == "ICPC")
+			p += `<th style='width: 2em'>=</th><th style='width: 4em'>&</th><th style='width: 5em'>*</th>`;
+		else
+			p += `<th style='width: 2em'>=</th><th style='width: 5em'>*</th>`;
+		for(var i=0; i<data.problems.length; i++)
+			p += `<th style='width: 4em'>${data.problems[i].index}${data.contest.type == "CF" ? `<span class='multiSmall'>${data.problems[i].points}</span>` : ""}`
+		hd.append("<tr>" + p + "</th>");
+		var bd = $(".multiInfoTbody");
+		bd.html("");
+		for(var t=0; t<data.rows.length; t++){
+			var user = data.rows[t];
+			var uList = "";
+			if(user.party.teamName != undefined)
+				uList = `<span style='color: grey; font-size: 14px'>${user.party.teamName}</span>: `;
+			var l = [];
+			for(var i=0; i<user.party.members.length; i++)
+				l.push(calcUserBlock(user.party.members[i].handle));
+			uList += l.join(", ");
+			var q = `<td>${user.party.participantType == "PRACTICE" ? "" : user.rank}</td><td class="multiTableUser">${user.party.ghost ? "<i class='fas fa-ghost'></i>" : ""}${(user.party.participantType == "PRACTICE" || user.party.participantType == "OUT_OF_COMPETITION") ? "* " : ""}${uList}${user.party.participantType == "VIRTUAL" ? `<sup>${getVirtualTag(user.party.startTimeSeconds)}</sup>` : ""}</td>`;
+			if(data.contest.type == "IOI")
+				q += `<td>${user.pointsInfo != undefined ? user.pointsInfo : user.points}</td>`;
+			else if(data.contest.type == "ICPC")
+				q += `<td>${user.points}</td><td>${user.party.participantType == "PRACTICE" ? "" : user.penalty}</td><td>${getMultiHack(user.successfulHackCount, user.unsuccessfulHackCount)}</td>`;
+			else
+				q += `<td>${user.points}</td><td>${getMultiHack(user.successfulHackCount, user.unsuccessfulHackCount)}</td>`;
+			for(var i=0; i<data.problems.length; i++){
+				var r = user.problemResults[i];
+				var s = "";
+				if(r.pointsInfo != undefined){
+					s = r.pointsInfo;
+					if(r.bestSubmissionTimeSeconds != undefined)
+						s += `<span class='multiSmall'>${getTimeLength(Number(r.bestSubmissionTimeSeconds))}</span>`;
+				}
+				else if(r.points == 0){
+					if(r.rejectedAttemptCount != 0)
+						s = '<span class="red">-' + r.rejectedAttemptCount + "</span>";
+				}
+				else if(data.contest.type == "ICPC")
+					s = `<span class='green' style="font-weight: bold">+${r.rejectedAttemptCount == 0 ? "" : r.rejectedAttemptCount}</span>${user.party.participantType == "PRACTICE" ? "" : `<span class='multiSmall'>${getTimeLength(Number(r.bestSubmissionTimeSeconds * 1000))}</span>`}`;
+				else
+					s = `<span class='green' style="font-weight: bold" title="[+${r.rejectedAttemptCount == 0 ? "" : r.rejectedAttemptCount}]">${r.points}</span>${user.party.participantType == "PRACTICE" ? "" : `<span class='multiSmall'>${getTimeLength(Number(r.bestSubmissionTimeSeconds * 1000))}</span>`}`;
+				q += `<td>${s}</td>`;
+			}
+			bd.append(`<tr class="${t % 2 == 1 ? "multiOddLine" : ""}">${q}</tr>`);
+		}
+	}, function(){
+		flushMultiStatusBar(localize("fetchError"), true);
+	})
+
+}
+
+function fetchStandingsMainTrack(){
+	flushMultiStatusBar(localize("multiLoading"), false);
+	var cid = Number($(".multiContestIdInput").val());
+	var t = $(".multiFetchTypeSelect > div.chosen");
+	var idx = $(".multiFetchTypeSelect > div").index(t);
+	var v = $(".multiContestInfoInput").val();
+	t = $(".multiUnofficialSelecter > span.chosen");
+	var sof = $(".multiUnofficialSelecter > span").index(t) == 1;
+	var pg = Number($(".multiPageSelecter > .number.chosen").html());
+	var l = (multiCurrentPage - 1) * pg + 1;
+	var uList = [];
+	var room = 0;
+	if(idx == 0){
+		var u = v.split(";");
+		var uList = [];
+		for(var i=0; i<u.length; i++)
+			if($.trim(u[i]) != "")
+				uList.push($.trim(u[i]));
+	}
+	else if(idx == 1){
+		var u = v.split(";");
+		var uList = [];
+		for(var i=0; i<u.length; i++)
+			if($.trim(u[i]) != "")
+				uList.push($.trim(u[i]));
+		if(currentLoginHandle != "")
+			uList.push(currentLoginHandle);
+	}
+	else{
+		room = Number(v);
+	}
+	loadMultiList(cid, uList, room, sof, l, pg, function(data){
+		multiRenderList(data);
+	}, function(){
+		flushMultiStatusBar(localize("fetchError"), true);
+	})
+}
+
+function multiBeforeStart(){
+	var cid = $(".multiContestIdInput").val();
+	if(!queryNumber.test(cid)){
+		flushMultiStatusBar(localize("multiContestIdError"), true);
+		return;
+	}
+	var t = $(".multiFetchTypeSelect > div.chosen");
+	var idx = $(".multiFetchTypeSelect > div").index(t);
+	var v = $(".multiContestInfoInput").val();
+	if(idx == 0){
+		var u = v.split(";");
+		var uList = [];
+		for(var i=0; i<u.length; i++)
+			if($.trim(u[i]) != "")
+				uList.push($.trim(u[i]));
+		var chk = true;
+		for(var i=0; i<uList.length; i++)
+			chk &= (uList[i].length >= 3 && uList[i].length <= 24 && queryUsrename.test(uList[i]));
+		if(!chk){
+			flushMultiStatusBar(localize("multiUsernameError"), true);
+			return;
+		}
+	}
+	else if(idx == 1){
+		;
+	}
+	else{
+		if(!queryNumber.test(v) || Number(v) == 0){
+			flushMultiStatusBar(localize("multiRoomError"), true);
+			return;
+		}
+	}
+	fetchStandingsMainTrack();
+}
+function multiPageIndexClick(){
+	var inp = $(`<input info="newPage" style="width: 100%; height: 100%; font-size: 18px; background: inherit; border: 0px; border-bottom: 1px solid grey; color: inherit; outline: 0; font-family: var(--font-family); text-align: center"></input>`);
+	function check(){
+		var val = inp.val();
+		if(!queryNumber.test(val) || Number(val) <= 0 || Number(val) > 99999){
+			inp.remove();
+			$(".multiPageIndex").append(`<span class="multiPageIndexNumber" style="cursor: pointer" onclick="multiPageIndexClick()">${multiCurrentPage}</span>`);
+			flushMultiStatusBar(localize("pageIdError"), true);
+			return;
+		}
+		flushMultiStatusBar(localize("ok"), false);
+		multiCurrentPage = Number(val);
+		inp.remove();
+		multiBeforeStart();
+		$(".multiPageIndex").append(`<span class="multiPageIndexNumber" style="cursor: pointer" onclick="multiPageIndexClick()">${multiCurrentPage}</span>`);
+	}
+	inp.bind('keydown',function(event){
+	    if(event.keyCode == "13"){
+	    	check();
+	    }
+	});
+	inp.on('blur', function(){
+		check();
+	})
+	$(".multiPageIndex span").remove();
+	$(".multiPageIndex").append(inp);
+	inp.focus();
+}
+$(".multiClickToFetch").click(function(){
+	multiCurrentPage = 1;
+	$(".multiPageIndexNumber").html(multiCurrentPage);
+	multiBeforeStart();
+})
+
+$(".multiPageSelecter > .number").click(function(){
+	$(".multiPageSelecter > .number.chosen").removeClass("chosen");
+	$(this).addClass("chosen");
+	multiCurrentPage = 1;
+	$(".multiPageIndexNumber").html(multiCurrentPage);
+	multiBeforeStart();
+})
+$(".multiUnofficialSelecter > span").click(function(){
+	$(".multiUnofficialSelecter > span").removeClass("chosen");
+	$(this).addClass("chosen");
+	multiBeforeStart();
+})
+$(".multiPagePrev").click(function(){
+	setTimeout(function(){
+		multiCurrentPage = Math.max(1, multiCurrentPage - 1);
+		$(".multiPageIndexNumber").html(multiCurrentPage);
+		multiBeforeStart();
+	}, 50);
+})
+$(".multiPageNext").click(function(){
+	setTimeout(function(){
+		multiCurrentPage = Math.min(99999, multiCurrentPage + 1);
+		$(".multiPageIndexNumber").html(multiCurrentPage);
+		multiBeforeStart();
+	}, 50);
+})

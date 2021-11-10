@@ -129,7 +129,10 @@ body{
 .searchArgumentsItem.chosen{
     background: #aaa;
 }
-.searchPagesButton:hover{
+.searchPagesButton:hover
+, .multiPagePrev:hover, .multiPageNext:hover
+, .multiPageSelecter > .number:hover, .multiPageSelecter > .number.chosen
+, .multiUnofficialSelecter > span:hover, .multiUnofficialSelecter > span.chosen{
     background: #aaa;
 }
 .contestInfoCard:hover{
@@ -141,6 +144,10 @@ body{
 .multiSettingsBar{
     background: #ccc;
 }
+.multiOddLine{
+    background: #bbb;
+}
+
 
 
 
