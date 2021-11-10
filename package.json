@@ -26,7 +26,7 @@
     "single-instance": true,
     "main": "index.html",
     "chromium-args": "--disable-web-security --user-data-dir --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding",
-    "double_tap_to_zoom_enabled": false,
+    "double-tap-to_zoom-enabled": false,
     "webkit": {
         "page-cache": false,
         "plugin": true,

@@ -235,12 +235,12 @@ body{
 .singleUsernameDisplayer{
 	height: 32px;
 	font-size: 26px;
-	width: 690px;
+	width: 700px;
 	margin-left: 10px;
 }
 .singleRatingDisplayer{
 	font-size: 16px;
-	width: 670px;
+	width: 700px;
 	padding: 5px 10px;
 }
 .singleRatingDisplayer > div:last-child{
@@ -829,15 +829,108 @@ pre{
 	overflow: auto;
 }
 .multiSettingsBar{
-	height: 100px;
+	height: 105px;
 	width: 100%;
 }
 .multiInfoTable{
-	width: 100%;
-	max-height: 100%;
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: calc(100% - 1px);
+	font-size: 16px;
+}
+.multiInfoTbody > tr > td{
+	border: 1px solid grey;
+	user-select: text;
+	padding: 3px;
+	text-align: center;
+}
+.multiTableUser{
+	text-align: left !important;
+	padding-left: 5px !important;
+}
+.multiSmall{
+	display: block;
+	font-size: 13px;
 }
 .multiInfoThead{
 	display: table-header-group;
+}
+.multiFetchTypeSelect > div.chosen{
+	flex: 1 !important;
+}
+.multiFetchTypeSelect > div.chosen .multiTypeChosenList .info{
+	display: inline-block;
+}
+.multiFetchTypeSelect > div{
+	width: 54px !important;
+}
+.multiTypeChosenList{
+	cursor: pointer;
+	position: relative;
+	padding: 10px 9px;
+	width: calc(100% - 18px);
+	height: calc(100% - 20px);
+	display: flex;
+}
+.multiTypeChosenList .info{
+	flex: 1;
+	font-size: 20px;
+	height: 100%;
+	display: none;
+	text-align: center;
+}
+.multiTypeChosenList > i{
+	font-size: 24px;
+	text-align: center;
+	width: 30px;
+}
+.multiPagePrev, .multiPageNext{
+	cursor: pointer;
+	position: relative;
+	transition: 0.2s;
+	margin: 2px;
+	width: 35px;
+	height: 26px;
+	border-radius: 5px;
+	font-size: 20px;
+	display: grid;
+	place-items: center;
+}
+.multiPageSelecter{
+	display: flex;
+	flex-direction: row;
+	font-size: 20px;
+	align-items: center;
+}
+.multiPageSelecter > .number{
+	cursor: pointer;
+	position: relative;
+	transition: 0.2s;
+	margin: 2px;
+	height: 26px;
+	padding: 0px 5px;
+	border-radius: 5px;
+	font-size: 20px;
+	display: grid;
+	place-items: center;
+}
+.multiUnofficialSelecter{
+	display: flex;
+	flex-direction: row;
+	overflow: hidden;
+	border-radius: 5px;
+	margin-left: 10px;
+}
+.multiUnofficialSelecter > span{
+	cursor: pointer;
+	position: relative;
+	transition: 0.2s;
+	height: 30px;
+	width: 55px;
+	font-size: 20px;
+	font-size: 18px;
+	display: grid;
+	place-items: center;
 }
 
 /* SETTINGS */
@@ -981,6 +1074,11 @@ pre{
 [info=reloadLanguages]{
 	cursor: pointer;
 }
+.settingsInfoIcon{
+	display: inline-block;
+	width: 30px;
+	text-align: center;
+}
 
 
 /* SEARCH */
@@ -1048,7 +1146,7 @@ pre{
 	position: relative;
 	transition: 0.2s;
 	margin: 2px;
-	width: 26px;
+	width: 35px;
 	height: 26px;
 	border-radius: 5px;
 	font-size: 20px;
