@@ -110,7 +110,7 @@ function getMultiHack(x, y){
 		return `<span class='red'>-${y}</span>`;
 	if(y == 0)
 		return `<span class='green'>+${x}</span>`;
-	return `<span class='green'>+${x}</span> : <span class='red'>-${y}</span>`;
+	return `<span class='green'>+${x}</span>:<span class='red'>-${y}</span>`;
 }
 
 function multiRenderList(data){
@@ -141,7 +141,7 @@ function multiRenderList(data){
 		$(".multiInfoTable").css("display", "table");
 		var hd = $(".multiInfoThead");
 		hd.html("");
-		var p = `<th>#</th><th>${localize("multiUser")}</th>`;
+		var p = `<th style='width: 2em'>#</th><th>${localize("multiUser")}</th>`;
 		if(data.contest.type == "IOI")
 			p += `<th style='width: 2em'>=</th>`;
 		else if(data.contest.type == "ICPC")
@@ -157,12 +157,14 @@ function multiRenderList(data){
 			var user = data.rows[t];
 			var uList = "";
 			if(user.party.teamName != undefined)
-				uList = `<span style='color: grey; font-size: 14px'>${user.party.teamName}</span>: `;
+				uList = `<span style='color: grey; font-size: 14px'>${user.party.teamName}</span>`;
 			var l = [];
 			for(var i=0; i<user.party.members.length; i++)
 				l.push(calcUserBlock(user.party.members[i].handle));
+			if(l.length != 0 && uList != "")
+				uList += ": ";
 			uList += l.join(", ");
-			var q = `<td>${user.party.participantType == "PRACTICE" ? "" : user.rank}</td><td class="multiTableUser">${user.party.ghost ? "<i class='fas fa-ghost'></i>" : ""}${(user.party.participantType == "PRACTICE" || user.party.participantType == "OUT_OF_COMPETITION") ? "* " : ""}${uList}${user.party.participantType == "VIRTUAL" ? `<sup>${getVirtualTag(user.party.startTimeSeconds)}</sup>` : ""}</td>`;
+			var q = `<td>${user.party.participantType == "PRACTICE" ? "" : user.rank}</td><td class="multiTableUser">${user.party.ghost ? "<i class='fas fa-ghost'></i> " : ""}${(user.party.participantType == "PRACTICE" || user.party.participantType == "OUT_OF_COMPETITION") ? "* " : ""}${uList}${user.party.participantType == "VIRTUAL" && !user.party.ghost ? `<sup>${getVirtualTag(user.party.startTimeSeconds)}</sup>` : ""}</td>`;
 			if(data.contest.type == "IOI")
 				q += `<td>${user.pointsInfo != undefined ? user.pointsInfo : user.points}</td>`;
 			else if(data.contest.type == "ICPC")
@@ -175,7 +177,7 @@ function multiRenderList(data){
 				if(r.pointsInfo != undefined){
 					s = r.pointsInfo;
 					if(r.bestSubmissionTimeSeconds != undefined)
-						s += `<span class='multiSmall'>${getTimeLength(Number(r.bestSubmissionTimeSeconds))}</span>`;
+						s += `<span class='multiSmall'>${getTimeLength(Number(r.bestSubmissionTimeSeconds * 1000))}</span>`;
 				}
 				else if(r.points == 0){
 					if(r.rejectedAttemptCount != 0)
