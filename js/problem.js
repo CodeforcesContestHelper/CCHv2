@@ -168,6 +168,7 @@ function loadProblem(x, info){
 	})
 	if(info != undefined){
 		problemCurrentPageList[p][2] = 0;
+		problemCurrentPageList[p][4].contestName = "Codeforces";
 		initProblemPageInfo(problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`), $(info).find(`.problemindexholder[problemindex=${getProblemIndexes(x)[1]}] .problem-statement`), p);
 		return;
 	}
