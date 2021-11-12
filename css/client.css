@@ -327,7 +327,7 @@ body{
 	font-size: 16px;
 }
 .singleHeadBack{
-	width: 220px;
+	width: 300px;
 	cursor: pointer;
 	left: 10px;
 }
@@ -771,7 +771,6 @@ img[src=""],img:not([src]){opacity:0;}
 	padding: 5px;
 	width: calc(100% - 10px);
 	height: calc(100% - 10px);
-	overflow-y: scroll;
 }
 .submissionDisplayer > div:first-child{
 	padding: 5px 10px;
