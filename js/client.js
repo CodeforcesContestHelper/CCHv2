@@ -580,20 +580,21 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 				if(singleAnnouncementLength == -1)
 					singleAnnouncementLength = q.length;
 				if(singleAnnouncementLength != q.length && q.length != 0){
-					singleAnnouncementLength = q.length;
-					q = q.eq(0);
-					var alt = "";
-					q.contents().each(function(){
-						if($(this).prop("outerHTML") == "<br>")
-							alt += '\n';
-						else
-							alt += $(this).text();
-					});
-					q = $('<div>' + alt + '</div>').text();
-					problemNewWinJQ.append(`<script>announcementDisplay(\`${q}\`)</script>`);
-					if(settings.openNotification){
-						new Notification(`Notification of CF #${ci}`, {body: q, icon: '../favicon.png'});
+					for(var dis = q.length - singleAnnouncementLength - 1; dis >= 0; dis --){
+						var t = q.eq(dis);
+						var alt = "";
+						t.contents().each(function(){
+							if($(this).prop("outerHTML") == "<br>")
+								alt += '\n';
+							else
+								alt += $(this).text();
+						});
+						t = $('<div>' + alt + '</div>').text();
+						problemNewWinJQ.append(`<script>announcementDisplay(\`${t}\`)</script>`);
+						if(settings.openNotification)
+							new Notification(`Notification of CF #${ci}`, {body: t, icon: '../favicon.png'});
 					}
+					singleAnnouncementLength = q.length;
 				}
 			}
 		})

@@ -168,11 +168,11 @@ function loadProblem(x, info){
 	})
 	if(info != undefined){
 		problemCurrentPageList[p][2] = 0;
-		problemCurrentPageList[p][4].contestName = "Codeforces";
+		problemCurrentPageList[p][4].contestName = $(info).find(".caption").html();
 		initProblemPageInfo(problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`), $(info).find(`.problemindexholder[problemindex=${getProblemIndexes(x)[1]}] .problem-statement`), p);
 		return;
 	}
-	problemCurrentPageList[p][1] =$.ajax({
+	problemCurrentPageList[p][1] = $.ajax({
 		url: settings.mainURL + `/${getProblemIndexes(x)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(x)[0] + '/problem/' + getProblemIndexes(x)[1] + '?locale=en',
 		success: function(data){
 			if(data.indexOf(`data-entityId="${getProblemIndexes(x)[0]}"`) == -1){
@@ -355,7 +355,8 @@ function loadContestProblemset(cid, S, E){
 	cid = Number(cid);
 	$.ajax({
 		url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid + '/problems',
-		success: function(data){
+		success: function(data, status, xhr){
+			console.log(status, xhr);
 			if(data.indexOf(`class="problem-statement"`) == -1){
 				E(); return;
 			}
@@ -364,7 +365,7 @@ function loadContestProblemset(cid, S, E){
 			q.find(".problemindexholder").each(function(){
 				ret.push(String(cid) + $.trim($(this).attr("problemindex")));
 			})
-			S(ret, q);
+			S(ret, data);
 		},
 		error: function(){
 			E();
@@ -604,16 +605,16 @@ function initProblemNewWin(){
 		for(var i=0; i<problemCurrentPageList.length; i++){
 			if(problemCurrentPageList[i][2] != 0)	continue;
 			var info = JSON.stringify({
-							"name": problemCurrentPageList[i][4].title,
-						    "group": problemCurrentPageList[i][4].contestName,
-						    "url": `https://codeforces.com/${getProblemIndexes(problemCurrentPageList[i][0])[0] >= 100000 ? "gym" : "contest"}/${getProblemIndexes(problemCurrentPageList[i][0])[0]}/problem/${getProblemIndexes(problemCurrentPageList[i][0])[1]}`,
-						    "interactive": false,
-						    "memoryLimit": problemCurrentPageList[i][4].memoryLimit,
-						    "timeLimit": problemCurrentPageList[i][4].timelimit,
-						    "tests": sampleWrapper(problemCurrentPageList[i][3][0], problemCurrentPageList[i][3][1]),
-						    "input": problemCurrentPageList[i][4].input,
-						    "output": problemCurrentPageList[i][4].output,
-						});
+				"name": problemCurrentPageList[i][4].title,
+			    "group": problemCurrentPageList[i][4].contestName,
+			    "url": `https://codeforces.com/${getProblemIndexes(problemCurrentPageList[i][0])[0] >= 100000 ? "gym" : "contest"}/${getProblemIndexes(problemCurrentPageList[i][0])[0]}/problem/${getProblemIndexes(problemCurrentPageList[i][0])[1]}`,
+			    "interactive": false,
+			    "memoryLimit": problemCurrentPageList[i][4].memoryLimit,
+			    "timeLimit": problemCurrentPageList[i][4].timelimit,
+			    "tests": sampleWrapper(problemCurrentPageList[i][3][0], problemCurrentPageList[i][3][1]),
+			    "input": problemCurrentPageList[i][4].input,
+			    "output": problemCurrentPageList[i][4].output,
+			});
 			for(var pr in CompetitiveCompanionPort)
 				sender(info, pr, curr * 1000);
 			++curr;
