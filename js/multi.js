@@ -33,7 +33,7 @@ function loadUserColors(users, S, E){
 				var ret = {};
 				for(var i=0; i<json.result.length; i++){
 					var q = json.result[i];
-					ret[q.handle] = ratingToClass(Number(q.rating));
+					ret[q.handle] = ratingToClass(q.rating);
 				}
 				S(ret);
 			}
