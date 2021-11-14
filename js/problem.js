@@ -444,10 +444,10 @@ function flushProblemNewWin(){
 		}, 500);
 	})
 	problemNewWinJQ.find(".addProblemSidebar").unbind("click").click(function(){
-		problemNewWinJQ.find(".addProblemWindow").css("opacity", "1");
 		problemNewWinJQ.find(".addProblemWindow").css("display", "grid");
 		problemNewWinJQ.find(".problemInfoInputArea input").val("");
 		problemNewWinJQ.find(".contestInfoInputArea input").val("");
+		setTimeout(function(){ problemNewWinJQ.find(".addProblemWindow").css("opacity", "1"); }, 50);
 	})
 	problemNewWinJQ.find(".problemInfoInputArea button").unbind('click').click(function(){
 		if(typeof($(this).attr("disabled")) != "undefined")

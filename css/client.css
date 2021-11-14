@@ -777,6 +777,32 @@ img[src=""],img:not([src]){opacity:0;}
 	height: calc(100% - 10px);
 	width: calc(100% - 20px);
 }
+.eventDisplayer{
+	user-select: text;
+	text-align: left !important;
+	font-size: 16px !important;
+	padding: 5px;
+	border-radius: 5px;
+	height: calc(100% - 170px);
+	width: calc(100% - 210px);
+	position: relative;
+}
+.eventCloseButton{
+	position: absolute;
+	right: 15px;
+	top: 10px;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	transition: 0.2s;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	font-size: 20px;
+}
+.eventList > p{
+	margin: 5px;
+}
 pre code{
 	border-radius: 5px;
 	display: block;

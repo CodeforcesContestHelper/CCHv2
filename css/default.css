@@ -108,8 +108,14 @@ body{
 .submissionDisplayer > div:first-child > div:first-child{
     background: #eee;
 }
-.submissionCodeDisplayer{
+.submissionCodeDisplayer, .eventDisplayer{
     background: #ddd;
+}
+.eventCloseButton{
+    background: #ccc;
+}
+.eventCloseButton:hover{
+    background: #bbb;
 }
 .settingsLoginButton, .settingsLoginType{
     color: black;
@@ -145,7 +151,7 @@ body{
     background: #ccc;
 }
 .multiOddLine{
-    background: #bbb;
+    background: #ccc;
 }
 
 

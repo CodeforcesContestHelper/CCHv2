@@ -104,8 +104,14 @@ body{
 .submissionDisplayer > div:first-child > div:first-child{
     background: rgb(35, 40, 45);
 }
-.submissionCodeDisplayer{
+.submissionCodeDisplayer, .eventDisplayer{
     background: rgb(35, 40, 45);
+}
+.eventCloseButton{
+    background: #555;
+}
+.eventCloseButton:hover{
+    background: #666;
 }
 .settingsLoginButton, .settingsLoginType{
     color: white;
