@@ -868,6 +868,15 @@ function toSmallInfo(x){
 	if(x == "REJECTED")	return "REJ";
 	return "";
 }
+function toDetailedInfo(x, ptType){
+	if(x == undefined || x == "")	return languageOption.compile["IN_QUEUE"];
+	if(x == "OK"){
+		if(ptType == "PRETESTS")
+			return languageOption.compile["PRETEST_PASSED"];
+		return languageOption.compile["ACCEPTED"];
+	}
+	return languageOption.compile[x];
+}
 function judgeToClass(x){
 	if(x == undefined || x == "")	return "loadingColor";
 	if(x == "OK")	return "successColor";
@@ -902,6 +911,13 @@ function toSmallTestset(x){
 	if(x == "TESTS")	return "MAIN";
 	if(x == "CHALLENGES")	return "HACK";
 	return "TEST";
+}
+function toDetailedTestset(x){
+	if(x == "SAMPLES")	return "samples";
+	if(x == "PRETESTS")	return "pretests";
+	if(x == "TESTS")	return "main tests";
+	if(x == "CHALLENGES")	return "hack";
+	return "testcase " + x.substring(5);
 }
 function allHtmlSpecialChars(text){
     var map = {

@@ -33,7 +33,7 @@ function loadUserColors(users, S, E){
 				var ret = {};
 				for(var i=0; i<json.result.length; i++){
 					var q = json.result[i];
-					ret[q.handle] = ratingToClass(Number(q.rating));
+					ret[q.handle] = ratingToClass(q.rating);
 				}
 				S(ret);
 			}
@@ -60,6 +60,7 @@ function loadFriendList(S, E){
 }
 
 var multiPlaceholders = ["", "", ""];
+var eventAjax = null;
 $(".multiFetchTypeSelect > div").click(function(){
 	var t = $(".multiFetchTypeSelect > div.chosen");
 	var i = $(".multiFetchTypeSelect > div").index(t);
@@ -159,12 +160,23 @@ function multiRenderList(data){
 			if(user.party.teamName != undefined)
 				uList = `<span style='color: grey; font-size: 14px'>${user.party.teamName}</span>`;
 			var l = [];
+			var addi = "";
 			for(var i=0; i<user.party.members.length; i++)
 				l.push(calcUserBlock(user.party.members[i].handle));
 			if(l.length != 0 && uList != "")
 				uList += ": ";
 			uList += l.join(", ");
-			var q = `<td>${user.party.participantType == "PRACTICE" ? "" : user.rank}</td><td class="multiTableUser">${user.party.ghost ? "<i class='fas fa-ghost'></i> " : ""}${(user.party.participantType == "PRACTICE" || user.party.participantType == "OUT_OF_COMPETITION") ? "* " : ""}${uList}${user.party.participantType == "VIRTUAL" && !user.party.ghost ? `<sup>${getVirtualTag(user.party.startTimeSeconds)}</sup>` : ""}</td>`;
+			var q = `<td>${user.party.participantType == "PRACTICE" ? "" : user.rank}</td>`;
+			var rr = $(`<td class="multiTableUser">${user.party.ghost ? "<i class='fas fa-ghost'></i> " : ""}${(user.party.participantType == "PRACTICE" || user.party.participantType == "OUT_OF_COMPETITION") ? "* " : ""}${uList}${user.party.participantType == "VIRTUAL" && !user.party.ghost ? `<sup>${getVirtualTag(user.party.startTimeSeconds)}</sup>` : ""}</td>`);
+			if(user.party.members.length != 0){
+				rr.css("cursor", "pointer");
+				rr.attr("contestId", data.contest.id);
+				rr.attr("handle", user.party.members[0].handle);
+				rr.attr("startTime", user.party.startTimeSeconds == undefined ? 0 : user.party.startTimeSeconds);
+				rr.attr("participantType", user.party.participantType);
+				rr.addClass("eventLister");
+			}
+			q += rr.prop("outerHTML");
 			if(data.contest.type == "IOI")
 				q += `<td>${user.pointsInfo != undefined ? user.pointsInfo : user.points}</td>`;
 			else if(data.contest.type == "ICPC")
@@ -174,7 +186,9 @@ function multiRenderList(data){
 			for(var i=0; i<data.problems.length; i++){
 				var r = user.problemResults[i];
 				var s = "";
-				if(r.pointsInfo != undefined){
+				if(r.type == "PRELIMINARY")
+					s += `<span style="color: grey; font-weight: bold">?</span>`;
+				else if(r.pointsInfo != undefined){
 					s = r.pointsInfo;
 					if(r.bestSubmissionTimeSeconds != undefined)
 						s += `<span class='multiSmall'>${getTimeLength(Number(r.bestSubmissionTimeSeconds * 1000))}</span>`;
@@ -187,12 +201,82 @@ function multiRenderList(data){
 					s = `<span class='green' style="font-weight: bold">+${r.rejectedAttemptCount == 0 ? "" : r.rejectedAttemptCount}</span>${user.party.participantType == "PRACTICE" ? "" : `<span class='multiSmall'>${getTimeLength(Number(r.bestSubmissionTimeSeconds * 1000))}</span>`}`;
 				else
 					s = `<span class='green' style="font-weight: bold" title="[+${r.rejectedAttemptCount == 0 ? "" : r.rejectedAttemptCount}]">${r.points}</span>${user.party.participantType == "PRACTICE" ? "" : `<span class='multiSmall'>${getTimeLength(Number(r.bestSubmissionTimeSeconds * 1000))}</span>`}`;
-				q += `<td>${s}</td>`;
+				var tt = $(`<td>${s}</td>`);
+				if(user.party.members.length != 0 && s != ""){
+					tt.css("cursor", "pointer");
+					tt.attr("contestId", data.contest.id);
+					tt.attr("handle", user.party.members[0].handle);
+					tt.attr("startTime", user.party.participantType == "PRACTICE" ? 0 : user.party.startTimeSeconds);
+					tt.attr("participantType", user.party.participantType);
+					tt.attr("problemId", data.problems[i].index);
+					tt.addClass("eventLister");
+				}
+				q += tt.prop("outerHTML");
 			}
 			bd.append(`<tr class="${t % 2 == 1 ? "multiOddLine" : ""}">${q}</tr>`);
 		}
+		$(".eventLister").unbind("click").click(function(){
+			var cid = Number($(this).attr("contestId"));
+			var had = $(this).attr("handle");
+			var stt = Number($(this).attr("startTime"));
+			var ptt = $(this).attr("participantType");
+			var pid = $(this).attr("problemId");
+			$(".eventContainer").css("display", "grid");
+			setTimeout(function(){
+				$(".eventContainer").css("opacity", "1");
+			}, 50);
+			$(".eventList").html(`<div style="width: 100%; height: 100%; display: grid; place-items: center"><i class="fas fa-3x fa-spin fa-sync-alt"></i></div>`)
+			eventAjax = $.ajax({
+				url: generateAuthorizeURL(settings.codeforcesApiUrl + '/contest.status', {contestId: cid, handle: had}),
+				timeout: settings.largeTimeLimit,
+				success: function(json){
+					eventAjax = null;
+					if(json.status != "OK")
+						$(".eventList").html(`<div style="width: 100%; height: 100%; display: grid; place-items: center"><i class="fas red fa-3x fa-unlink"></i></div>`)
+					else{
+						json = json.result;
+						var useful = [];
+						for(var i = json.length - 1; i >= 0; i --){
+							var q = json[i];
+							var _stt = q.author.startTimeSeconds;
+							if(_stt == undefined || q.author.participantType == "PRACTICE")
+								_stt = 0;
+							if(q.author.participantType != ptt || _stt != stt || (pid != undefined && pid != q.problem.index))
+								continue;
+							useful.push(q);
+						}
+						$(".eventList").html('');
+						for(var i = 0; i < useful.length; i++){
+							var tim = "";
+							var curr = useful[i];
+							if(stt == 0)
+								tim = (new Date(curr.creationTimeSeconds * 1000).pattern("yyyy/MM/dd hh:mm"));
+							else
+								tim = getTimeLength((curr.creationTimeSeconds - stt) * 1000);
+							var vid = "";
+							// toDetailedTestset
+							// toDetailedInfo
+							if(curr.verdict == "OK")
+								vid = `<span class="green" style="font-weight: bold">${toDetailedInfo(curr.verdict, curr.testset)}</span>`
+							else if(curr.verdict == "PARTIAL")
+								vid = `<span class="red">${toDetailedInfo(curr.verdict, curr.testset)}</span>`
+							else
+								vid = `<span class="red">${toDetailedInfo(curr.verdict, curr.testset)} on test ${curr.passedTestCount + 1}</span>`
+							vid = $(vid);
+							vid.attr("onclick", `openSubmission(${cid}, ${curr.id})`);
+							vid.css("cursor", "pointer");
+							vid = vid.prop("outerHTML");
+							$(".eventList").append(`<p>${tim} ${pid == undefined ? `<span style="text-decoration: underline; display: inline-block; padding: 0px 3px; width: 20px; text-align: center">${curr.problem.index}</span> ` : ""}${vid}${curr.points != undefined || curr.pointsInfo != undefined ? ` | ${curr.pointsInfo != undefined ? curr.pointsInfo : curr.points}` : ""} [${toDetailedTestset(curr.testset)}]</p>`)
+						}
+					}
+				},
+				error: function(){
+					$(".eventList").html(`<div style="width: 100%; height: 100%; display: grid; place-items: center"><i class="fas red fa-3x fa-unlink"></i></div>`)
+				}
+			})
+		})
 	}, function(){
-		flushMultiStatusBar(localize("fetchError"), true);
+
 	})
 
 }
@@ -297,6 +381,7 @@ function multiPageIndexClick(){
 	$(".multiPageIndex").append(inp);
 	inp.focus();
 }
+
 $(".multiClickToFetch").click(function(){
 	multiCurrentPage = 1;
 	$(".multiPageIndexNumber").html(multiCurrentPage);
@@ -328,4 +413,12 @@ $(".multiPageNext").click(function(){
 		$(".multiPageIndexNumber").html(multiCurrentPage);
 		multiBeforeStart();
 	}, 50);
+})
+$(".eventCloseButton").click(function(){
+	if(eventAjax != null)
+		eventAjax.abort(), eventAjax = null;
+	$(".eventContainer").css("opacity", "0");
+	setTimeout(function(){
+		$(".eventContainer").css("display", "none");
+	}, 500);
 })

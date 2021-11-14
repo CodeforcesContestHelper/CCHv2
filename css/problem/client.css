@@ -332,9 +332,6 @@ p{
 	display: block;
 	margin: 10px;
 }
-ul, ol{
-	padding-inline-start: 20px;
-}
 .tex-font-style-tt{
 	font-family: var(--editor-font-family);
 	border: 1px solid #777;

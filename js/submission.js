@@ -7,11 +7,11 @@ function openSubmission(c, u){
 	}
 	submissionLastOperated = new Date();
 	var T = submissionLastOperated;
-	$(".HtmlContainer > div > .loadingInterface").css("display", "grid");
-	$(".HtmlContainer > div > .loadingInterface > div:first-child").css("display", "block");
-	$(".HtmlContainer > div > .loadingInterface > div:last-child").css("display", "none");
-	setTimeout(function(){$(".HtmlContainer > div > .loadingInterface").css("opacity", 1);}, 100);
-	$(".HtmlContainer > div > .loadingInterface > div:first-child > i").attr("class", 'fas fa-spin fa-sync-alt');
+	$(".submissionContainer").css("display", "grid");
+	$(".submissionContainer > div:first-child").css("display", "block");
+	$(".submissionContainer > div:last-child").css("display", "none");
+	setTimeout(function(){$(".submissionContainer").css("opacity", 1);}, 100);
+	$(".submissionContainer > div:first-child > i").attr("class", 'fas fa-spin fa-sync-alt');
 	var data;
 	function loader(callback){
 		$.ajax({
@@ -25,19 +25,19 @@ function openSubmission(c, u){
 			},
 			error: function(){
 				if(T.getTime() != submissionLastOperated.getTime())	return;
-				$(".HtmlContainer > div > .loadingInterface > div:first-child > i").css("opacity", 0);
+				$(".submissionContainer > div:first-child > i").css("opacity", 0);
 				setTimeout(function(){
-					$(".HtmlContainer > div > .loadingInterface > div:first-child > i").attr("class", 'fas fa-unlink');
+					$(".submissionContainer > div:first-child > i").attr("class", 'fas fa-unlink');
 					setTimeout(function(){
-						$(".HtmlContainer > div > .loadingInterface > div:first-child > i").css("opacity", 1);
+						$(".submissionContainer > div:first-child > i").css("opacity", 1);
 					}, 100)
 				}, 500);
 				setTimeout(function(){
-					$(".HtmlContainer > div > .loadingInterface > div:first-child > i").css("opacity", 0);
+					$(".submissionContainer > div:first-child > i").css("opacity", 0);
 					setTimeout(function(){
-						$(".HtmlContainer > div > .loadingInterface > div:first-child > i").attr("class", 'fas fa-spin fa-sync-alt');
+						$(".submissionContainer > div:first-child > i").attr("class", 'fas fa-spin fa-sync-alt');
 						setTimeout(function(){
-							$(".HtmlContainer > div > .loadingInterface > div:first-child > i").css("opacity", 1);
+							$(".submissionContainer > div:first-child > i").css("opacity", 1);
 						}, 100)
 						loader(callback);
 					}, 500);
@@ -56,9 +56,9 @@ function openSubmission(c, u){
 	function req(){
 		var ctN = data.find("table").eq(0).find("tr").eq(0);
 		var ctL = data.find("table").eq(0).find("tr").eq(1);
-		$(".HtmlContainer > div > .loadingInterface").css("display", "block");
-		$(".HtmlContainer > div > .loadingInterface > div:last-child").css("display", "block");
-		$(".HtmlContainer > div > .loadingInterface > div:first-child").css("display", "none");
+		$(".submissionContainer").css("display", "block");
+		$(".submissionContainer > div:last-child").css("display", "block");
+		$(".submissionContainer > div:first-child").css("display", "none");
 		$(".submissionUsername").html();
 		$(".submissionProblem").html(ctL.children().eq(2).find("a").text());
 		$(".submissionLanguage").html(ctL.children().eq(3).text());
@@ -130,8 +130,8 @@ function openSubmission(c, u){
 	}
 	$(".submissionCloser").unbind("click").click(function(){
 		submissionLastOperated = new Date();
-		$(".HtmlContainer > div > .loadingInterface").css("opacity", 0);
-		setTimeout(function(){$(".HtmlContainer > div > .loadingInterface").css("display", "none");}, 500);
+		$(".submissionContainer").css("opacity", 0);
+		setTimeout(function(){$(".submissionContainer").css("display", "none");}, 500);
 	})
 	loader(req);
 }

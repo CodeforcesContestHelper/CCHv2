@@ -56,7 +56,7 @@
 				</div>
 			</div>
 			<div style="display: flex; flex-direction: row; position: relative; flex: 1">
-				<div class="loadingInterface" style="display: none; opacity: 0; z-index: 999">
+				<div class="loadingInterface submissionContainer" style="display: none; opacity: 0; z-index: 999">
 					<div><i></i><div class="popTip submissionCloser" info="tipClickToGoBack"></div></div>
 					<div style="display: none" class="submissionDisplayer">
 						<div style="display: flex; flex-direction: column; height: calc(100% - 10px)">
@@ -82,6 +82,18 @@
 						</div>
 					</div>
 				</div>
+
+				<div class="loadingInterface eventContainer" style="display: none; opacity: 0; z-index: 990;">
+					<div class="eventDisplayer">
+						<div style="width: calc(100% - 40px); height: calc(100% - 20px); position: absolute; top: 0px; left: 0px; overflow-y: auto; padding: 10px 20px" class="eventList">
+
+						</div>
+						<div class="eventCloseButton">
+							<i class="fas fa-close red"></i>
+						</div>
+					</div>
+				</div>
+
 				<div class="NavBar">
 					<div class="NavBarCurr"></div>
 					<div class="NavBarContent NavBarChosen" for="singleContent">

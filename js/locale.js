@@ -273,6 +273,27 @@ var lang_en = {
 			"<span class='settingsInfoIcon fas fa-mask'></span> API Secret",
 			"Your API secret."
 		]
+	},
+	compile: {
+		IN_QUEUE: "In queue",
+		PRETEST_PASSED: "Pretest passed",
+		ACCEPTED: "Accepted",
+		FAILED: "Failed",
+		PARTIAL: "Partial correct",
+		COMPILATION_ERROR: "Compilation error",
+		RUNTIME_ERROR: "Runtime error",
+		WRONG_ANSWER: "Wrond answer",
+		PRESENTATION_ERROR: "Presentation error",
+		TIME_LIMIT_EXCEEDED: "Time limit exceeded",
+		MEMORY_LIMIT_EXCEEDED: "Memory limit exceeded",
+		IDLENESS_LIMIT_EXCEEDED: "Idleness limit exceeded",
+		SECURITY_VIOLATED: "Security violated",
+		CRASHED: "Crashed",
+		INPUT_PREPARATION_CRASHED: "Input preparation crashed",
+		CHALLENGED: "Hacked",
+		SKIPPED: "Skipped",
+		TESTING: "Testing",
+		REJECTED: "Rejected",
 	}
 };
 var lang_zh = {
@@ -553,6 +574,48 @@ var lang_zh = {
 			"<span class='settingsInfoIcon fas fa-mask'></span> API Secret",
 			"你的 API secret."
 		]
+	},
+	// compile: {
+	// 	IN_QUEUE: "在队列中",
+	// 	PRETEST_PASSED: "预测试通过",
+	// 	ACCEPTED: "通过",
+	// 	FAILED: "失败",
+	// 	PARTIAL: "部分正确",
+	// 	COMPILATION_ERROR: "编译错误",
+	// 	RUNTIME_ERROR: "运行时错误",
+	// 	WRONG_ANSWER: "答案错误",
+	// 	PRESENTATION_ERROR: "格式错误",
+	// 	TIME_LIMIT_EXCEEDED: "时间超限",
+	// 	MEMORY_LIMIT_EXCEEDED: "空间超限",
+	// 	IDLENESS_LIMIT_EXCEEDED: "等待操作时间超限",
+	// 	SECURITY_VIOLATED: "违反安全",
+	// 	CRASHED: "崩溃",
+	// 	INPUT_PREPARATION_CRASHED: "输入准备时崩溃",
+	// 	CHALLENGED: "被 hack",
+	// 	SKIPPED: "被跳过",
+	// 	TESTING: "测试中",
+	// 	REJECTED: "被拒绝",
+	// }
+	compile: {
+		IN_QUEUE: "In queue",
+		PRETEST_PASSED: "Pretest passed",
+		ACCEPTED: "Accepted",
+		FAILED: "Failed",
+		PARTIAL: "Partial correct",
+		COMPILATION_ERROR: "Compilation error",
+		RUNTIME_ERROR: "Runtime error",
+		WRONG_ANSWER: "Wrond answer",
+		PRESENTATION_ERROR: "Presentation error",
+		TIME_LIMIT_EXCEEDED: "Time limit exceeded",
+		MEMORY_LIMIT_EXCEEDED: "Memory limit exceeded",
+		IDLENESS_LIMIT_EXCEEDED: "Idleness limit exceeded",
+		SECURITY_VIOLATED: "Security violated",
+		CRASHED: "Crashed",
+		INPUT_PREPARATION_CRASHED: "Input preparation crashed",
+		CHALLENGED: "Hacked",
+		SKIPPED: "Skipped",
+		TESTING: "Testing",
+		REJECTED: "Rejected",
 	}
 };
 var lang_list = ["English", "简体中文"];
