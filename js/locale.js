@@ -276,7 +276,7 @@ var lang_en = {
 	},
 	compile: {
 		IN_QUEUE: "In queue",
-		PRETEST_PASSED: "Pretest passed",
+		PRETEST_PASSED: "Pretests passed",
 		ACCEPTED: "Accepted",
 		FAILED: "Failed",
 		PARTIAL: "Partial correct",
@@ -598,7 +598,7 @@ var lang_zh = {
 	// }
 	compile: {
 		IN_QUEUE: "In queue",
-		PRETEST_PASSED: "Pretest passed",
+		PRETEST_PASSED: "Pretests passed",
 		ACCEPTED: "Accepted",
 		FAILED: "Failed",
 		PARTIAL: "Partial correct",

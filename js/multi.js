@@ -172,7 +172,7 @@ function multiRenderList(data){
 				rr.css("cursor", "pointer");
 				rr.attr("contestId", data.contest.id);
 				rr.attr("handle", user.party.members[0].handle);
-				rr.attr("startTime", user.party.startTimeSeconds == undefined ? 0 : user.party.startTimeSeconds);
+				rr.attr("startTime", user.party.participantType == "PRACTICE" ? 0 : user.party.startTimeSeconds);
 				rr.attr("participantType", user.party.participantType);
 				rr.addClass("eventLister");
 			}
