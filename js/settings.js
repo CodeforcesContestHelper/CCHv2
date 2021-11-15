@@ -531,6 +531,14 @@ function initLanguage(){
 				})
 			else	$(`[info=${name}]`).html(languageOption.error[name]);
 		}
+	for(var name in languageOption.phase)
+		if(languageOption.phase.hasOwnProperty(name)){
+			if(languageOption.phase[name].format(["", "", ""]) != languageOption.phase[name] && $(`[info=${name}]`).attr("argv") != undefined)
+				$(`[info=${name}]`).each(function(){
+					$(this).html(languageOption.phase[name].format(JSON.parse($(this).attr("argv"))));
+				})
+			else	$(`[info=${name}]`).html(languageOption.phase[name]);
+		}
 	for(var name in languageOption.input)
 		if(languageOption.input.hasOwnProperty(name))
 			$(`[info=${name}]`).attr("placeholder", languageOption.input[name]);

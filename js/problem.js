@@ -64,6 +64,7 @@ function initProblemPageInfo(page, data, id){
 	page.html("");
 	page.append(`<div class="problemTitle">${data.find(".title").html()}</div>`);
 	problemCurrentPageList[id][4].title = data.find(".title").html();
+	page.append(`<div class="problemOrigin">${localize("origin")} → ${problemCurrentPageList[id][4].contestName}</div>`)
 	var tg = $(`<div class="problemTags"></div>`);
 	if(data.find(".time-limit").length != 0)
 		tg.append(`<div class='problemTag primaryColor'><i class='fas fa-clock'></i>${getRealTimeLimit(data.find(".time-limit").contents().eq(1).text())}</div>`),

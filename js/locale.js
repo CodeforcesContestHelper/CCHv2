@@ -111,6 +111,7 @@ var lang_en = {
 		multiApiError: "API Key Required!",
 		multiNoUsers: "Empty List",
 		multiUser: "User",
+		origin: "Origin",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -142,6 +143,7 @@ var lang_en = {
 		errorLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> Load Failed",
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' Load Failed",
 		errorSubmitFailed: "Submit Failed",
+		errorSameCode: "Same Code Sent Before",
 		errorRegisterFailed: "Register contest failed!",
 	},
 	tip: {
@@ -294,6 +296,13 @@ var lang_en = {
 		SKIPPED: "Skipped",
 		TESTING: "Testing",
 		REJECTED: "Rejected",
+	},
+	phase: {
+		BEFORE: "Before start",
+		CODING: "Running",
+		PENDING_SYSTEM_TEST: "Pending ST",
+		SYSTEM_TEST: "System testing",
+		FINISHED: "Finished"
 	}
 };
 var lang_zh = {
@@ -409,6 +418,7 @@ var lang_zh = {
 		multiApiError: "API Key 未配置！",
 		multiNoUsers: "列表为空",
 		multiUser: "用户",
+		origin: "来源",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -443,7 +453,8 @@ var lang_zh = {
 		errorCsrfLoadFailed: "<span class='fas fa-exclamation-triangle red'></span> 'csrf_token' 加载失败",
 		sendAnswer: "提交答案",
 		errorSubmitFailed: "提交失败",
-		errorRegisterFailed: "报名比赛失败！"
+		errorSameCode: "代码重复",
+		errorRegisterFailed: "报名比赛失败！",
 	},
 	tip: {
 		tipInitializing: "初始化中...",
@@ -616,6 +627,13 @@ var lang_zh = {
 		SKIPPED: "Skipped",
 		TESTING: "Testing",
 		REJECTED: "Rejected",
+	},
+	phase: {
+		BEFORE: "未开始",
+		CODING: "进行中",
+		PENDING_SYSTEM_TEST: "等待系统评测",
+		SYSTEM_TEST: "系统评测中",
+		FINISHED: "已结束"
 	}
 };
 var lang_list = ["English", "简体中文"];

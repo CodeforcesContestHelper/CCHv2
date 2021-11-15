@@ -137,7 +137,7 @@ function multiRenderList(data){
 				return getTimeLength(len * 1000);
 			return '#';
 		}
-		flushMultiStatusBar(localize("ok"), false);
+		flushMultiStatusBar(localize("ok") + " | " + `<span info="${data.contest.phase}">${languageOption.phase[data.contest.phase]}</span>`, false);
 		$(".multiMask").css("display", "none");
 		$(".multiInfoTable").css("display", "table");
 		var hd = $(".multiInfoThead");
@@ -150,7 +150,7 @@ function multiRenderList(data){
 		else
 			p += `<th style='width: 2em'>=</th><th style='width: 5em'>*</th>`;
 		for(var i=0; i<data.problems.length; i++)
-			p += `<th style='width: 4em'>${data.problems[i].index}${data.contest.type == "CF" ? `<span class='multiSmall'>${data.problems[i].points}</span>` : ""}`
+			p += `<th style='width: 4em'><span onclick="openProblemWin(['${data.contest.id}${data.problems[i].index}'])" style="text-decoration: underline; cursor: pointer">${data.problems[i].index}</span>${data.contest.type == "CF" ? `<span class='multiSmall'>${data.problems[i].points}</span>` : ""}`
 		hd.append("<tr>" + p + "</th>");
 		var bd = $(".multiInfoTbody");
 		bd.html("");
@@ -258,8 +258,10 @@ function multiRenderList(data){
 							// toDetailedInfo
 							if(curr.verdict == "OK")
 								vid = `<span class="green" style="font-weight: bold">${toDetailedInfo(curr.verdict, curr.testset)}</span>`
-							else if(curr.verdict == "PARTIAL")
+							else if(curr.verdict == "PARTIAL" || curr.verdict == "COMPILATION_ERROR" || curr.verdict == "SKIPPED" || curr.verdict == "REJECTED")
 								vid = `<span class="red">${toDetailedInfo(curr.verdict, curr.testset)}</span>`
+							else if(curr.verdict == "CHALLENGED")
+								vid = `<span class="red" style="font-weight: bold">${toDetailedInfo(curr.verdict, curr.testset)}</span>`
 							else
 								vid = `<span class="red">${toDetailedInfo(curr.verdict, curr.testset)} on test ${curr.passedTestCount + 1}</span>`
 							vid = $(vid);
