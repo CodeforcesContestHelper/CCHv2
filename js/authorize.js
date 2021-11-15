@@ -173,6 +173,10 @@ function submitSolution(ci, idx, code, lang, S, E){
 						E('errorLoginFailed', languageOption.error.errorLoginFailed);
 						return;
 					}
+					if(d.indexOf("You have submitted exactly the same code before") != -1){
+						E('errorSameCode', languageOption.error.errorSameCode);
+						return;
+					}
 					if(d.indexOf("submitted successfully") == -1){
 						E('errorSubmitFailed', languageOption.error.errorSubmitFailed);
 						return;
