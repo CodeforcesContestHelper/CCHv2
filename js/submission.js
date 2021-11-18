@@ -13,10 +13,12 @@ function openSubmission(c, u){
 	setTimeout(function(){$(".submissionContainer").css("opacity", 1);}, 100);
 	$(".submissionContainer > div:first-child > i").attr("class", 'fas fa-spin fa-sync-alt');
 	var data;
+	var submissionAjax;
 	function loader(callback){
-		$.ajax({
+		submissionAjax = $.ajax({
 			url: settings.mainURL + `/${c >= 100000 ? "gym" : "contest"}/` + c + '/submission/' + u,
 			success: function(j){
+				submissionAjax = null;
 				if(T.getTime() != submissionLastOperated.getTime())	return;
 				data = $(j);
 				if(j.indexOf(`data-entityId="${u}"`) == -1)
@@ -24,6 +26,7 @@ function openSubmission(c, u){
 				setTimeout(callback, 100);
 			},
 			error: function(){
+				submissionAjax = null;
 				if(T.getTime() != submissionLastOperated.getTime())	return;
 				$(".submissionContainer > div:first-child > i").css("opacity", 0);
 				setTimeout(function(){
@@ -64,8 +67,8 @@ function openSubmission(c, u){
 		$(".submissionLanguage").html(ctL.children().eq(3).text());
 		var pwp = ctL.children().eq(4);
 		var vdl = "";
-		pwp.children().each(function(){
-			if($(this).attr("class") != undefined && $(this).attr("class").indexOf("verdict") != -1)
+		pwp.contents().each(function(){
+			if(($(this).attr("class") != undefined && $(this).attr("class").indexOf("verdict") != -1) || $.trim($(this).text()) == "Compilation error")
 				vdl += $(this).text();
 		})
 		$(".submissionVerdict").html(vdl);
@@ -130,6 +133,8 @@ function openSubmission(c, u){
 	}
 	$(".submissionCloser").unbind("click").click(function(){
 		submissionLastOperated = new Date();
+		if(submissionAjax != null)
+			submissionAjax.abort();
 		$(".submissionContainer").css("opacity", 0);
 		setTimeout(function(){$(".submissionContainer").css("display", "none");}, 500);
 	})

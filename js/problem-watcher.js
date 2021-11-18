@@ -1,4 +1,4 @@
-function addWatcher(id, idx){
+function addWatcher(id, idx, gc){
 	var p = $(`<div class="singleWatchContent"><div class="singleWatchTitle">#${id} | ${idx}</div><div style="flex: 1; display: flex; flex-direction: row;"><div style="flex: 1; overflow: hidden; display: grid; place-items: center"><span class="singleWatchInfo">Pending...</span></div></div></div>`)
 	p.css("transform", "scale(1, 0)");
 	p.css("max-height", "0px");
@@ -26,8 +26,69 @@ function addWatcher(id, idx){
 			}, 200);
 		}, 5000);
 	}
-	fadeIn();
+	fadeIn(); fadeOut("");
+	var chk = false;
 	function loadWatchType(){
+		var wsOpened = false, wsGetResult = false;
+		function startWS(){
+			var chnl = new WebSocket(`wss://pubsub.codeforces.com/ws/s_${gc}?_=${new Date().getTime()}&tag=&time=&eventid=`);
+			chnl.onopen = function(){ wsOpened = true; console.log("ws started") };
+			chnl.onerror = function(){ console.log("ws error"), chnl.close(); wsOpened = false; };
+			chnl.onclose = function(){ console.log("ws closed"); wsOpened = false; };
+			var DT = new Date();
+			chnl.onmessage = function(data){
+				if(wsGetResult){
+					chnl.close();
+					return;
+				}
+				DT = new Date();
+				var j = JSON.parse(data.data);
+				j = JSON.parse(j.text);
+				if(j.t != "s")
+					return;
+				j = j.d; 
+				if(j[1] != id)
+					return;
+				var vdl = j[6];
+				var num = j[8];
+				var tim = j[9];
+				var mem = j[10];
+				if(j[6] == null || j[6] == undefined)
+					vdl = `<span>${toDetailedInfo(j[6], j[4])}</span>`;
+				else if(j[6] == "TESTING")
+					vdl = `<span>${toDetailedInfo(j[6], j[4])} on test ${j[7] + 1}</span>`;
+				else if(j[6] == "OK")
+					vdl = `<span class="green" style="font-weight: bold">${toDetailedInfo(j[6], j[4])}</span>`
+				else if(j[6] == "PARTIAL" || j[6] == "COMPILATION_ERROR" || j[6] == "SKIPPED" || j[6] == "REJECTED")
+					vdl = `<span class="red">${toDetailedInfo(j[6], j[4])}</span>`
+				else if(j[6] == "CHALLENGED")
+					vdl = `<span class="red" style="font-weight: bold">${toDetailedInfo(j[6], j[4])}</span>`
+				else
+					vdl = `<span class="red">${toDetailedInfo(j[6], j[4])} on test ${num}</span>`
+				mem = toMemoryInfo(mem);
+				tim += "ms";
+				p.find(".singleWatchInfo").html(vdl);
+				if(vdl != lastJudgement)
+					fadeIn(), fadeOut(vdl);
+				lastJudgement = vdl;
+				if(j[6] != "TESTING" && j[6] != null && j[6] != undefined){
+					chnl.close(); wsGetResult = true;
+					p.find(".singleWatchTitle").html(`${idx} <i class="fas fa-angle-double-right"></i> ${tim} | ${mem}`);
+					if(settings.openNotification){
+						new Notification(`Result of CF${idx}`, {body: `${$(vdl).html()}\n${tim} | ${mem}`, icon: '../favicon.png'});
+					}
+				}
+			};
+			function checkSub(){
+				if(!wsGetResult && (new Date()).getTime() - DT.getTime() >= 10000){
+					chnl.close(); loadWatchType();
+					return;
+				}
+				setTimeout(checkSub, 1000);
+			}
+			checkSub();
+		}
+		startWS();
 		$.ajax({
 			url: settings.mainURL + `/${getProblemIndexes(idx)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(idx)[0] + '/submission/' + id,
 			success: function(data){
@@ -35,9 +96,11 @@ function addWatcher(id, idx){
 					setTimeout(loadWatchType, 10000);
 					return;
 				}
+				if(wsGetResult)
+					return;
 				var ctL = $(data).find("table").eq(0).find("tr").eq(1);
 				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-accepted")){
-					p.find(".singleWatchInfo").addClass("green");
+					p.find(".singleWatchInfo").addClass("green").css("font-weight", "bold");
 				}
 				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-rejected")
 				|| ctL.children().eq(4).children().eq(0).hasClass("verdict-failed")){
@@ -48,10 +111,17 @@ function addWatcher(id, idx){
 					fadeIn(), fadeOut(ctL.children().eq(4).text());
 				lastJudgement = ctL.children().eq(4).text();
 				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-waiting")
-				|| lastJudgement == "In queue" || lastJudgement == "")
+				|| lastJudgement == "In queue" || lastJudgement == ""){
+					if(wsOpened)
+						return;
 					setTimeout(loadWatchType, 1500);
-				else if(settings.openNotification){
-					new Notification(`Result of CF${idx}`, {body: ctL.children().eq(4).text().trim(), icon: '../favicon.png'});
+				}
+				else{
+					wsGetResult = true;
+					p.find(".singleWatchTitle").html(`${idx} <i class="fas fa-angle-double-right"></i> ${ctL.children().eq(5).text().trim()} | ${ctL.children().eq(6).text().trim()}`);
+					if(settings.openNotification){
+						new Notification(`Result of CF${idx}`, {body: `${ctL.children().eq(4).text().trim()}\n${ctL.children().eq(5).text().trim()} | ${ctL.children().eq(6).text().trim()}`, icon: '../favicon.png'});
+					}
 				}
 			},
 			error: function(){

@@ -31,6 +31,7 @@ function loadLoginType(){
 	})
 }
 var queryCsrf = new RegExp(`<meta name="X-Csrf-Token" content="([0-9a-f]*)"`);
+var queryGlobalChannel = new RegExp(`<meta name="gc" content="([0-9a-f]*)"`);
 var queryHandle = new RegExp(`handle = "([\s\S]+?)"`);
 var queryHandle2 = new RegExp(`<title>([0-9a-zA-Z-_.]+?) - Codeforces</title>`);
 function getFtaa(){
@@ -181,7 +182,12 @@ function submitSolution(ci, idx, code, lang, S, E){
 						E('errorSubmitFailed', languageOption.error.errorSubmitFailed);
 						return;
 					}
-					S($(d).find(`[data-submission-id]`).eq(0).attr("data-submission-id"), ci + idx);
+					var gc = queryGlobalChannel.exec(d);
+					if(gc != null)
+						gc = gc[1];
+					else
+						gc = "7bf17394dc32cc2d4d6234197d8d58178ed01ff7";
+					S($(d).find(`[data-submission-id]`).eq(0).attr("data-submission-id"), ci + idx, gc);
 				},
 				error: function(){
 					E('errorLoginFailed', languageOption.error.errorLoginFailed);

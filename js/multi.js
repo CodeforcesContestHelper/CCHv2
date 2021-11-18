@@ -252,7 +252,7 @@ function multiRenderList(data){
 							if(stt == 0)
 								tim = (new Date(curr.creationTimeSeconds * 1000).pattern("yyyy/MM/dd hh:mm"));
 							else
-								tim = getTimeLength((curr.creationTimeSeconds - stt) * 1000);
+								tim = getTimeLength2((curr.creationTimeSeconds - stt) * 1000);
 							var vid = "";
 							// toDetailedTestset
 							// toDetailedInfo

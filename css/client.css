@@ -116,7 +116,7 @@ body{
 	height: 80px;
 }
 .contentRowInfo{
-	height: 680px;
+	height: 630px;
 	display: flex;
 	flex-direction: row;
 	position: absolute;
@@ -738,7 +738,7 @@ img[src=""],img:not([src]){opacity:0;}
 	display: flex;
 	flex-direction: row;
 	padding: 3px 10px;
-	font-size: 16px;
+	font-size: 14px;
 	width: calc(100% - 20px);
 	text-align: center;
 }
@@ -1281,8 +1281,14 @@ pre{
 
 
 
-
-
+/* PROFILE */
+.infoUserSelector{
+	width: calc(100% - 10px);
+	padding: 5px;
+	position: absolute;
+	top: 0px;
+	transition: 0.2s;
+}
 
 
 

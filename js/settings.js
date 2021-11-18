@@ -877,7 +877,7 @@ function toSmallInfo(x){
 	return "";
 }
 function toDetailedInfo(x, ptType){
-	if(x == undefined || x == "")	return languageOption.compile["IN_QUEUE"];
+	if(x == undefined || x == "" || x == null)	return languageOption.compile["IN_QUEUE"];
 	if(x == "OK"){
 		if(ptType == "PRETESTS")
 			return languageOption.compile["PRETEST_PASSED"];

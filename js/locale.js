@@ -112,6 +112,7 @@ var lang_en = {
 		multiNoUsers: "Empty List",
 		multiUser: "User",
 		origin: "Origin",
+		infoFetchToStart: "Load Username to Start"
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -126,6 +127,7 @@ var lang_en = {
 		multiContestInfoInput0: "Usernames，splitted by ;",
 		multiContestInfoInput1: "Blank",
 		multiContestInfoInput2: "Room ID",
+		infoUsernameInput: "Username",
 	},
 	error: {
 		errorUsernameError: "Username Error",
@@ -419,6 +421,7 @@ var lang_zh = {
 		multiNoUsers: "列表为空",
 		multiUser: "用户",
 		origin: "来源",
+		infoFetchToStart: "加载用户名以开始",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -435,6 +438,7 @@ var lang_zh = {
 		multiContestInfoInput2: "房间 ID",
 		usersPerPage: "每页用户数",
 		multiStatus: "状态",
+		infoUsernameInput: "用户名",
 	},
 	error: {
 		errorUsernameError: "用户名错误",
