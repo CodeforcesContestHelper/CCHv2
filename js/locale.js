@@ -296,7 +296,7 @@ var lang_en = {
 		INPUT_PREPARATION_CRASHED: "Input preparation crashed",
 		CHALLENGED: "Hacked",
 		SKIPPED: "Skipped",
-		TESTING: "Testing",
+		TESTING: "Running",
 		REJECTED: "Rejected",
 	},
 	phase: {
@@ -629,7 +629,7 @@ var lang_zh = {
 		INPUT_PREPARATION_CRASHED: "Input preparation crashed",
 		CHALLENGED: "Hacked",
 		SKIPPED: "Skipped",
-		TESTING: "Testing",
+		TESTING: "Running",
 		REJECTED: "Rejected",
 	},
 	phase: {

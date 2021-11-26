@@ -35,13 +35,11 @@ function addWatcher(id, idx, gc){
 			chnl.onopen = function(){ wsOpened = true; console.log("ws started") };
 			chnl.onerror = function(){ console.log("ws error"), chnl.close(); wsOpened = false; };
 			chnl.onclose = function(){ console.log("ws closed"); wsOpened = false; };
-			var DT = new Date();
 			chnl.onmessage = function(data){
 				if(wsGetResult){
 					chnl.close();
 					return;
 				}
-				DT = new Date();
 				var j = JSON.parse(data.data);
 				j = JSON.parse(j.text);
 				if(j.t != "s")
@@ -72,62 +70,59 @@ function addWatcher(id, idx, gc){
 					fadeIn(), fadeOut(vdl);
 				lastJudgement = vdl;
 				if(j[6] != "TESTING" && j[6] != null && j[6] != undefined){
-					chnl.close(); wsGetResult = true;
+					wsGetResult = true;
 					p.find(".singleWatchTitle").html(`${idx} <i class="fas fa-angle-double-right"></i> ${tim} | ${mem}`);
 					if(settings.openNotification){
 						new Notification(`Result of CF${idx}`, {body: `${$(vdl).html()}\n${tim} | ${mem}`, icon: '../favicon.png'});
 					}
+					chnl.close();
 				}
 			};
-			function checkSub(){
-				if(!wsGetResult && (new Date()).getTime() - DT.getTime() >= 10000){
-					chnl.close(); loadWatchType();
-					return;
-				}
-				setTimeout(checkSub, 1000);
-			}
-			checkSub();
 		}
-		startWS();
-		$.ajax({
-			url: settings.mainURL + `/${getProblemIndexes(idx)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(idx)[0] + '/submission/' + id,
-			success: function(data){
-				if(data.indexOf(`data-entityId="${id}"`) == -1){
-					setTimeout(loadWatchType, 10000);
-					return;
-				}
-				if(wsGetResult)
-					return;
-				var ctL = $(data).find("table").eq(0).find("tr").eq(1);
-				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-accepted")){
-					p.find(".singleWatchInfo").addClass("green").css("font-weight", "bold");
-				}
-				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-rejected")
-				|| ctL.children().eq(4).children().eq(0).hasClass("verdict-failed")){
-					p.find(".singleWatchInfo").addClass("red");
-				}
-				p.find(".singleWatchInfo").html(ctL.children().eq(4).text());
-				if(ctL.children().eq(4).text() != lastJudgement)
-					fadeIn(), fadeOut(ctL.children().eq(4).text());
-				lastJudgement = ctL.children().eq(4).text();
-				if(ctL.children().eq(4).children().eq(0).hasClass("verdict-waiting")
-				|| lastJudgement == "In queue" || lastJudgement == ""){
-					if(wsOpened)
+		// startWS();
+		function reloadByAjax(){
+			console.log("Reloading by ajax...");
+			$.ajax({
+				url: settings.mainURL + `/${getProblemIndexes(idx)[0] >= 100000 ? "gym" : "contest"}/` + getProblemIndexes(idx)[0] + '/submission/' + id,
+				success: function(data){
+					if(data.indexOf(`data-entityId="${id}"`) == -1){
+						setTimeout(reloadByAjax, 10000);
 						return;
-					setTimeout(loadWatchType, 1500);
-				}
-				else{
-					wsGetResult = true;
-					p.find(".singleWatchTitle").html(`${idx} <i class="fas fa-angle-double-right"></i> ${ctL.children().eq(5).text().trim()} | ${ctL.children().eq(6).text().trim()}`);
-					if(settings.openNotification){
-						new Notification(`Result of CF${idx}`, {body: `${ctL.children().eq(4).text().trim()}\n${ctL.children().eq(5).text().trim()} | ${ctL.children().eq(6).text().trim()}`, icon: '../favicon.png'});
 					}
+					if(wsGetResult)
+						return;
+					var ctL = $(data).find("table").eq(0).find("tr").eq(1);
+					if(ctL.children().eq(4).children().eq(0).hasClass("verdict-accepted")){
+						p.find(".singleWatchInfo").addClass("green").css("font-weight", "bold");
+					}
+					if(ctL.children().eq(4).children().eq(0).hasClass("verdict-rejected")
+					|| ctL.children().eq(4).children().eq(0).hasClass("verdict-failed")){
+						p.find(".singleWatchInfo").addClass("red");
+					}
+					p.find(".singleWatchInfo").html(ctL.children().eq(4).text());
+					if(ctL.children().eq(4).text() != lastJudgement)
+						fadeIn(), fadeOut(ctL.children().eq(4).text());
+					lastJudgement = ctL.children().eq(4).text();
+					if(ctL.children().eq(4).children().eq(0).hasClass("verdict-waiting")
+					|| lastJudgement == "In queue" || lastJudgement == ""){
+						setTimeout(reloadByAjax, 2000);
+						if(wsOpened)
+							return;
+					}
+					else{
+						wsGetResult = true;
+						p.find(".singleWatchTitle").html(`${idx} <i class="fas fa-angle-double-right"></i> ${ctL.children().eq(5).text().trim()} | ${ctL.children().eq(6).text().trim()}`);
+						if(settings.openNotification){
+							new Notification(`Result of CF${idx}`, {body: `${ctL.children().eq(4).text().trim()}\n${ctL.children().eq(5).text().trim()} | ${ctL.children().eq(6).text().trim()}`, icon: '../favicon.png'});
+						}
+					}
+				},
+				error: function(){
+					setTimeout(reloadByAjax, 2000);
 				}
-			},
-			error: function(){
-				setTimeout(loadWatchType, 1500);
-			}
-		})
+			})
+		}
+		reloadByAjax();
 	}
 	setTimeout(function(){loadWatchType()}, 200);
 }

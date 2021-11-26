@@ -1494,7 +1494,7 @@ function loadStandingsService(un, ci, forced){
 	if(settings.showProblemStatus){
 		contestProblemStatusBarInfo[0] = loadProblemStatusBar(false);
 		contestProblemStatusBarInfo[1] = loadProblemStatusBar(true);
-		setTimeout(function(){flushProblemStatusBar()}, 300);
+		setTimeout(function(){flushProblemStatusBar()}, 200);
 	}
 }
 function singleContestantSyncHacks(un, ci, json, p){

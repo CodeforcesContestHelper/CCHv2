@@ -34,6 +34,7 @@ body{
 	flex-direction: column;
 	font-family: var(--font-family);
 	position: relative;
+	overflow: hidden;
 }
 .HtmlContainer > div:last-child{
 	flex: 1;
@@ -109,19 +110,19 @@ body{
 .ToolList{
 	-webkit-app-region: drag;
 	position: relative;
-	height: 36px;
+	height: 30px;
 }
 .ToolListTitle{
 	margin: 8px 12px;
-	font-size: 16px;
+	font-size: 14px;
 	user-select: none;
 }
 .ToolListButton{
 	-webkit-app-region: no-drag;
 	cursor: pointer;
 	transition: 0.2s;
-	width:  55px;
-	height: 38px;
+	width:  45px;
+	height: 30px;
 	font-size: 16px;
 	display: grid;
 	place-items: center;
