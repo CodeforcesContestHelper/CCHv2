@@ -13,9 +13,6 @@ body{
 .ToolListMinimize:hover{
 	background: #666;
 }
-.ToolList{
-	border-bottom: 2px solid #555;
-}
 .NavBarCurr{
 	background: #555;
 }

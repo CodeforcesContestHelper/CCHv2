@@ -21,7 +21,7 @@ body{
 }
 .HtmlContainer{
 	width: 1000px;
-	height: 668px;
+	height: 658px;
 	overflow: hidden;
 	margin: 0px;
 	user-select:none;
@@ -70,19 +70,19 @@ body{
 .ToolList{
 	-webkit-app-region: drag;
 	position: relative;
-	height: 38px;
+	height: 30px;
 }
 .ToolListTitle{
 	margin: 8px 12px;
-	font-size: 16px;
+	font-size: 14px;
 }
 .ToolListButton{
 	-webkit-app-region: no-drag;
 	cursor: pointer;
 	transition: 0.2s;
-	width:  55px;
-	height: 38px;
-	font-size: 16px;
+	width:  45px;
+	height: 30px;
+	font-size: 14px;
 	display: grid;
 	place-items: center;
 }
@@ -116,7 +116,7 @@ body{
 	height: 80px;
 }
 .contentRowInfo{
-	height: 680px;
+	height: 630px;
 	display: flex;
 	flex-direction: row;
 	position: absolute;
@@ -738,7 +738,7 @@ img[src=""],img:not([src]){opacity:0;}
 	display: flex;
 	flex-direction: row;
 	padding: 3px 10px;
-	font-size: 16px;
+	font-size: 14px;
 	width: calc(100% - 20px);
 	text-align: center;
 }
@@ -1281,8 +1281,14 @@ pre{
 
 
 
-
-
+/* PROFILE */
+.infoUserSelector{
+	width: calc(100% - 10px);
+	padding: 5px;
+	position: absolute;
+	top: 0px;
+	transition: 0.2s;
+}
 
 
 

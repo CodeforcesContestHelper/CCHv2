@@ -12,7 +12,7 @@
         "resizable": false,
         "show_in_taskbar": true,
         "width": 1000,
-        "height": 668,
+        "height": 658,
         "toolbar": true,
         "as_desktop": false,
         "position": "center",
@@ -26,7 +26,7 @@
     "single-instance": true,
     "main": "index.html",
     "chromium-args": "--disable-web-security --user-data-dir --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-renderer-backgrounding",
-    "double-tap-to_zoom-enabled": false,
+    "double-tap-to-zoom-enabled": false,
     "webkit": {
         "page-cache": false,
         "plugin": true,

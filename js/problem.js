@@ -265,7 +265,7 @@ function loadProblem(x, info){
 function reloadProblem(x){
 	if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
 	var p = problemCurrentPageList.findIndex(function(q){return q[0] == x});
-	if(problemCurrentPageList[p][2] == 2)
+	if(problemCurrentPageList[p][2] == 1 || problemCurrentPageList[p][2] == 2)
 		problemCurrentPageList[p][1].abort();
 	problemCurrentPageList[p][2] = 0;
 	loadProblem(x);
@@ -349,29 +349,60 @@ function(x){ return `<span>${getProblemIndexes(x)[1]}</span>` }
 , function(){ return `<i class="fas ${loadTypes[3]}"></i>`; }
 ];
 
-function loadContestProblemset(cid, S, E){
+function loadContestProblemset(cid, chk, S, E){
 	if(! /^\d+$/.test(cid)){
 		E(); return;
 	}
 	cid = Number(cid);
-	$.ajax({
-		url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid + '/problems',
-		success: function(data, status, xhr){
-			console.log(status, xhr);
-			if(data.indexOf(`class="problem-statement"`) == -1){
-				E(); return;
+	if(!chk)
+		$.ajax({
+			url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid + '/problems',
+			success: function(data){
+				if(data.indexOf(`class="problem-statement"`) == -1){
+					E(); return;
+				}
+				var q = $(data);
+				var ret = [];
+				q.find(".problemindexholder").each(function(){
+					ret.push(String(cid) + $.trim($(this).attr("problemindex")));
+				})
+				S(ret, data);
+			},
+			error: function(){
+				E();
 			}
-			var q = $(data);
-			var ret = [];
-			q.find(".problemindexholder").each(function(){
-				ret.push(String(cid) + $.trim($(this).attr("problemindex")));
-			})
-			S(ret, data);
-		},
-		error: function(){
-			E();
-		}
-	})
+		})
+	else
+		$.ajax({
+			url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid + '/',
+			success: function(data){
+				q = $(data).find("#sidebar").find(".rtable").find("a").attr("href");
+				console.log(q);
+				if(q != `/contest/${cid}`){
+					E(); return;
+				}
+				$.ajax({
+					url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid + '/problems',
+					success: function(data){
+						if(data.indexOf(`class="problem-statement"`) == -1){
+							E(); return;
+						}
+						var q = $(data);
+						var ret = [];
+						q.find(".problemindexholder").each(function(){
+							ret.push(String(cid) + $.trim($(this).attr("problemindex")));
+						})
+						S(ret, data);
+					},
+					error: function(){
+						E();
+					}
+				})
+			},
+			error: function(){
+				E();
+			}
+		})
 }
 
 function flushProblemNewWin(){
@@ -458,7 +489,7 @@ function flushProblemNewWin(){
 		problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
 		problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
 		var R = problemNewWinJQ.find(".problemInfoInputArea input").val();
-		if(getProblemIndexes(R)[0] != -1){
+		if(getProblemIndexes(R)[0] != -1 && R.length <= 9){
 			problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
 			problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
 			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
@@ -498,7 +529,7 @@ function flushProblemNewWin(){
 		problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
 		problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
 		var R = problemNewWinJQ.find(".contestInfoInputArea input").val();
-		loadContestProblemset(R, function(data, info){
+		loadContestProblemset(R, true, function(data, info){
 			problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
 			problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
 			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
@@ -628,7 +659,7 @@ function initProblemNewWin(){
 					 , getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[1]
 					 , problemNewWinJQ.find("#submitCodeArea").val()
 					 , problemNewWinJQ.find(".submitLanguageChoser").val()
-					 , function(id, cid){
+					 , function(id, cid, gc){
 					 	problemNewWinJQ.find(".submitButton > button").removeClass("primaryColor").addClass("successColor");
 					 	problemNewWinJQ.find(".submitButton > button").html(`<span info="submitSuccess">${languageOption.general.submitSuccess}</span>`);
 					 	setTimeout(function(){
@@ -640,7 +671,7 @@ function initProblemNewWin(){
 								problemNewWinJQ.find(".submitWindow").css("display", "none");
 							}, 500);
 					 		if(id != undefined)
-					 			problemNewWinJQ.append(`<script>addWatcher('${id}', '${cid}')</script>`)
+					 			problemNewWinJQ.append(`<script>addWatcher('${id}', '${cid}', '${gc}')</script>`)
 					 	}, 1000);
 					 }
 					 , function(x, y){
@@ -664,8 +695,8 @@ function openProblemWin(xx, gid){
 	nw.Window.open("problem.html",{
 	    "title": "Codeforces Problems", 
 	    "icon": "favicon.png",
-	    "width": 600,
-	    "height": 420, 
+	    "width": 800,
+	    "height": 570, 
 	    "position": "center",
 	    "resizable": true,
 	    "min_width": 450,
@@ -703,7 +734,7 @@ function openProblemWin(xx, gid){
 	});
 }
 function addContest(ci){
-	loadContestProblemset(ci, function(data, info){
+	loadContestProblemset(ci, false, function(data, info){
 		addProblems(data, ci, info);
 	}, function(){});
 }
@@ -717,8 +748,8 @@ function openContestProblems(xx){
 	nw.Window.open("problem.html",{
 	    "title": "Codeforces Problems", 
 	    "icon": "favicon.png",
-	    "width": 600,
-	    "height": 420, 
+	    "width": 800,
+	    "height": 570, 
 	    "position": "center",
 	    "resizable": true,
 	    "min_width": 450,

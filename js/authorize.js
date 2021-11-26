@@ -31,6 +31,7 @@ function loadLoginType(){
 	})
 }
 var queryCsrf = new RegExp(`<meta name="X-Csrf-Token" content="([0-9a-f]*)"`);
+var queryGlobalChannel = new RegExp(`<meta name="gc" content="([0-9a-f]*)"`);
 var queryHandle = new RegExp(`handle = "([\s\S]+?)"`);
 var queryHandle2 = new RegExp(`<title>([0-9a-zA-Z-_.]+?) - Codeforces</title>`);
 function getFtaa(){
@@ -162,10 +163,14 @@ function submitSolution(ci, idx, code, lang, S, E){
 					"source":                code,
 					"sourceFile":            "",
 					"tabSize":               "4",
-					"_tta":                  "493",
+					"_tta":                  "594",
 					"sourceCodeConfirmed":   "true",
 				},
 				success: function(d){
+					if($(d).find(".lang-chooser > div").length == 0){
+						E('errorNetworkError', languageOption.error.errorNetworkError);
+						return;
+					}
 					var q = $(d).find(".lang-chooser > div").eq(1);
 					if(q.children("a").eq(1).html() == "Register"){
 						currentLoginHandle = "";
@@ -181,7 +186,12 @@ function submitSolution(ci, idx, code, lang, S, E){
 						E('errorSubmitFailed', languageOption.error.errorSubmitFailed);
 						return;
 					}
-					S($(d).find(`[data-submission-id]`).eq(0).attr("data-submission-id"), ci + idx);
+					var gc = queryGlobalChannel.exec(d);
+					if(gc != null)
+						gc = gc[1];
+					else
+						gc = "7bf17394dc32cc2d4d6234197d8d58178ed01ff7";
+					S($(d).find(`[data-submission-id]`).eq(0).attr("data-submission-id"), ci + idx, gc);
 				},
 				error: function(){
 					E('errorLoginFailed', languageOption.error.errorLoginFailed);

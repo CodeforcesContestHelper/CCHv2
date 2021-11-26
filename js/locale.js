@@ -14,7 +14,10 @@ var lang_en = {
 		singleContestantButton: "Fetch Information",
 		singleVirtualButton: "Fetch Information",
 		singleCheckExist: "Checking Existance...",
-		singleHeadBack: "Go back (Long press)",
+		singleHeadBack0: "Go back (Long press)",
+		singleHeadBack1: "Go back (Double click)",
+		singleHeadBackOptions0: "Long press",
+		singleHeadBackOptions1: "Double click",
 		singleSmallWindow: "Open small window",
 		singleSmallWindowClose: "Close small window",
 		alertLoadSuccess: "Load Success!",
@@ -112,6 +115,7 @@ var lang_en = {
 		multiNoUsers: "Empty List",
 		multiUser: "User",
 		origin: "Origin",
+		infoFetchToStart: "Load Username to Start"
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -126,6 +130,7 @@ var lang_en = {
 		multiContestInfoInput0: "Usernames，splitted by ;",
 		multiContestInfoInput1: "Blank",
 		multiContestInfoInput2: "Room ID",
+		infoUsernameInput: "Username",
 	},
 	error: {
 		errorUsernameError: "Username Error",
@@ -274,6 +279,10 @@ var lang_en = {
 		apiSecret: [
 			"<span class='settingsInfoIcon fas fa-mask'></span> API Secret",
 			"Your API secret."
+		],
+		headBackOption: [
+			"<span class='settingsInfoIcon fas fa-door-open'></span> Head back option",
+			"Choose how to exit \"Single\" page."
 		]
 	},
 	compile: {
@@ -294,7 +303,7 @@ var lang_en = {
 		INPUT_PREPARATION_CRASHED: "Input preparation crashed",
 		CHALLENGED: "Hacked",
 		SKIPPED: "Skipped",
-		TESTING: "Testing",
+		TESTING: "Running",
 		REJECTED: "Rejected",
 	},
 	phase: {
@@ -321,7 +330,10 @@ var lang_zh = {
 		singleContestantButton: "获取信息",
 		singleVirtualButton: "获取信息",
 		singleCheckExist: "检查合法性...",
-		singleHeadBack: "返回选择界面（长按）",
+		singleHeadBack0: "返回选择界面（长按）",
+		singleHeadBack1: "返回选择界面（双击）",
+		singleHeadBackOptions0: "长按",
+		singleHeadBackOptions1: "双击",
 		singleSmallWindow: "打开小窗口",
 		singleSmallWindowClose: "关闭小窗口",
 		alertLoadSuccess: "加载成功！",
@@ -419,6 +431,7 @@ var lang_zh = {
 		multiNoUsers: "列表为空",
 		multiUser: "用户",
 		origin: "来源",
+		infoFetchToStart: "加载用户名以开始",
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -435,6 +448,7 @@ var lang_zh = {
 		multiContestInfoInput2: "房间 ID",
 		usersPerPage: "每页用户数",
 		multiStatus: "状态",
+		infoUsernameInput: "用户名",
 	},
 	error: {
 		errorUsernameError: "用户名错误",
@@ -584,6 +598,10 @@ var lang_zh = {
 		apiSecret: [
 			"<span class='settingsInfoIcon fas fa-mask'></span> API Secret",
 			"你的 API secret."
+		],
+		headBackOption: [
+			"<span class='settingsInfoIcon fas fa-door-open'></span> 返回选项",
+			"选择如何返回个人选项界面。",
 		]
 	},
 	// compile: {
@@ -625,7 +643,7 @@ var lang_zh = {
 		INPUT_PREPARATION_CRASHED: "Input preparation crashed",
 		CHALLENGED: "Hacked",
 		SKIPPED: "Skipped",
-		TESTING: "Testing",
+		TESTING: "Running",
 		REJECTED: "Rejected",
 	},
 	phase: {

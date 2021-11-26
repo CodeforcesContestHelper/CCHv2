@@ -18,9 +18,6 @@ body{
 .sideBarItem:hover, .addProblemSidebar:hover{
     background: #eee;
 }
-.ToolList{
-    border-bottom: 2px solid #ccc;
-}
 .ToolListMinimize:hover, .ToolListMaximize:hover{
     background: #bbb;
 }
