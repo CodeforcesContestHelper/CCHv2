@@ -24,4 +24,4 @@ https://afdian.net/@cfcontesthelper
 ## Chatting
 
 - Discord: [click here](https://discord.gg/natZEphAmS)
-- QQ: group number `100676157
+- QQ: group number: 458610798
