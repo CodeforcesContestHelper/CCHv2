@@ -421,6 +421,30 @@ var settingsFunctions = {
 			saveSettings();
 			return settings.showProblemStatus;
 		}
+	},
+	headBackOption: {
+		initial: function(){
+			var q = $("[info=singleHeadBack]");
+			q.attr("info", "singleHeadBack" + (settings.headBackOption));
+			q.html(languageOption.general["singleHeadBack" + (settings.headBackOption)]);
+			return [localize("singleHeadBackOptions" + (settings.headBackOption)), true, true];
+		},
+		previous: function(){
+			var q = $(`[info=singleHeadBack${settings.headBackOption}]`);
+			settings.headBackOption = 1 - settings.headBackOption;
+			q.attr("info", "singleHeadBack" + (settings.headBackOption));
+			q.html(languageOption.general["singleHeadBack" + (settings.headBackOption)]);
+			reinitSingleButton(); saveSettings();
+			return [localize("singleHeadBackOptions" + (settings.headBackOption)), true, true];
+		},
+		next: function(){
+			var q = $(`[info=singleHeadBack${settings.headBackOption}]`);
+			settings.headBackOption = 1 - settings.headBackOption;
+			q.attr("info", "singleHeadBack" + (settings.headBackOption));
+			q.html(languageOption.general["singleHeadBack" + (settings.headBackOption)]);
+			reinitSingleButton(); saveSettings();
+			return [localize("singleHeadBackOptions" + (settings.headBackOption)), true, true];
+		},
 	}
 };
 String.prototype.format = function() {
@@ -456,7 +480,8 @@ var currentDefaultSettings = {
 	openNotification: true,
 	useApiKeys: false,
 	apiKey: "",
-	apiSecret: ""
+	apiSecret: "",
+	headBackOption: 0,
 };
 function setAsDefault(op){
 	if(op == undefined)	op = false;

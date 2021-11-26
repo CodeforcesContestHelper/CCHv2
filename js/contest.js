@@ -191,6 +191,18 @@ function loadContestList(){
 			$(".contestListLoadIf > span").unbind("click").click(function(){
 				loadContestList();
 			})
+		},
+		xhr: function() {
+			var xhr = new XMLHttpRequest();
+			var fr = false;
+			xhr.addEventListener('progress', function (e) {
+				if(! fr){
+					$(".contestListLoadIf > span").append(`<span class='contestLoadedInfo'></span>`);
+					fr = true;
+				}
+				$(".contestLoadedInfo").html(` (${toMemoryInfo(e.loaded)})`);
+			});
+			return xhr;
 		}
 	})
 }

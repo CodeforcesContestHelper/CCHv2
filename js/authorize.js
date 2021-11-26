@@ -163,10 +163,14 @@ function submitSolution(ci, idx, code, lang, S, E){
 					"source":                code,
 					"sourceFile":            "",
 					"tabSize":               "4",
-					"_tta":                  "493",
+					"_tta":                  "594",
 					"sourceCodeConfirmed":   "true",
 				},
 				success: function(d){
+					if($(d).find(".lang-chooser > div").length == 0){
+						E('errorNetworkError', languageOption.error.errorNetworkError);
+						return;
+					}
 					var q = $(d).find(".lang-chooser > div").eq(1);
 					if(q.children("a").eq(1).html() == "Register"){
 						currentLoginHandle = "";

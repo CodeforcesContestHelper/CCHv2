@@ -624,7 +624,7 @@ function getSingleRatingChanges(currSingleLastTimeUpdate, un, ci){
 					callbacks();
 					return;
 				}
-				for(var i=0; i<json.length; i++) if(json[i].handle == un){
+				for(var i=0; i<json.length; i++) if(json[i].handle.toLowerCase() == un.toLowerCase()){
 					$(".singleContestProgressRatingChangesDisplayer > span:last-child")
 						.html(`<span class="${ratingToClass(json[i].oldRating)}">${json[i].oldRating}</span> <span class="${json[i].newRating>=json[i].oldRating?"green":"red"}">${json[i].newRating>=json[i].oldRating?'+':'-'}${Math.abs(Number(json[i].newRating)-Number(json[i].oldRating))}</span> <i class="fas fa-angle-double-right"></i> <span class="${ratingToClass(json[i].newRating)}">${json[i].newRating}</span>`)
 					if(contestNewWinLoaded) contestNewWinJQ.find(".ratingChanges").html($(".singleContestProgressRatingChangesDisplayer > span:last-child").html());
@@ -2416,46 +2416,7 @@ $(".searchArgumentsItem").click(function(){
 
 
 var timeLoader, ifInObserve;
-$(".singleHeadBack > span").mousedown(function(e){
-	$(".singleHeadBackProgress").addClass("selected");
-	timeStart = new Date();
-	ifInObserve = true;
-	var x = e.clientX;
-	var y = e.clientY;
-	$(".singleHeadBackProgress").css("top", y).css("left", x);
- 	window.onmousemove = function(evt){
-		var x = evt.clientX;
-		var y = evt.clientY;
-		$(".singleHeadBackProgress").css("top", y).css("left", x);
-	}
-	timeLoader = setInterval(function(){
-		timeEnd = new Date();
-		if(timeEnd.getTime() - timeStart.getTime() > 600){
-			clearInterval(timeLoader);
-			$(".singleContent > div").css("left", "0px");
-			$(".singleHeadBackProgress").removeClass("selected");
-			$("body").attr("onmouseup", "");
-			ifInObserve = false;
-			contestEnterInPage = false;
-			singleLastTimeUpdate = new Date();
-			for(var i=0; i<bigIsComing.length; i++){
-				if(bigIsComing[i] != null)	bigIsComing[i].abort();
-				bigIsComing[i] = null;
-			}
-			if(contestRatingChangesHook)	contestRatingChangesHook.abort();
-			if(contestNewWinOpened){
-				contestNewWinOpened = contestNewWinLoaded = false;
-				contestNewWin.close();
-				$(".singleOpenSmallWindow").html(`<span info="singleSmallWindow">${languageOption.general.singleSmallWindow}</span> <i class="fas fa-angle-right"></i>`);
-			}
-			++ singleContestantTimeCountdownTimeCnt;
-			setTimeout(function(){
-				if(!ifInObserve)	window.onmousemove = function(){}
-			}, 300);
-		}
-	},100);
-	$("body").attr("onmouseup", "singleButtonMouseUp()");
-});
+var singleHeadBackClkd = 0;
 function singleButtonMouseUp(){
 	 clearInterval(timeLoader);
 	 ifInObserve = false;
@@ -2468,6 +2429,73 @@ function singleButtonMouseUp(){
 		}
 	}, 300);
 }
+
+function reinitSingleButton(){
+	if(settings.headBackOption == 0){
+		$(".singleHeadBack > span").mousedown(function(e){
+			$(".singleHeadBackProgress").addClass("selected");
+			timeStart = new Date();
+			ifInObserve = true;
+			var x = e.clientX;
+			var y = e.clientY;
+			$(".singleHeadBackProgress").css("top", y).css("left", x);
+		 	window.onmousemove = function(evt){
+				var x = evt.clientX;
+				var y = evt.clientY;
+				$(".singleHeadBackProgress").css("top", y).css("left", x);
+			}
+			timeLoader = setInterval(function(){
+				timeEnd = new Date();
+				if(timeEnd.getTime() - timeStart.getTime() > 600){
+					clearInterval(timeLoader);
+					$(".singleContent > div").css("left", "0px");
+					$(".singleHeadBackProgress").removeClass("selected");
+					$("body").attr("onmouseup", "");
+					ifInObserve = false;
+					contestEnterInPage = false;
+					singleLastTimeUpdate = new Date();
+					for(var i=0; i<bigIsComing.length; i++){
+						if(bigIsComing[i] != null)	bigIsComing[i].abort();
+						bigIsComing[i] = null;
+					}
+					if(contestRatingChangesHook)	contestRatingChangesHook.abort();
+					if(contestNewWinOpened){
+						contestNewWinOpened = contestNewWinLoaded = false;
+						contestNewWin.close();
+						$(".singleOpenSmallWindow").html(`<span info="singleSmallWindow">${languageOption.general.singleSmallWindow}</span> <i class="fas fa-angle-right"></i>`);
+					}
+					++ singleContestantTimeCountdownTimeCnt;
+					setTimeout(function(){
+						if(!ifInObserve)	window.onmousemove = function(){}
+					}, 300);
+				}
+			},100);
+			$("body").attr("onmouseup", "singleButtonMouseUp()");
+		});
+		$(".singleHeadBack > span").unbind("click");
+	}
+	else{
+		$(".singleHeadBack > span").click(function(){
+			if(settings.headBackOption == 1){
+				console.log("!");
+				if(singleHeadBackClkd == 1){
+					singleHeadBackClkd = 0;
+					$(".singleHeadBack > span").css("font-weight", "normal");
+					$(".singleContent > div").css("left", "0px");
+					return;
+				}
+				singleHeadBackClkd = 1;
+				$(".singleHeadBack > span").css("font-weight", "bold");
+				setTimeout(function(){
+					$(".singleHeadBack > span").css("font-weight", "normal");
+					singleHeadBackClkd = 0;
+				}, 1000);
+			}
+		})
+		$(".singleHeadBack > span").unbind("mousedown");
+	}
+}
+reinitSingleButton();
 
 $(".singleOpenSmallWindow").click(function(){
 	if(!RunInNwjs)	return;
