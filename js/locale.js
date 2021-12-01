@@ -6,6 +6,7 @@ var lang_en = {
 		contestNav: "Contest",
 		questionNav: "Problem",
 		infoNav: "Profile",
+		modulesNav: "Modules",
 		settingNav: "Setting",
 		singleTitle: "<i class='fas fa-calendar'></i> Select Contest Type",
 		singleDivider: "OR",
@@ -115,7 +116,25 @@ var lang_en = {
 		multiNoUsers: "Empty List",
 		multiUser: "User",
 		origin: "Origin",
-		infoFetchToStart: "Load Username to Start"
+		infoFetchToStart: "Load Username to Start",
+		infoChangeUsername: "<span class='fas fa-user'></span> Change User",
+		infoShowProblems: "<span class='fas fa-book'></span> Problems",
+		infoShowSubmissions: "<span class='fas fa-code'></span> Submissions",
+		infoProblemSubmitted: "Submission count",
+		infoProblemAccept: "Accepted count",
+		infoProblemContestPP: "Contest PP",
+		infoProblemPracticePP: "Practice PP",
+		insertUsername: "Insert Username",
+		registerTime: "Register Time",
+		activeTime: "Active Time",
+		infoRanks: "<span style='display: inline-block; text-align: center; width: 20px' class='fas fa-chart-line'></span> Rating",
+		infoContribution: "<span style='display: inline-block; text-align: center; width: 20px' class='fas fa-handshake'></span> Contribution",
+		infoFriends: "<span style='display: inline-block; text-align: center; width: 20px' class='fas fa-users'></span> Friend of {0} user(s)",
+		infoContestTitle: "Rated Contest Count: {0}",
+		Rating: "Rating",
+		userInfoOptionsProfile: "<span class='fas fa-address-card'></span> Open profile",
+		userInfoOptionsObserve: "<span class='fas fa-eye'></span> Observe status",
+		
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -312,6 +331,19 @@ var lang_en = {
 		PENDING_SYSTEM_TEST: "Pending ST",
 		SYSTEM_TEST: "System testing",
 		FINISHED: "Finished"
+	},
+	modules: {
+		modulesOpen: "<span class='fas fa-external-link-square-alt'></span> Open",
+		modulesProblemPage: "Problems Page",
+		modulesProblemPageDesc: "Enter a problem or a contest, the problem descriptions will be fetched and rendered quickly.",
+		modulesSubmissionPage: "Submission Page",
+		modulesSubmissionPageDesc: "All the submission will be listed here. You can use filters to get proper submission list.",
+		modulesBlogViewer: "Blog Viewer",
+		modulesBlogViewerDesc: "Enter a blog ID, and CCHv2 will fetch the content and comments. We improve the way it looks.",
+		modulesScoreboard: "Scoreboard",
+		modulesScoreboardDesc: "This page will refresh standings of running contests regularly, which is good for ACM/ICPC practice.",
+		modulesVirtualStandings: "Virtual Standings",
+		modulesVirtualStandingsDesc: "In this page, CCHv2 will firstly fetch fill standings for a contest. Then you can toggle the time of the contest to see temporary standings. Auto play is enabled.",
 	}
 };
 var lang_zh = {
@@ -322,6 +354,7 @@ var lang_zh = {
 		contestNav: "比赛",
 		questionNav: "题目",
 		infoNav: "简介",
+		modulesNav: "模块",
 		settingNav: "设置",
 		singleTitle: "<i class='fas fa-calendar'></i> 选择比赛类型",
 		singleDivider: "或",
@@ -432,6 +465,24 @@ var lang_zh = {
 		multiUser: "用户",
 		origin: "来源",
 		infoFetchToStart: "加载用户名以开始",
+		infoChangeUsername: "<span class='fas fa-user'></span> 更换用户",
+		infoShowProblems: "<span class='fas fa-book'></span> 题目统计",
+		infoShowSubmissions: "<span class='fas fa-code'></span> 提交记录",
+		infoProblemSubmitted: "提交总数",
+		infoProblemAccept: "通过题目",
+		infoProblemContestPP: "比赛 PP",
+		infoProblemPracticePP: "练习 PP",
+		insertUsername: "输入账号",
+		registerTime: "注册时间",
+		activeTime: "最近活跃",
+		infoRanks: "<span style='display: inline-block; text-align: center; width: 20px' class='fas fa-chart-line'></span> Rating",
+		infoContribution: "<span style='display: inline-block; text-align: center; width: 20px' class='fas fa-handshake'></span> 贡献分",
+		infoFriends: "<span style='display: inline-block; text-align: center; width: 20px' class='fas fa-users'></span> 为 {0} 个人的好友",
+		infoContestTitle: "Rated 比赛次数：{0}",
+		Rating: "Rating",
+		userInfoOptionsProfile: "<span class='fas fa-address-card'></span> 个人信息",
+		userInfoOptionsObserve: "<span class='fas fa-eye'></span> 追踪状态",
+
 	},
 	input: {
 		singleContestantUsername: "用户名",
@@ -652,6 +703,19 @@ var lang_zh = {
 		PENDING_SYSTEM_TEST: "等待系统评测",
 		SYSTEM_TEST: "系统评测中",
 		FINISHED: "已结束"
+	},
+	modules: {
+		modulesOpen: "<span class='fas fa-external-link-square-alt'></span> 打开",
+		modulesProblemPage: "题目界面",
+		modulesProblemPageDesc: "在此界面添加一场比赛或者题目，利用 CCHv2 的快速加载和渲染更快查看题目。在此界面添加一场比赛或者题目，利用 CCHv2 的快速加载和渲染更快查看题目",
+		modulesSubmissionPage: "提交记录界面",
+		modulesSubmissionPageDesc: "你可以在这里查看所有的提交记录，并且通过适当的筛选找到自己想要的记录列表。",
+		modulesBlogViewer: "博客查看器",
+		modulesBlogViewerDesc: "输入一篇博客的 ID 后，CCHv2 将会获取其内容和评论并且优化显示的形式。",
+		modulesScoreboard: "榜单展示",
+		modulesScoreboardDesc: "这个界面将会在赛时自动刷新排行榜列表，并且支持全屏显示，很适合 ACM/ICPC 的榜单展示。",
+		modulesVirtualStandings: "虚拟赛榜单",
+		modulesVirtualStandingsDesc: "在这个界面中，CCHv2 将会提前获取一场比赛的信息，随后你可以查看各个时间段排行榜的变化，支持播放。",
 	}
 };
 var lang_list = ["English", "简体中文"];

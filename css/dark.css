@@ -101,13 +101,13 @@ body{
 .submissionDisplayer > div:first-child > div:first-child{
     background: rgb(35, 40, 45);
 }
-.submissionCodeDisplayer, .eventDisplayer{
+.submissionCodeDisplayer, .eventDisplayer, .userInfoDisplayer{
     background: rgb(35, 40, 45);
 }
-.eventCloseButton{
+.eventCloseButton, .userInfoCloseButton{
     background: #555;
 }
-.eventCloseButton:hover{
+.eventCloseButton:hover, .userInfoCloseButton:hover{
     background: #666;
 }
 .settingsLoginButton, .settingsLoginType{
@@ -147,14 +147,33 @@ body{
 .multiOddLine{
     background: #333;
 }
+.infoBlock{
+    background: rgb(51, 56, 61);
+}
+.infoBlockTitle{
+    background: rgb(56, 61, 66);
+}
+.modulesBlock{
+    background: rgb(51, 56, 61);
+}
 
 
 
 
 
-
-
-
+.infoChangeUsernameInterface{
+    background: #302e35;
+}
+.inputButtonSplitter > button{
+    border: 1px solid #777;
+    color: white;
+}
+.inputButtonSplitter > input{
+    border: 0;
+    border-bottom: 1px solid #888;
+    color: white;
+    outline: none;
+}
 .blockManager{
     background: rgb(46, 51, 56);
 }

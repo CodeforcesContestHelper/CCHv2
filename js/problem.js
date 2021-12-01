@@ -591,7 +591,8 @@ function initProblemNewWin(){
 		problemNewWinJQ.find(".submitLanguageChoser").val(settings.statementDefaultLanguage);
 		problemNewWinJQ.find("#submitCodeArea").val("");
 		problemNewWinJQ.find(".submitWindow").css("display", "grid");
-		problemNewWinJQ.find(".submitWindow").css("opacity", "1");
+		setTimeout(function(){problemNewWinJQ.find(".submitWindow").css("opacity", "1");}, 100);
+		
 		// problemNewWinJQ.find(".submitUsername").html(currentLoginHandle);
 		problemNewWinJQ.find(".submitProblemID").html(problemCurrentPageList[problemFocusOn][0]);
 	})
