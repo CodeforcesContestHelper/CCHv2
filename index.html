@@ -41,7 +41,12 @@
 				}
 			}
 		</script>
-		<script class="cssControler"></script>
+		<style class="cssController"></style>
+		<style class="cssController2">
+			.profileProblemTags{
+				display: none;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="HtmlContainer">
@@ -583,7 +588,31 @@
 							</div>
 						</div></div>
 						<div class="contentRowInfo" style="left: -920px">
-							<div class="contentPage" style="width: 920px;"></div>
+							<div class="contentPage" style="width: 920px; display: flex; flex-direction: column; text-align: center;">
+								<div class="profileTagsBar"></div>
+								<div class="profileTagsDisplayer"></div>
+								<div class="profileRatingGraph"></div>
+								<div class="profileProblemMain">
+									<div class="profileProblemBlock">
+										
+									</div>
+								</div>
+								<div class="profileProblemSummary">
+									<span info="Difficulty"></span>
+									<input class="profileDiffInput" info="minDiff" style="width: 50px; height: 100%; font-size: 14px; background: inherit; border: 0px; color: inherit; outline: 0; font-family: var(--font-family); text-align: center"></input>
+									<input class="profileDiffInput" info="maxDiff" style="width: 50px; height: 100%; font-size: 14px; background: inherit; border: 0px; color: inherit; outline: 0; font-family: var(--font-family); text-align: center"></input>
+									<input class="profileTagsInput" info="search" style="flex: 1; height: 100%; font-size: 14px; background: inherit; border: 0px; color: inherit; outline: 0; font-family: var(--font-family); text-align: center"></input>
+									<span class="profileSelectIf profilePageLeft"><i class='fas fa-angle-left'></i></span>
+									<span style="min-width: 50px; padding: 2px" class="profileProblemPages"></span>
+									<span class="profileSelectIf profilePageRight"><i class='fas fa-angle-right'></i></span>
+									<span class="profileSelectIf profileTagsDisplayIf" style="margin-right: 10px;"><i class='fas fa-tags'></i></span>
+									<span class="profileSelectIf profileSortId profileSelectSortID selected"><i class='fas fa-hashtag'></i></span>
+									<span class="profileSelectIf profileSortId profileSelectSortRating"><i class='fas fa-star'></i></span>
+									<span class="profileSelectIf profileSortId profileSelectSortName"><i class='fas fa-sort-alpha-down'></i></span>
+									<span class="profileSelectIf profileSelectSortDirection"><i class='fas fa-caret-down green'></i></span>
+									<span class="profileGoBack" style="cursor: pointer; display: inline-block; margin-left: 6px"><span info="back"></span> <i class="fas fa-angle-right"></i></span>
+								</div>
+							</div>
 							<div class="contentPage" style="width: 920px; display: flex; flex-direction: column;">
 								<div class="infoBlock infoUserInfo" style="height: 200px; width: calc(100% - 40px); display: grid; place-items: center">
 									<div style="width: 100%">

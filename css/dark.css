@@ -156,7 +156,15 @@ body{
 .modulesBlock{
     background: rgb(51, 56, 61);
 }
-
+.profileTagsDisplayer, .profileRatingGraph, .profileProblemSummary, .profileProblemMain{
+    background: rgb(51, 56, 61);
+}
+.profileSelectIf:hover{
+    background: rgb(71, 76, 81);
+}
+.profileSelectIf.selected{
+    background: #777;
+}
 
 
 

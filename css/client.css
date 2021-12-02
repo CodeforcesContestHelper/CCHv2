@@ -16,8 +16,8 @@ body{
 	margin: 0px;
 }
 :root{
-	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
-	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
+	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif;
+	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif;
 }
 .HtmlContainer{
 	width: 1000px;
@@ -1317,6 +1317,82 @@ pre{
 
 
 /* PROFILE */
+.profileTagsBar{
+	width: calc(100% - 50px);
+	height: 10px;
+	border-radius: 5px;
+	margin: 20px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	position: relative;
+}
+.profileProblemMain{
+	flex: 1;
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: calc(100% - 50px);
+	height: 20px;
+	overflow-y: auto;
+}
+.profileProblemBlock{
+	width: calc(100% - 10px);
+	border: 3px 5px;
+	display: flex;
+	flex-direction: row;
+	font-size: 16px;
+	margin: 5px 0px;
+}
+.profileProblemTags{
+	width: calc(100% - 10px);
+	text-align: right;
+	font-size: 16px;
+	margin: 5px 0px;
+}
+.profileProblemTags > .profileTagBox{
+	margin: 0px 3px !important;
+	font-size: 12px !important;
+}
+.profileProblemSummary{
+	justify-content: center;
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: calc(100% - 50px);
+	height: 20px;
+	margin: 20px 10px;
+	margin-top: 10px;
+	display: flex;
+	flex-direction: row;
+}
+.problemTagsBarContent{
+	height: 10px;
+	transition: 0.3s;
+}
+.problemTagsBarContent:hover{
+	opacity: 0.7;
+}
+.profileTagsDisplayer{
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: calc(100% - 50px);
+	height: 100px;
+	overflow-y: auto;
+}
+.profileTagBox{
+	display: inline-block;
+	margin: 3px;
+	padding: 3px 5px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.profileRatingGraph{
+	border-radius: 5px;
+	margin: 15px;
+	width: calc(100% - 50px);
+	padding: 10px;
+	height: 100px;
+	position: relative;
+}
 .infoOptions .disabled, .userInfoOptions .disabled{
 	color: #777;
 }
@@ -1367,7 +1443,17 @@ pre{
 	place-items: center;
 	outline: 0;
 }
-
+.profileSelectIf{
+	transition: 0.3s;
+	height: 20px;
+	width: 20px;
+	border-radius: 10px;
+	margin: 0px 3px;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	font-size: 14px;
+}
 
 
 .setInlineBlock{

@@ -134,7 +134,7 @@ var lang_en = {
 		Rating: "Rating",
 		userInfoOptionsProfile: "<span class='fas fa-address-card'></span> Open profile",
 		userInfoOptionsObserve: "<span class='fas fa-eye'></span> Observe status",
-		
+		Difficulty: "Diff.",
 	},
 	input: {
 		singleContestantUsername: "Username",
@@ -150,6 +150,8 @@ var lang_en = {
 		multiContestInfoInput1: "Blank",
 		multiContestInfoInput2: "Room ID",
 		infoUsernameInput: "Username",
+		minDiff: "Min",
+		maxDiff: "Max",
 	},
 	error: {
 		errorUsernameError: "Username Error",
@@ -482,6 +484,8 @@ var lang_zh = {
 		Rating: "Rating",
 		userInfoOptionsProfile: "<span class='fas fa-address-card'></span> 个人信息",
 		userInfoOptionsObserve: "<span class='fas fa-eye'></span> 追踪状态",
+		Difficulty: "难度",
+
 
 	},
 	input: {
@@ -500,6 +504,8 @@ var lang_zh = {
 		usersPerPage: "每页用户数",
 		multiStatus: "状态",
 		infoUsernameInput: "用户名",
+		minDiff: "最小值",
+		maxDiff: "最大值",
 	},
 	error: {
 		errorUsernameError: "用户名错误",
@@ -707,7 +713,7 @@ var lang_zh = {
 	modules: {
 		modulesOpen: "<span class='fas fa-external-link-square-alt'></span> 打开",
 		modulesProblemPage: "题目界面",
-		modulesProblemPageDesc: "在此界面添加一场比赛或者题目，利用 CCHv2 的快速加载和渲染更快查看题目。在此界面添加一场比赛或者题目，利用 CCHv2 的快速加载和渲染更快查看题目",
+		modulesProblemPageDesc: "在此界面添加一场比赛或者题目，利用 CCHv2 的快速加载和渲染更快查看题目。",
 		modulesSubmissionPage: "提交记录界面",
 		modulesSubmissionPageDesc: "你可以在这里查看所有的提交记录，并且通过适当的筛选找到自己想要的记录列表。",
 		modulesBlogViewer: "博客查看器",

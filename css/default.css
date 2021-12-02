@@ -173,9 +173,15 @@ body{
 .modulesBlock{
     background: #ccc;
 }
-
-
-
+.profileTagsDisplayer, .profileRatingGraph, .profileProblemSummary, .profileProblemMain{
+    background: #ccc;
+}
+.profileSelectIf:hover{
+    background: #bbb;
+}
+.profileSelectIf.selected{
+    background: #aaa;
+}
 
 
 
