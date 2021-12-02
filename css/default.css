@@ -99,7 +99,7 @@ body{
     outline: none;
 }
 .loadingInterface{
-	background: rgba(200, 200, 200, 0.95);
+	background: rgba(200, 200, 200, 0.85);
 	color: black;
 }
 .submissionDisplayer > div:first-child > div:first-child{

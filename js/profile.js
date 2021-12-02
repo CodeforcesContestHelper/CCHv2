@@ -1,6 +1,6 @@
 var ratingRanges = [
 {
-	color: '#CCCCCC',
+	color: '#BBBBBB',
 	from: -9999,
 	to: 1200
 },
@@ -629,7 +629,8 @@ function infoLoadUsername(un){
 	delete(profileInfoDatas[1]);
 	delete(profileInfoDatas[2]);
 	delete(profileInfoDatas[3]);
-	profileInfoDatas = [{}, [], [], {}];
+	delete(profileInfoDatas[4]);
+	profileInfoDatas = [{}, [], [], {}, []];
 	profileInfoLoaded = [false, false, false]
 	$(".infoShowProblems").addClass("disabled");
 	$(".infoShowSubmissions").addClass("disabled");
@@ -694,7 +695,7 @@ function infoLoadUsername(un){
 		for(var i=0; i<d.length; i++)
 			D.push([d[i].ratingUpdateTimeSeconds * 1000, d[i].newRating]),
 			profileInfoDatas[3][d[i].ratingUpdateTimeSeconds * 1000] = i;
-		profileDrawGraph(D);
+		profileDrawGraph(profileInfoDatas[4] = D);
 	});
 	infoLoadData(2, generateAuthorizeURL(settings.codeforcesApiUrl + '/user.status', {handle: un}), function(d){
 		profileInfoDatas[2] = d;
