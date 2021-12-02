@@ -511,7 +511,7 @@ function profileDrawGraph(data){
 	var chart = {
 		type: 'line',
 		animation: Highcharts.svg, // don't animate in IE < IE 10.
-		zoomType: 'x'
+		zoomType: 'x',
 	};
 	var title = {
 		text: null
@@ -602,6 +602,9 @@ function profileDrawGraph(data){
 	}
 	var json = {};
 	json.chart = chart; 
+	if(!DarkMode)
+		json.colors = ['#2b908f', '#90ee7e', '#f45b5b', '#7798BF', '#aaeeee', '#ff0066',
+         '#eeaaee', '#55BF3B', '#DF5353', '#7798BF', '#aaeeee'],
 	json.title = title;	  
 	json.tooltip = tooltip;
 	json.xAxis = xAxis;
