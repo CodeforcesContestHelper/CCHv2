@@ -651,11 +651,11 @@ function initStyle(){
 	if(problemNewWinLoaded){
 		problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/problem/dark.css" : "./css/problem/default.css");
 	}
+	profileDrawGraph(profileInfoDatas[4]);
 	if(contestRankInfo == undefined || contestRankInfo[contestRankChosen].length == 0)	return;
 	if(contestCalculatingRank[contestRankChosen])
 		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
 	else generateRankGraph(contestRankInfo[contestRankChosen]);
-	profileDrawGraph(profileInfoDatas[4]);
 }
 function reloadSettings(){
 	settings = JSON.parse(localStorage.getItem("CCH_Settings"));
