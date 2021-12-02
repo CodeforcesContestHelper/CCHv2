@@ -16,8 +16,8 @@ body{
 	margin: 0px;
 }
 :root{
-	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
-	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif;
+	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif;
+	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif;
 }
 .HtmlContainer{
 	width: 1000px;
@@ -787,7 +787,17 @@ img[src=""],img:not([src]){opacity:0;}
 	width: calc(100% - 210px);
 	position: relative;
 }
-.eventCloseButton{
+.userInfoDisplayer{
+	user-select: text;
+	text-align: left !important;
+	font-size: 16px !important;
+	padding: 5px;
+	border-radius: 5px;
+	height: calc(100% - 440px);
+	width: calc(100% - 450px);
+	position: relative;
+}
+.eventCloseButton, .userInfoCloseButton{
 	position: absolute;
 	right: 15px;
 	top: 10px;
@@ -956,6 +966,31 @@ pre{
 	font-size: 18px;
 	display: grid;
 	place-items: center;
+}
+
+/* MODULES */
+.modulesPage{
+	padding: 0px 50px;
+	overflow-y: scroll;
+	width: calc(100% - 100px);
+	position: relative;
+	height: 100%;
+}
+.modulesBlock{
+	padding: 10px;
+	width: calc(100% - 20px);
+	height: 90px;
+	border-radius: 5px;
+	display: flex;
+	flex-direction: row;
+	margin: 25px 0px;
+}
+.modulesTitle{
+	font-size: 20px;
+}
+.modulesDesc{
+	font-size: 16px;
+	color: #777;
 }
 
 /* SETTINGS */
@@ -1282,16 +1317,143 @@ pre{
 
 
 /* PROFILE */
-.infoUserSelector{
+.profileTagsBar{
+	width: calc(100% - 50px);
+	height: 10px;
+	border-radius: 5px;
+	margin: 20px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: row;
+	position: relative;
+}
+.profileProblemMain{
+	flex: 1;
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: calc(100% - 50px);
+	height: 20px;
+	overflow-y: auto;
+}
+.profileProblemBlock{
+	width: calc(100% - 10px);
+	border: 3px 5px;
+	display: flex;
+	flex-direction: row;
+	font-size: 16px;
+	margin: 5px 0px;
+}
+.profileProblemTags{
+	width: calc(100% - 10px);
+	text-align: right;
+	font-size: 16px;
+	margin: 5px 0px;
+}
+.profileProblemTags > .profileTagBox{
+	margin: 0px 3px !important;
+	font-size: 12px !important;
+}
+.profileProblemSummary{
+	justify-content: center;
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: calc(100% - 50px);
+	height: 20px;
+	margin: 20px 10px;
+	margin-top: 10px;
+	display: flex;
+	flex-direction: row;
+}
+.problemTagsBarContent{
+	height: 10px;
+	transition: 0.3s;
+}
+.problemTagsBarContent:hover{
+	opacity: 0.7;
+}
+.profileTagsDisplayer{
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: calc(100% - 50px);
+	height: 100px;
+	overflow-y: auto;
+}
+.profileTagBox{
+	display: inline-block;
+	margin: 3px;
+	padding: 3px 5px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+.profileRatingGraph{
+	border-radius: 5px;
+	margin: 15px;
+	width: calc(100% - 50px);
+	padding: 10px;
+	height: 100px;
+	position: relative;
+}
+.infoOptions .disabled, .userInfoOptions .disabled{
+	color: #777;
+}
+.infoBlock{
+	width: calc(100% - 40px);
+	margin: 10px 20px;
+	border-radius: 5px;
+	overflow: hidden;
+}
+.inputButtonSplitter{
+	display: flex;
+	flex-direction: row;
+	height: 50px;
 	width: calc(100% - 10px);
 	padding: 5px;
+	border-radius: 5px;
+	background: rgba(127, 127, 127, 0.4);
+	position: relative;
+}
+.inputButtonSplitterTitle{
 	position: absolute;
 	top: 0px;
-	transition: 0.2s;
+	height: 22px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(127, 127, 127, 1);
+	font-size: 16px;
+	padding: 0px 10px;
+	border-radius: 5px;
 }
-
-
-
+.inputButtonSplitter > input{
+	margin-top: 10px;
+	background: transparent;
+	width: calc(100% - 40px);
+	font-family: var(--font-family);
+	font-size: 20px;
+}
+.inputButtonSplitter > button{
+	margin-top: 10px;
+	cursor: pointer;
+	margin-left: 10px;
+	width: 40px;
+	transition: 0.2s;
+	height: 40px;
+	border-radius: 5px;
+	font-size: 20px;
+	display: grid;
+	place-items: center;
+	outline: 0;
+}
+.profileSelectIf{
+	transition: 0.3s;
+	height: 20px;
+	width: 20px;
+	border-radius: 10px;
+	margin: 0px 3px;
+	cursor: pointer;
+	display: grid;
+	place-items: center;
+	font-size: 14px;
+}
 
 
 .setInlineBlock{

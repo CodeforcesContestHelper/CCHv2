@@ -257,6 +257,7 @@ function generateRankGraph(rankData){
 		},
 	};
 	var tooltip = {
+		borderRadius: 5,
 		formatter: function () {
 		return `<b><span info="Rank">${languageOption.general.Rank}</span>: ` + Highcharts.numberFormat(this.y, 0) + '</b><br/>' +
 			Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x);
@@ -811,34 +812,6 @@ function getAllSingleContestantInfo(currSingleLastTimeUpdate, un, ci, success, e
 			if((inContest == 2 && settings.openRankPredict >= 1) || (inContest >= 1 && settings.openRankPredict == 2))
 				setTimeout(function(){loadInfo(generateAuthorizeURL(settings.codeforcesApiUrl + "/contest.standings", {contestId: ci, showUnofficial: settings.openRankPredict == 2}), ["result"], 5, false);}, 500);
 	}}, 3000);
-}
-function ratingToClass(x){
-	if(x == undefined)	return "user-unrated";
-	if(x <= 0)	return "user-unrated";
-	if(x < 1200)	return "user-newbie";
-	if(x < 1400)	return "user-pupil";
-	if(x < 1600)	return "user-specialist";
-	if(x < 1900)	return "user-expert";
-	if(x < 2100)	return "user-cmaster";
-	if(x < 2300)	return "user-master";
-	if(x < 2400)	return "user-imaster";
-	if(x < 2600)	return "user-grandmaster";
-	if(x < 3000)	return "user-igramdmaster";
-	return "user-legendary";
-}
-function ratingToGrade(x){
-	if(x == undefined)	return "Unrated";
-	if(x <= 0)	return "Unrated";
-	if(x < 1200)	return "Newbie";
-	if(x < 1400)	return "Pupil";
-	if(x < 1600)	return "Specialist";
-	if(x < 1900)	return "Expert";
-	if(x < 2100)	return "Candidate Master";
-	if(x < 2300)	return "Master";
-	if(x < 2400)	return "International Master";
-	if(x < 2600)	return "Grandmaster";
-	if(x < 3000)	return "International Grandmaster";
-	return "Legendary Grandmaster";
 }
 var singleContestType, singleContestUnrated;
 var contestEndTime, contestStartTime;
@@ -2061,6 +2034,11 @@ function loadSingleVirtualAll(un, ci, tm){
 
 
 function loadSingleInformation(type, un, ci, tm, started){
+	if(contestNewWinOpened){
+		contestNewWinOpened = contestNewWinLoaded = false;
+		contestNewWin.close();
+		$(".singleOpenSmallWindow").html(`<span info="singleSmallWindow">${languageOption.general.singleSmallWindow}</span> <i class="fas fa-angle-right"></i>`);
+	}
 	singleFirstTimeLoaded = true;
 	contestUsername = un;
 	contestContestId = ci;

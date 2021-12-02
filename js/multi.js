@@ -22,18 +22,36 @@ function loadMultiList(cid, users, room, showUnofficial, from, count, S, E){
 		}
 	})
 }
+
+var userColorCache = {};
+var userColorCacheTime = 10 * 60 * 1000;
+
 function loadUserColors(users, S, E){
+	var ret = {};
+	var U = [];
+	for(var i=0; i<users.length; i++){
+		if(userColorCache[users[i]] != undefined && userColorCache[users[i]][1] <= (new Date()).getTime() - userColorCacheTime)
+			delete userColorCache[users[i]];
+		if(userColorCache[users[i]] != undefined)
+			ret[users[i]] = userColorCache[users[i]][0];
+		else
+			U.push(users[i]);
+	}
+	if(U.length == 0){
+		S(ret);
+		return;
+	}
 	$.ajax({
-		url: generateAuthorizeURL(settings.codeforcesApiUrl + '/user.info', {handles: users.join(";")}),
+		url: generateAuthorizeURL(settings.codeforcesApiUrl + '/user.info', {handles: U.join(";")}),
 		timeout: settings.largeTimeLimit,
 		success: function(json){
 			if(json.status != "OK")
 				E();
 			else{
-				var ret = {};
 				for(var i=0; i<json.result.length; i++){
 					var q = json.result[i];
 					ret[q.handle] = ratingToClass(q.rating);
+					userColorCache[q.handle] = [ratingToClass(q.rating), (new Date()).getTime()];
 				}
 				S(ret);
 			}
@@ -114,6 +132,59 @@ function getMultiHack(x, y){
 	return `<span class='green'>+${x}</span>:<span class='red'>-${y}</span>`;
 }
 
+var userInfoPopAjax = null;
+function showUserInfoBlock(un, ci, st, tm){
+	$(".userInfoAvatar").attr("src", "");
+	$(".userInfoContainer").css("display", "grid");
+	setTimeout(function(){
+		$(".userInfoContainer").css("opacity", "1");
+	}, 100);
+	$(".userInfoMain").css("display", "none");
+	$(".userInfoLoading").css("display", "grid").html(`<i class="fas fa-3x fa-sync-alt fa-spin"></i>`);
+	userInfoPopAjax = $.ajax({
+		url: generateAuthorizeURL(settings.codeforcesApiUrl + '/user.info', {handles: un}),
+		success: function(d){
+			userInfoPopAjax = null;
+			if(d.status != "OK")
+				$(".userInfoLoading").css("display", "grid").html(`<i class="fas fa-3x fa-unlink red"></i>`);
+			else{
+				d = d.result[0];
+				$(".userInfoMain").css("display", "block");
+				$(".userInfoLoading").css("display", "none");
+				$(".userInfoAvatar").attr("src", d.titlePhoto);
+				$(".userInfoName").html(`<div style="display: inline-block" class='${ratingToClass(d.rating)}'>${d.handle}</div> (rating: ${d.rating == undefined ? "?" : d.rating})`);
+				$(".userInfoProfile").unbind('click').click(function(){
+					$(".userInfoCloseButton").click();
+					infoLoadUsername(un);
+				})
+				if(st != "PRACTICE")
+					$(".userInfoObserve").removeClass("disabled"),
+					$(".userInfoObserve").unbind('click').click(function(){
+						$(".userInfoCloseButton").click();
+						$("[for=singleContent]").click();
+						loadSingleInformation(st == "VIRTUAL", un, ci, (new Date(tm * 1000)), true);
+					})
+				else{
+					$(".userInfoObserve").unbind('click');
+					$(".userInfoObserve").addClass("disabled");
+				}
+			}
+		},
+		error: function(){
+			userInfoPopAjax = null;
+			$(".userInfoLoading").css("display", "grid").html(`<i class="fas fa-3x fa-unlink red"></i>`);
+		}
+	})
+}
+$(".userInfoCloseButton").click(function(){
+	if(userInfoPopAjax != null)
+		userInfoPopAjax.abort();
+	$(".userInfoContainer").css("opacity", "0");
+	setTimeout(function(){
+		$(".userInfoContainer").css("display", "none");
+	}, 500);
+})
+
 function multiRenderList(data){
 	if(data.rows.length == 0){
 		flushMultiStatusBar(localize("ok"), false);
@@ -129,8 +200,8 @@ function multiRenderList(data){
 	}
 	function calcStandingList(){
 		loadUserColors(userList, function(colors){
-			function calcUserBlock(un){
-				return `<div style="display: inline-block" class="${colors[un]}">${un}</div>`;
+			function calcUserBlock(un, dt){
+				return `<div style="display: inline-block" class="${colors[un]}" onclick="event.stopPropagation(); showUserInfoBlock('${un}', ${data.contest.id}, '${dt.party.participantType}', ${dt.party.startTimeSeconds})">${un}</div>`;
 			}
 			function getVirtualTag(u){
 				var len = Math.floor((new Date()).getTime() / 1000) - u;
@@ -163,7 +234,7 @@ function multiRenderList(data){
 				var l = [];
 				var addi = "";
 				for(var i=0; i<user.party.members.length; i++)
-					l.push(calcUserBlock(user.party.members[i].handle));
+					l.push(calcUserBlock(user.party.members[i].handle, user));
 				if(l.length != 0 && uList != "")
 					uList += ": ";
 				uList += l.join(", ");

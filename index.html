@@ -41,7 +41,12 @@
 				}
 			}
 		</script>
-		<script class="cssControler"></script>
+		<style class="cssController"></style>
+		<style class="cssController2">
+			.profileProblemTags{
+				display: none;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="HtmlContainer">
@@ -95,6 +100,28 @@
 					</div>
 				</div>
 
+				<div class="loadingInterface userInfoContainer" style="display: none; opacity: 0; z-index: 990;">
+					<div class="userInfoDisplayer">
+						<div style="width: calc(100% - 40px); height: calc(100% - 20px); position: absolute; top: 0px; left: 0px; overflow-y: auto; text-align: center; padding: 10px 20px" class="userInfoList">
+							<div class="userInfoLoading" style="height: 100%; width: 100%; display: grid; place-items: center;">
+								<i class="fas fa-3x fa-sync-alt fa-spin"></i>
+							</div>
+							<div class="userInfoMain" style="display: none">
+								<img height="120" width="120" alt="User Avatar" style="border-radius: 60px;" class="userInfoAvatar"></img>
+								<div class="userInfoName" style="margin-bottom: 10px;"></div>
+								<div class="userInfoOptions" style="display: flex; flex-direction: row;">
+									<div style="flex: 1; text-align: center"><span style="cursor: pointer" info="userInfoOptionsProfile" class="userInfoProfile"></span></div>
+									<div style="margin: 0px 5px; width: 4px; height: 20px; background: #777; border-radius: 2px;"></div>
+									<div style="flex: 1; text-align: center"><span class="userInfoObserve disabled" style="cursor: pointer" info="userInfoOptionsObserve"></span></div>
+								</div>
+							</div>
+						</div>
+						<div class="userInfoCloseButton">
+							<i class="fas fa-close red"></i>
+						</div>
+					</div>
+				</div>
+
 				<div class="NavBar">
 					<div class="NavBarCurr"></div>
 					<div class="NavBarContent NavBarChosen" for="singleContent">
@@ -125,6 +152,12 @@
 						<div class="infoNav" style="text-align: center">
 							<i class="fas fa-address-card"></i><br/>
 							<div info="infoNav"></div>
+						</div>
+					</div>
+					<div class="NavBarContent" for="modulesContent">
+						<div class="modulesNav" style="text-align: center">
+							<i class="fas fa-puzzle-piece"></i><br/>
+							<div info="modulesNav"></div>
 						</div>
 					</div>
 					<div class="NavBarContent" for="settingContent">
@@ -543,8 +576,191 @@
 						</div>
 					</div>
 					<div class="contentWrapper infoContent">
-						<div class="contentRowInfo" style="width: 920px;">
-							
+						<div class="loadingInterface infoChangeUsernameWindow" style="display: none; opacity: 0"><div style="height: 90px; width: 450px; padding: 10px; border-radius: 5px; display: flex; flex-direction: column; overflow: hidden" class="infoChangeUsernameInterface">
+							<div class="infoChangeUsernameWindow" style="height: 30px; width: 100%; font-size: 16px;display: flex; flex-direction: row; overflow: hidden; position: relative;">
+								<div style="overflow: hidden; flex: 1;">
+									<span info="insertUsername" style="user-select: none"></span>
+								</div><div style="position: absolute; width: 24px; top: 0px; right: 0px;"><i class="fas fa-times red closeInfoChangeUsername" style="cursor: pointer"></i></div>
+							</div>
+							<div class="inputButtonSplitter infoChangeUsernameInputArea">
+								<input info="infoUsernameInput"></input>
+								<button class="primaryColor"><i class="fas fa-paper-plane"></i></button>
+							</div>
+						</div></div>
+						<div class="contentRowInfo" style="left: -920px">
+							<div class="contentPage" style="width: 920px; display: flex; flex-direction: column; text-align: center;">
+								<div class="profileTagsBar"></div>
+								<div class="profileTagsDisplayer"></div>
+								<div class="profileRatingGraph"></div>
+								<div class="profileProblemMain">
+									<div class="profileProblemBlock">
+										
+									</div>
+								</div>
+								<div class="profileProblemSummary">
+									<span info="Difficulty"></span>
+									<input class="profileDiffInput" info="minDiff" style="width: 50px; height: 100%; font-size: 14px; background: inherit; border: 0px; color: inherit; outline: 0; font-family: var(--font-family); text-align: center"></input>
+									<input class="profileDiffInput" info="maxDiff" style="width: 50px; height: 100%; font-size: 14px; background: inherit; border: 0px; color: inherit; outline: 0; font-family: var(--font-family); text-align: center"></input>
+									<input class="profileTagsInput" info="search" style="flex: 1; height: 100%; font-size: 14px; background: inherit; border: 0px; color: inherit; outline: 0; font-family: var(--font-family); text-align: center"></input>
+									<span class="profileSelectIf profilePageLeft"><i class='fas fa-angle-left'></i></span>
+									<span style="min-width: 50px; padding: 2px" class="profileProblemPages"></span>
+									<span class="profileSelectIf profilePageRight"><i class='fas fa-angle-right'></i></span>
+									<span class="profileSelectIf profileTagsDisplayIf" style="margin-right: 10px;"><i class='fas fa-tags'></i></span>
+									<span class="profileSelectIf profileSortId profileSelectSortID selected"><i class='fas fa-hashtag'></i></span>
+									<span class="profileSelectIf profileSortId profileSelectSortRating"><i class='fas fa-star'></i></span>
+									<span class="profileSelectIf profileSortId profileSelectSortName"><i class='fas fa-sort-alpha-down'></i></span>
+									<span class="profileSelectIf profileSelectSortDirection"><i class='fas fa-caret-down green'></i></span>
+									<span class="profileGoBack" style="cursor: pointer; display: inline-block; margin-left: 6px"><span info="back"></span> <i class="fas fa-angle-right"></i></span>
+								</div>
+							</div>
+							<div class="contentPage" style="width: 920px; display: flex; flex-direction: column;">
+								<div class="infoBlock infoUserInfo" style="height: 200px; width: calc(100% - 40px); display: grid; place-items: center">
+									<div style="width: 100%">
+										<div style="display: flex; flex-direction: column; width: calc(100% - 20px); margin: 10px; overflow: hidden; opacity: 0" class="infoUserBlock">
+											<div style="display: flex; flex-direction: row">
+												<img height="140" width="140" alt="User Avatar" class="infoUserAvatar" style="border-radius: 5px;">
+												<div style="flex: 1; margin-left: 10px">
+													<div class="infoSmallUserRanks" style="font-size: 14px;"></div>
+													<div class="infoUsername" style="font-size: 28px"></div>
+													<div class="infoUserInfos" style="display: flex; flex-direction: column; font-size: 16px;">
+														<div style="margin: 5px 0px" class="infoUserRanks">
+															<span info="infoRanks"></span>: <span class="infoUserRanksValue">?</span>
+														</div>
+														<div style="margin: 5px 0px" class="infoUserContribution">
+															<span info="infoContribution"></span>: <span class="infoUserContributionValue">?</span>
+														</div>
+														<div style="margin: 5px 0px" class="infoUserFriends">
+															<span info="infoFriends" argv='["?"]'></span> 
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="infoUserTimes" style="width: 100%; position: relative; font-size: 16px">
+												<div>?</div><div style="position: absolute; right: 0px; top: 0px">?</div>
+											</div>
+											<div class="infoUserTimesIndex" style="width: 100%; position: relative; font-size: 14px; color: grey">
+												<div info="registerTime"></div><div style="position: absolute; right: 0px; top: 0px" info="activeTime"></div>
+											</div>
+										</div>				
+									</div>
+								</div>
+								<div class="infoBlock infoRatingGraph" style="height: 250px;"><div class="infoGraphBlock" style="opacity: 0;">
+									<div style="font-size: 16px; height: 20px; width: calc(100% - 20px); padding: 5px 10px;" class="infoBlockTitle"><div info="infoContestTitle" argv='["?"]'></div></div>
+									<div id="infoRatingGraphContainer" style="width: 100%; height: 220px"></div>
+								</div></div>
+								<div class="infoBlock infoProblemStatus" style="display: flex; flex-direction: row; height: 85px;">
+									<div style="width: 20%; text-align: center; display: grid; place-items: center" class="infoProblemSubmitted"><div>
+										<span style="font-size: 36px;" class="red">-</span>
+										<div style="font-size: 14px; color: #777" info="infoProblemSubmitted"></div>
+									</div></div>
+									<div style="width: 20%; text-align: center; display: grid; place-items: center" class="infoProblemAccept"><div>
+										<span style="font-size: 36px;" class="green">-</span>
+										<div style="font-size: 14px; color: #777" info="infoProblemAccept"></div>
+									</div></div>
+									<div style="width: 30%; text-align: center; display: grid; place-items: center" class="infoProblemContestPP"><div>
+										<span style="font-size: 36px; font-weight: normal !important;" class="user-master">-</span>
+										<div style="font-size: 14px; color: #777" info="infoProblemContestPP"></div>
+									</div></div>
+									<div style="width: 30%; text-align: center; display: grid; place-items: center" class="infoProblemPracticePP"><div>
+										<span style="font-size: 36px; font-weight: normal !important;" class="user-expert">-</span>
+										<div style="font-size: 14px; color: #777" info="infoProblemPracticePP"></div></div>
+									</div>
+								</div>
+								<div class="infoOptions" style="margin: 0px 20px; width: calc(100% - 40px); display: flex; flex-direction: row; font-size: 16px;">
+									<div style="flex: 1; text-align: center"><span style="cursor: pointer" info="infoChangeUsername" class="inputOptionsUsername"></span></div>
+									<div style="margin: 0px 5px; width: 4px; height: 20px; background: #777; border-radius: 2px;"></div>
+									<div style="flex: 1; text-align: center"><span class="infoShowProblems disabled" style="cursor: pointer" info="infoShowProblems"></span></div>
+									<div style="margin: 0px 5px; width: 4px; height: 20px; background: #777; border-radius: 2px;"></div>
+									<div style="flex: 1; text-align: center"><span class="infoShowSubmissions disabled" style="cursor: pointer" info="infoShowSubmissions"></span></div>
+									<div style="margin: 0px 5px; width: 4px; height: 20px; background: #777; border-radius: 2px;"></div>
+									<div style="flex: 1; text-align: center; display: flex; flex-direction: row"><span class="infoLoaders0" title="user.info" style="flex: 1"><i class='fas fa-question'></i></span><span class="infoLoaders1" title="user.rating" style="flex: 1"><i class='fas fa-question'></i></span><span class="infoLoaders2" title="user.status" style="flex: 1"><i class='fas fa-question'></i></span></div>
+								</div>
+							</div>
+							<div class="contentPage" style="width: 920px;">
+								
+							</div>
+						</div>
+					</div>
+					<div class="contentWrapper modulesContent">
+						<div class="contentRowInfo">
+							<div class="contentPage">
+								<div class="modulesPage"> <div style="margin: 20px 0px">
+									<div class="modulesBlock">
+										<div style="width: 72px; height: 100%; font-size: 48px; display: grid; place-items: center; margin-right: 10px">
+											<span class="fas fa-book"></span>
+										</div>
+										<div style="flex: 1; display: flex; flex-direction: column;">
+											<div class="modulesTitle" style="position: relative; margin-bottom: 5px">
+												<span info="modulesProblemPage"></span>
+												<div class="primaryColor" style="position: absolute; right: 0px; top: 0px; padding: 2px 6px; font-size: 15px; border-radius: 5px; cursor: pointer" info="modulesOpen" onclick="openProblemWin([])"></div>
+											</div>
+											<div class="modulesDesc">
+												<span info="modulesProblemPageDesc"></span>
+											</div>
+										</div>
+									</div>
+
+									<div class="modulesBlock">
+										<div style="width: 72px; height: 100%; font-size: 48px; display: grid; place-items: center; margin-right: 10px">
+											<span class="fas fa-chart-pie"></span>
+										</div>
+										<div style="flex: 1; display: flex; flex-direction: column;">
+											<div class="modulesTitle" style="position: relative; margin-bottom: 5px">
+												<span info="modulesSubmissionPage"></span>
+												<!-- <div class="primaryColor" style="position: absolute; right: 0px; top: 0px; padding: 2px 6px; font-size: 15px; border-radius: 5px; cursor: pointer" info="modulesOpen"></div> -->
+											</div>
+											<div class="modulesDesc">
+												<span info="modulesSubmissionPageDesc"></span>
+											</div>
+										</div>
+									</div>
+
+									<div class="modulesBlock">
+										<div style="width: 72px; height: 100%; font-size: 48px; display: grid; place-items: center; margin-right: 10px">
+											<span class="fas fa-comments"></span>
+										</div>
+										<div style="flex: 1; display: flex; flex-direction: column;">
+											<div class="modulesTitle" style="position: relative; margin-bottom: 5px">
+												<span info="modulesBlogViewer"></span>
+												<!-- <div class="primaryColor" style="position: absolute; right: 0px; top: 0px; padding: 2px 6px; font-size: 15px; border-radius: 5px; cursor: pointer" info="modulesOpen"></div> -->
+											</div>
+											<div class="modulesDesc">
+												<span info="modulesBlogViewerDesc"></span>
+											</div>
+										</div>
+									</div>
+
+									<div class="modulesBlock">
+										<div style="width: 72px; height: 100%; font-size: 48px; display: grid; place-items: center; margin-right: 10px">
+											<span class="fas fa-list-ol"></span>
+										</div>
+										<div style="flex: 1; display: flex; flex-direction: column;">
+											<div class="modulesTitle" style="position: relative; margin-bottom: 5px">
+												<span info="modulesScoreboard"></span>
+												<!-- <div class="primaryColor" style="position: absolute; right: 0px; top: 0px; padding: 2px 6px; font-size: 15px; border-radius: 5px; cursor: pointer" info="modulesOpen"></div> -->
+											</div>
+											<div class="modulesDesc">
+												<span info="modulesScoreboardDesc"></span>
+											</div>
+										</div>
+									</div>
+
+									<div class="modulesBlock">
+										<div style="width: 72px; height: 100%; font-size: 48px; display: grid; place-items: center; margin-right: 10px">
+											<span class="fas fa-user-secret"></span>
+										</div>
+										<div style="flex: 1; display: flex; flex-direction: column;">
+											<div class="modulesTitle" style="position: relative; margin-bottom: 5px">
+												<span info="modulesVirtualStandings"></span>
+												<!-- <div class="primaryColor" style="position: absolute; right: 0px; top: 0px; padding: 2px 6px; font-size: 15px; border-radius: 5px; cursor: pointer" info="modulesOpen"></div> -->
+											</div>
+											<div class="modulesDesc">
+												<span info="modulesVirtualStandingsDesc"></span>
+											</div>
+										</div>
+									</div>
+								</div></div>
+							</div>
 						</div>
 					</div>
 					<div class="contentWrapper settingContent">
@@ -859,7 +1075,6 @@
 										</div>
 									</div>
 									<div class="settingsSelectInfoAddition settingsReloadLanguages"><span info='reloadLanguages' onclick="reloadLanguages()"></span></div>
-									<div style="text-align: center; margin-top: 30px"><span class="settingsOpenProblems"><span info='openProblems' onclick="openProblemWin([])"></span></span></div>
 									<!-- <div class="settingsUI settingsRadio" for="testRadio">
 										<div class="settingsRadioInfo">
 											<div class="settingsRadioInfoMain">Radio Name</div>

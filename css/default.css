@@ -99,19 +99,19 @@ body{
     outline: none;
 }
 .loadingInterface{
-	background: rgba(200, 200, 200, 0.95);
+	background: rgba(200, 200, 200, 0.85);
 	color: black;
 }
 .submissionDisplayer > div:first-child > div:first-child{
     background: #eee;
 }
-.submissionCodeDisplayer, .eventDisplayer{
+.submissionCodeDisplayer, .eventDisplayer, .userInfoDisplayer{
     background: #ddd;
 }
-.eventCloseButton{
+.eventCloseButton, .userInfoCloseButton{
     background: #ccc;
 }
-.eventCloseButton:hover{
+.eventCloseButton:hover, .userInfoCloseButton:hover{
     background: #bbb;
 }
 .settingsLoginButton, .settingsLoginType{
@@ -150,13 +150,38 @@ body{
 .multiOddLine{
     background: #ccc;
 }
+.infoBlock{
+    background: #ccc;
+}
 
-
-
-
-
-
-
+.addProblemInterface{
+    background: #ddd;
+}
+.inputButtonSplitter > button{
+    border: 1px solid #777;
+    color: white;
+}
+.inputButtonSplitter > input{
+    border: 0;
+    border-bottom: 1px solid #777;
+    color: black;
+    outline: none;
+}
+.infoBlockTitle{
+    background: #bbb;
+}
+.modulesBlock{
+    background: #ccc;
+}
+.profileTagsDisplayer, .profileRatingGraph, .profileProblemSummary, .profileProblemMain{
+    background: #ccc;
+}
+.profileSelectIf:hover{
+    background: #bbb;
+}
+.profileSelectIf.selected{
+    background: #aaa;
+}
 
 
 

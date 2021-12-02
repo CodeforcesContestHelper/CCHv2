@@ -163,7 +163,7 @@ function submitSolution(ci, idx, code, lang, S, E){
 					"source":                code,
 					"sourceFile":            "",
 					"tabSize":               "4",
-					"_tta":                  "594",
+					"_tta":                  "493",
 					"sourceCodeConfirmed":   "true",
 				},
 				success: function(d){

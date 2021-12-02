@@ -68,7 +68,7 @@ function openSubmission(c, u){
 		var pwp = ctL.children().eq(4);
 		var vdl = "";
 		pwp.contents().each(function(){
-			if(($(this).attr("class") != undefined && $(this).attr("class").indexOf("verdict") != -1) || $.trim($(this).text()) == "Compilation error")
+			if(($(this).attr("class") != undefined && $(this).attr("class").indexOf("verdict") != -1) || $.trim($(this).text()) == "Compilation error" || $.trim($(this).text()) == "Skipped")
 				vdl += $(this).text();
 		})
 		$(".submissionVerdict").html(vdl);

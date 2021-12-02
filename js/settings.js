@@ -575,6 +575,14 @@ function initLanguage(){
 				})
 			else	$(`[info=${name}]`).html(languageOption.tip[name]);
 		}
+	for(var name in languageOption.modules)
+		if(languageOption.modules.hasOwnProperty(name)){
+			if(languageOption.modules[name].format(["", "", ""]) != languageOption.modules[name] && $(`[info=${name}]`).attr("argv") != undefined)
+				$(`[info=${name}]`).each(function(){
+					$(this).html(languageOption.modules[name].format(JSON.parse($(this).attr("argv"))));
+				})
+			else	$(`[info=${name}]`).html(languageOption.modules[name]);
+		}
 	for(var name in languageOption.settings)
 		if(languageOption.settings.hasOwnProperty(name)){
 			$(`.settingsUI[for=${name}] > div:first-child > div:first-child`).html(languageOption.settings[name][0]);
@@ -647,6 +655,7 @@ function initStyle(){
 	if(contestCalculatingRank[contestRankChosen])
 		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
 	else generateRankGraph(contestRankInfo[contestRankChosen]);
+	profileDrawGraph(profileInfoDatas[4]);
 }
 function reloadSettings(){
 	settings = JSON.parse(localStorage.getItem("CCH_Settings"));
@@ -1035,3 +1044,45 @@ $(".settingsUI[for=accountPassword] input")
     	submitLogin();
     }
 });
+function ratingToClass(x){
+	if(x == undefined)	return "user-unrated";
+	if(x <= 0)	return "user-unrated";
+	if(x < 1200)	return "user-newbie";
+	if(x < 1400)	return "user-pupil";
+	if(x < 1600)	return "user-specialist";
+	if(x < 1900)	return "user-expert";
+	if(x < 2100)	return "user-cmaster";
+	if(x < 2300)	return "user-master";
+	if(x < 2400)	return "user-imaster";
+	if(x < 2600)	return "user-grandmaster";
+	if(x < 3000)	return "user-igramdmaster";
+	return "user-legendary";
+}
+function ratingToSmalln(x){
+	if(x == undefined)	return "U";
+	if(x <= 0)	return "U";
+	if(x < 1200)	return "N";
+	if(x < 1400)	return "P";
+	if(x < 1600)	return "S";
+	if(x < 1900)	return "E";
+	if(x < 2100)	return "CM";
+	if(x < 2300)	return "M";
+	if(x < 2400)	return "IM";
+	if(x < 2600)	return "GM";
+	if(x < 3000)	return "IGM";
+	return "LGM";
+}
+function ratingToGrade(x){
+	if(x == undefined)	return "Unrated";
+	if(x <= 0)	return "Unrated";
+	if(x < 1200)	return "Newbie";
+	if(x < 1400)	return "Pupil";
+	if(x < 1600)	return "Specialist";
+	if(x < 1900)	return "Expert";
+	if(x < 2100)	return "Candidate Master";
+	if(x < 2300)	return "Master";
+	if(x < 2400)	return "International Master";
+	if(x < 2600)	return "Grandmaster";
+	if(x < 3000)	return "International Grandmaster";
+	return "Legendary Grandmaster";
+}

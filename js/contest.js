@@ -13,7 +13,7 @@ var contestListFormatString = `<div class="contestInfoCard {7}"><div class="cont
 // :uac=...
 // :pcnt=...
 
-var contestListFilterRegex = [/^:type(=)([a-zA-Z]+)/, /^:mode(=)(.+)/, /^:time(>|=|<|>=|<=|!=)([0-9]+)$/, /^:id(>|=|<|>=|<=|!=)([0-9]+)$/, /^:ac(>|=|<|>=|<=|!=)([0-9]+)$/, /^:pcnt(>|=|<|>=|<=|!=)([0-9]+)$/];
+var contestListFilterRegex = [/^:type(=)([a-zA-Z]+)$/, /^:mode(=)(.+)$/, /^:time(>|=|<|>=|<=|!=)([0-9]+)$/, /^:id(>|=|<|>=|<=|!=)([0-9]+)$/, /^:ac(>|=|<|>=|<=|!=)([0-9]+)$/, /^:pcnt(>|=|<|>=|<=|!=)([0-9]+)$/];
 var contestListFilterFuncs = [
 function(args, info, op){
 	return args.toLowerCase() == info[2].toLowerCase();

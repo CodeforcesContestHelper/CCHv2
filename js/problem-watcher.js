@@ -21,9 +21,6 @@ function addWatcher(id, idx, gc){
 			p.css("max-height", "0px");
 			p.css("margin", "0");
 			p.css("padding", "0");
-			setTimeout(function(){
-				p.remove();
-			}, 200);
 		}, 5000);
 	}
 	fadeIn(); fadeOut("");
@@ -106,8 +103,8 @@ function addWatcher(id, idx, gc){
 					if(ctL.children().eq(4).children().eq(0).hasClass("verdict-waiting")
 					|| lastJudgement == "In queue" || lastJudgement == ""){
 						setTimeout(reloadByAjax, 2000);
-						if(wsOpened)
-							return;
+						// if(wsOpened)
+						// 	return;
 					}
 					else{
 						wsGetResult = true;
