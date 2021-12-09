@@ -21,7 +21,7 @@ function openSubmission(c, u){
 				submissionAjax = null;
 				if(T.getTime() != submissionLastOperated.getTime())	return;
 				data = $(j);
-				if(j.indexOf(`data-entityId="${u}"`) == -1)
+				if(j.indexOf(`SubmissionDetailsFrameRoundBox-${u}"`) == -1)
 					data = $("<body></body>");
 				setTimeout(callback, 100);
 			},
@@ -129,6 +129,7 @@ function openSubmission(c, u){
 			}
 			$(".submissionCode > code").attr("class", "hljs language-" + lang);
 			hljs.highlightElement($(".submissionCode > code")[0]);
+			hljs.lineNumbersBlock($(".submissionCode > code")[0]);
 		}
 	}
 	$(".submissionCloser").unbind("click").click(function(){

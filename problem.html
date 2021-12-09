@@ -8,7 +8,7 @@
 		<script src="./js/highlight.min.js"></script>
 		<script src="./js/copy-tex.js"></script>
 		<script src="./js/highlightjs-line-numbers.js"></script>
-		<link rel="stylesheet" href="./css/problem/client.css">
+		<link rel="stylesheet" href="./css/problem.css">
 		<link rel="stylesheet" href="./css/all.min.css">
 		<link rel="stylesheet" href="./KaTeX/katex.min.css">
 		<script>
@@ -25,13 +25,13 @@
 			var DarkMode = false;
 			if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
 				if(window.matchMedia('(prefers-color-scheme: dark)').matches){
-					DarkMode = true, $('.ThemeTypeIf').attr('href','./css/contest/dark.css');
+					DarkMode = true, $('.ThemeTypeIf').attr('href','./css/dark.css');
 				}
 			}
 		</script>
 	</head>
 	<body>
-		<link class="ThemeTypeIf" rel="stylesheet" href="./css/problem/dark.css">
+		<link class="ThemeTypeIf" rel="stylesheet" href="./css/dark.css">
 		<script class="cssController"></script>
 		<div class="HtmlContainer">
 			<div class="ToolList">
@@ -165,12 +165,12 @@
 			}
 			function ChangeTheme(){
 				if(!DarkMode){
-					$(".ThemeTypeIf").attr("href", "./css/problem/dark.css");
+					$(".ThemeTypeIf").attr("href", "./css/dark.css");
 					if(!RunInNwjs)
 						$('body').css('background','#222');
 				}
 				else{
-					$(".ThemeTypeIf").attr("href", "./css/problem/default.css");
+					$(".ThemeTypeIf").attr("href", "./css/default.css");
 					if(!RunInNwjs)
 						$('body').css('background','#bbb');
 				}
