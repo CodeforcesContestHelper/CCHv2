@@ -5,7 +5,7 @@
 		<script src="./js/json3.min.js"></script>
 		<script src="./js/jquery.min.js"></script>
 		<meta name="referrer" content="never">
-		<link rel="stylesheet" href="./css/contest/client.css">
+		<link rel="stylesheet" href="./css/contest.css">
 		<link rel="stylesheet" href="./css/all.min.css">
 		<title>Codeforces Contest Helper</title>
 		<script>
@@ -22,13 +22,13 @@
 			var DarkMode = false;
 			if (window.matchMedia('(prefers-color-scheme)').media !== 'not all') {
 				if(window.matchMedia('(prefers-color-scheme: dark)').matches){
-					DarkMode = true, $('.ThemeTypeIf').attr('href','./css/contest/dark.css');
+					DarkMode = true, $('.ThemeTypeIf').attr('href','./css/dark.css');
 				}
 			}
 		</script>
 	</head>
 	<body>
-		<link class="ThemeTypeIf" rel="stylesheet" href="./css/contest/dark.css">
+		<link class="ThemeTypeIf" rel="stylesheet" href="./css/dark.css">
 		<script class="cssController"></script>
 		<div class="HtmlContainer">
 			<div class="mainWrapper">

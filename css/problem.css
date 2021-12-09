@@ -1,0 +1,719 @@
+@font-face {
+	font-family: 'Consolas';
+	src: url('../../fonts/Consolas.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Verdana';
+	src: url('../../fonts/Verdana.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'VerdanaBold';
+	src: url('../../fonts/VerdanaBold.ttf') format('truetype');
+}
+:root{
+	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif;
+	--editor-font-family:  'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif;
+	--editor-font-size: 14;
+	--statement-font-family:  sans-serif;
+	--statement-font-size: 16;
+}
+html, body{
+	width: 100%;
+	height: 100%;
+}
+body{
+	margin: 0px;
+	color: var(--major-font-color);
+}
+.HtmlContainer{
+	-webkit-app-region: drag;
+	transition: background-color 0.3s, color 0.3s;
+	border-radius: 5px;
+	display: inline-flex;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+	font-family: var(--font-family);
+	position: relative;
+	overflow: hidden;
+	background: var(--major-background-color);
+}
+.HtmlContainer > div:last-child{
+	flex: 1;
+	width:  100%;
+	overflow: hidden;
+}
+.sideBar{
+	z-index: 4;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	-webkit-app-region: no-drag;
+	transition: 0.3s;
+	width: 35px;
+	overflow: hidden;
+}
+.sideBar > div{
+	overflow-x: hidden;
+	overflow-y: auto;
+	width: 175px;
+	height: 100%;
+}
+.sideBar:hover{
+	width: 175px;
+}
+.sideBarGroupContents{
+	border-radius: 10px;
+	overflow: hidden;
+}
+.sideBarItem, .sideBarGroup, .addProblemSidebar{
+	transition: 0.2s;
+	font-size: 16px;
+	padding: 10px;
+	padding-left: 10px;
+	width: calc(100% - 20px);
+	font-family: var(--font-family);
+	border-left: 0px solid rgb(255, 204, 102);
+	user-select: none;
+	cursor: pointer;
+}
+.sideBarItem > i, .sideBarItem > span
+, .sideBarGroup > i, .sideBarGroup > span
+, .addProblemSidebar > i{
+	text-align: center;
+	display: inline-block;
+	width: 16px;
+	margin-right: 10px;
+}
+.sideBarItem > div:last-child
+, .sideBarGroup > div:last-child{
+	float: right;
+	transition: 0.2s;
+	margin-right: 3px;
+	border-radius: 5px;
+	width: 20px;
+	height: 20px;
+	cursor: pointer;
+	position: relative;
+}
+.sideBarItem > div:last-child > i
+, .sideBarGroup > div:last-child > i{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.innerContent{
+	flex: 1;
+	overflow: hidden;
+	z-index: 1;
+}
+.ToolList{
+	-webkit-app-region: drag;
+	position: relative;
+	height: 30px;
+}
+.ToolListTitle{
+	margin: 8px 12px;
+	font-size: 14px;
+	user-select: none;
+}
+.ToolListButton{
+	-webkit-app-region: no-drag;
+	cursor: pointer;
+	transition: 0.2s;
+	width:  45px;
+	height: 30px;
+	font-size: 14px;
+	display: grid;
+	place-items: center;
+}
+.ToolListClose:hover{
+	background: rgb(232, 17, 35);
+	color: white;
+}
+.progressBar{
+	user-select: none;
+	height: 24px;
+	padding: 5px;
+	display: flex;
+	flex-direction: row;
+	font-size: 20px;
+	text-align: center;
+}
+.progressBar > div{
+	display: flex;
+	flex-direction: row;
+	text-align: center;
+}
+.progressBar > div > div.actions{
+	-webkit-app-region: no-drag;
+	transition: 0.2s;
+	border-radius: 5px;
+	width: 24px;
+	height: 24px;
+	cursor: pointer;
+	position: relative;
+}
+.progressBarMain > div.actions{
+	margin: 0px 10px !important;
+}
+.progressBar > div > div.actions > i{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.progressBarMain{
+	display: grid;
+	place-items: center;
+	margin-left: 20px;
+	margin-right: 20px;
+}
+.innerContentPage{
+	padding: 10px;
+	height: calc(100% - 20px);
+	width: calc(100% - 20px);
+	overflow-y: scroll;
+	user-select: text;
+	-webkit-app-region: no-drag;
+	font-family: var(--statement-font-family);
+}
+.problemTitle{
+	font-size: 24px;
+	text-align: center;
+	margin-bottom: 5px;
+}
+.problemOrigin{
+	font-size: 13px;
+	text-align: center;
+	margin-bottom: 10px;
+}
+.problemTags{
+	font-size: 16px;
+	text-align: center;
+	margin-bottom: 10px;
+}
+.blockManager{
+	font-size: var(--statement-font-size);
+	margin: 10px;
+	border-radius: 5px;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+.blockManagerTitle{
+	padding: 5px;
+	font-size: calc(var(--statement-font-size) * 1.2);
+	height: calc(var(--statement-font-size) + 10);
+}
+.blockManagerContent{
+	padding: 5px;
+}
+.loadingInterface{
+	-webkit-app-region: no-drag;
+	transition: 0.2s;
+	position: absolute;
+	z-index: 99;
+	top: 0px;
+	left: 0px;
+	width: 100%;
+	height: 100%;
+	display: grid;
+	place-items: center;
+	background: rgba(0, 0, 0, 0.9);
+}
+.loadingInterface > div{
+	text-align: center;
+}
+.bigButton{
+	cursor: pointer;
+	width: 100%;
+	margin: 10px 0px;
+	height: 40px;
+	border-radius: 5px;
+	font-size: 16px;
+	font-family: var(--font-family);
+	transition: 0.2s;
+}
+.bigButton:focus{
+	outline: 0;
+} 
+.bigButton>i{
+	width: 16px;
+	margin-right: 12px;
+}
+.submitInterface{
+	border-radius: 5px;
+}
+.submitInterfaceTitle{
+	font-size: 16px;
+}
+.closeSubmitPage{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+select{
+	transition: 0.2s;
+	border: none;
+	width: 100%;
+	color: inherit;
+	font-family: inherit;
+}
+#submitCodeArea{
+	tab-size: 4;
+	font-size: var(--editor-font-size);
+	border: 1px solid #777;
+	padding: 5px;
+	outline: 0;
+	background: inherit;
+	color: inherit;
+	font-family: var(--editor-font-family);
+}
+.problemTag {
+    font-size: 14px;
+    display: inline-block;
+    padding: 4px 6px;
+    border-radius: 4px;
+    margin-right: 10px;
+}
+.addProblemInterface{
+	user-select: none;
+	border-radius: 5px;
+}
+.inputButtonSplitter{
+	margin-top: 30px;
+	display: flex;
+	flex-direction: row;
+	height: 50px;
+	width: calc(100% - 10px);
+	padding: 5px;
+	border-radius: 5px;
+	background: rgba(127, 127, 127, 0.4);
+	position: relative;
+}
+.inputButtonSplitterTitle{
+	position: absolute;
+	top: 0px;
+	height: 22px;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(127, 127, 127, 1);
+	font-size: 16px;
+	padding: 0px 10px;
+	border-radius: 5px;
+}
+.inputButtonSplitter > input{
+	margin-top: 10px;
+	background: transparent;
+	width: calc(100% - 40px);
+	font-family: var(--font-family);
+	font-size: 20px;
+}
+.inputButtonSplitter > button{
+	margin-top: 10px;
+	cursor: pointer;
+	margin-left: 10px;
+	width: 40px;
+	transition: 0.2s;
+	height: 40px;
+	border-radius: 5px;
+	font-size: 20px;
+	display: grid;
+	place-items: center;
+	outline: 0;
+}
+
+.problemTag{
+	user-select: none;
+}
+.problemTag > i{
+	margin-right: 10px;
+}
+p{
+	margin: 10px 0px;
+}
+.innerContentPage center{
+	display: block;
+	margin: 10px;
+}
+.tex-font-style-tt{
+	font-family: var(--editor-font-family);
+	border: 1px solid #777;
+	border-radius: 5px;
+	padding: 0px 3px;
+}
+.tex-font-style-it{
+	font-style: italic;
+}
+.tex-font-style-bf{
+	font-weight: bold;
+}
+.epigraph-text{
+	margin-left: 50%;
+	width: 50%;
+	overflow: hidden;
+
+}
+.tex-span{
+	font-size: 125%;
+	font-family: KaTeX_Main, "Times New Roman", serif;
+}
+.tex-formula{
+	font-size: 125%;
+	font-family: KaTeX_Main, "Times New Roman", serif;
+	display: block;
+	text-align: center;
+}
+.blockManagerContent pre{
+	width: calc(100% - 15px);
+	overflow-x: scroll;
+	font-family: var(--editor-font-family);
+	border: 1px solid #777;
+	border-radius: 5px;
+}
+.tex-tabular .tex-tabular-text-align-left{
+    text-align:left
+}
+.tex-tabular .tex-tabular-text-align-center{
+    text-align:center
+}
+.tex-tabular .tex-tabular-text-align-right{
+    text-align:right
+}
+.tex-font-size-tiny{
+    font-size:70%
+}
+.tex-font-size-script{
+    font-size:75%
+}
+.tex-font-size-footnotes{
+    font-size:85%
+}
+.tex-font-size-small{
+    font-size:85%
+}
+.tex-font-size-normal{
+    font-size:100%
+}
+.tex-font-size-large-1{
+    font-size:115%
+}
+.tex-font-size-large-2{
+    font-size:130%
+}
+.tex-font-size-large-3{
+    font-size:145%
+}
+.tex-font-size-huge-1{
+    font-size:175%
+}
+.tex-font-size-huge-2{
+    font-size:200%
+}
+.tex-font-style-tt{
+    font-size:110%;
+}
+.tex-font-style-bf{
+    font-weight:700
+}
+.tex-font-style-up{
+}
+.tex-font-style-it{
+    font-style:italic
+}
+.tex-font-style-sl{
+    font-style:italic
+}
+.tex-font-style-sc{
+    text-transform:uppercase
+}
+.tex-font-style-striked{
+    text-decoration:line-through
+}
+.tex-font-style-underline{
+    text-decoration:underline
+}
+.tex-graphics{
+    display:block
+}
+.verbatim{
+	padding: 5px;
+}
+.spoiler > span{
+	width: 20px;
+	text-align: center;
+	margin-right: 5px;
+}
+.spoiler{
+	border-left: 5px solid #777;
+	padding-left: 5px;
+	overflow: hidden;
+}
+.sampleBlock{
+	display: flex;
+	flex-direction: row;
+	width: 100%;
+}
+.sampleBlock > div{
+	flex-grow: 1;
+	overflow-x: hidden;
+	margin: 5px;
+	display: flex;
+	width: calc(100% - 10px);
+	height: calc(100% - 10px);
+	flex-direction: column;
+}
+.codeDisplayer{
+	tab-size: 4;
+	border: 1px solid #777;
+	border-radius: 5px;
+	padding: 5px;
+	padding-bottom: 0px;
+	width: calc(100% - 12px);
+	height: 100%;
+	overflow-x: scroll;
+	font-family: var(--editor-font-family);
+	font-size: var(--editor-font-size);
+	white-space: pre;
+}
+@media only screen and (max-width: 520px){
+	.sampleBlock{
+		flex-direction: column !important;
+	}
+}
+.copyCode{
+	transition: 0.2s;
+	user-select: none;
+	cursor: pointer;
+	border-radius: 5px;
+	padding: 2px 5px;
+	font-size: calc(100% - 5px);
+	display: inline-block;
+}
+.watchDisplayer{
+	user-select: none;
+	z-index: 98;
+	width: 370px !important;
+	position: absolute;
+	left: calc(50% - 185px + 17.5px);
+	top: 0px;
+	text-align: center;
+}
+.singleWatchContent{
+	user-select: none;
+	transition: 0.2s;
+	padding: 0px 10px;
+	margin: 10px 0px;
+	width: 350px;
+	height: 50px;
+	border-radius: 5px;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+}
+.singleWatchTitle{
+	user-select: none;
+	font-size: 16px;
+	text-align: center;
+}
+.copyInfo{
+	margin-left: 10px;
+	user-select: none;
+	cursor: pointer;
+	font-size: calc(100% - 4px);
+	padding: 2px;
+	border-radius: 5px;
+}
+.katex,
+.katex-display {
+    user-select: all;
+    -moz-user-select: all;
+    -webkit-user-select: all;
+    -ms-user-select: all;
+}
+
+
+
+::-webkit-scrollbar{
+	width: 8px;
+	height: 8px;
+}
+::-webkit-scrollbar-thumb{
+	border-radius: 2px;
+}
+::-webkit-scrollbar-corner{
+	display: none;
+}
+::-webkit-scrollbar{
+	transition: 0.3s;
+}
+::-webkit-scrollbar:hover{
+    background-color: var(--scroll-bar-hover-color);
+}
+::-webkit-scrollbar-thumb{
+    background-color: var(--scroll-bar-thumb-color);
+}
+.primaryColor{
+    background: var(--primary-color);
+    transition: 0.2s;
+    color: white;
+}
+.primaryColor:hover{
+    background: var(--primary-hover-color);
+}
+.dangerColor{
+    background: var(--danger-color);
+    transition: 0.2s;
+    color: white;
+}
+.dangerColor:hover{
+    background: var(--danger-hover-color);
+}
+.warningColor{
+    background: var(--warning-color);
+    transition: 0.2s;
+    color: white;
+}
+.warningColor:hover{
+    background: var(--warning-hover-color);
+}
+.successColor{
+    background: var(--success-color);
+    transition: 0.2s;
+    color: white;
+}
+.successColor:hover{
+    background: var(--success-hover-color);
+}
+.loadingColor{
+    background: var(--loading-color);
+    transition: 0.2s;
+    color: white;
+}
+.loadingColor:hover{
+    background: var(--loading-hover-color);
+}
+.red{
+    color: var(--red-font-color);
+}
+.green{
+    color: var(--green-font-color);
+}
+
+.user-legendary, .user-igramdmaster, .user-grandmaster {
+    color: var(--user-red-color);
+    font-weight: 600;
+}
+.user-legendary:first-letter{
+    color: var(--major-font-color);
+}
+.user-master, .user-imaster {
+    color: var(--user-orange-color);
+    font-weight: 600;
+}
+.user-cmaster {
+    color: var(--user-purple-color);
+    font-weight: 600;
+}
+.user-expert {
+    color: var(--user-blue-color);
+    font-weight: 600;
+}
+.user-specialist {
+    color: var(--user-cyan-color);
+    font-weight: 600;
+}
+.user-pupil {
+    color: var(--user-green-color);
+    font-weight: 600;
+}
+.user-newbie {
+    color: var(--user-grey-color);
+    font-weight: 600;
+}
+.user-unrated {
+    color: var(--major-font-color);
+}
+
+.highcharts-background{
+    background: var(--graphs-background-color) !important;
+}
+::selection { background: var(--selection-background-color); }  
+
+.innerContentPage{
+	background: var(--major-background-color);
+}
+.sideBar{
+    background: var(--problem-window-side-bar-background-color);
+}
+.sideBarItem.chosen{
+    padding-left: 5px;
+    border-left: 5px solid var(--problem-window-side-bar-highlight-color);
+}
+.sideBarItem > div:last-child:hover, .sideBarGroup > div:last-child:hover{
+    background: var(--red-font-color);
+    color: white
+}
+.sideBarItem:hover, .addProblemSidebar:hover{
+    background: var(--problem-window-side-bar-hover-background-color);
+}
+.ToolListMinimize:hover, .ToolListMaximize:hover{
+    background: var(--topbar-hover-color);
+}
+.progressBar{
+    background: var(--problem-window-info-bar-background-color);
+}
+.progressBar > div > div.actions:hover{
+    background: var(--problem-window-info-bar-items-background-color);
+}
+input{
+    border: 0;
+    border-bottom: 1px solid grey;
+    color: var(--major-font-color);
+    outline: none;
+}
+.blockManagerTitle{
+    background: var(--single-block-title-background-color);
+}
+.blockManagerContent{
+    background: var(--single-block-background-color);
+}
+.submitInterface, .addProblemInterface{
+    background: var(--pop-out-block-background-color);
+}
+.bigButton{
+    background: transparent;
+    border: 1px solid grey;
+    color: white;
+}
+.inputButtonSplitter > button{
+    border: 1px solid grey;
+    color: white;
+}
+select{
+    background: var(--settings-select-background-color);
+}
+a {color: var(--problem-window-link-color);}
+a:hover {color: var(--problem-window-link-hover-color);}
+a:onclick {color: var(--problem-window-link-onclick-color);}
+a:visited {color: var(--problem-window-link-visited-color);}
+table > tr > th, table > tr > td { border-color: var(--problem-window-table-border-color); }
+.copyCode, .copyInfo{
+    background: var(--problem-window-copy-button-background-color);
+}
+.copyCode:hover, .copyInfo:hover{
+    background: var(--problem-window-copy-button-hover-background-color);
+}
+.singleWatchContent{
+    background: var(--problem-window-submission-watcher-popout-background-color);
+}
+.sideBarGroupContents{
+    background: var(--problem-window-info-bar-group-background-color);
+}
+.loadingInterface{
+	background: var(--loading-interface-background-color);
+}

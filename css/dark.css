@@ -1,301 +1,124 @@
-body{
-	color: #fff;
-}
-.HtmlContainer{
-	background: rgb(29, 33, 37);
-}
-.NavBarContent:hover{
-	background: rgb(36, 41, 46);
-}
-.NavBarChosen, .InnerContent{
-	background: rgb(36, 41, 46);
-}
-.ToolListMinimize:hover{
-	background: #666;
-}
-.NavBarCurr{
-	background: #555;
-}
-.DividerLine{
-	background: #fff;
-}
-.singleUsernameDisplayer{
-    border-bottom: 1px solid #777;
-}
-.singleContestProgressBarDisplayer{
-    background: #555;
-}
-.singleContestProgressInfoDisplayer{
-    background: #666;
-}
-.singleMemoryUsed > span{
-    border-bottom: 1px solid #777;
-}
-.selectButton{
-    background: #424254;
-}
-.selectButton:hover{
-    background: #666;
-}
-.selectButton.selected{
-    background: #666;
-}
-.singleRankChangesDisplayer{
-    background: #455055;
-}
-.singleContestProgressBackground{
-    background: #777;
-}
-.singleContestPoptip{
-    background: #111;
-}
-.singleContestPoptipTail{
-     border-color: #111 transparent transparent transparent;
-}
-.singleProblemlistDisplayerGridItem{
-    background: #434348;
-}
-.singleProblemlistDisplayerGridItemIndex{
-    background: #555;
-}
-.singleProblemlistBottom{
-    background: #333;
-}
-.singleProblemlistDisplayListItemInfo, .singleProblemlistDisplayListItemStatus, .singleProblemlistDisplayEventItem{
-    background: #474747;
-}
-.singleProblemlistDisplayListItemInfo:hover, 
-.singleProblemlistDisplayListItemStatus:hover, 
-.singleProblemlistDisplayEventItem:hover{
-    background: #373737;
-}
-.singleProblemlistDisplayListItemProgress{
-    background: #777;
-}
-.singleHeadBackProgress {
-    background-color:  #999;
-    border: 15px solid rgba(255, 255, 255, 0.7);
-}
-.singleHeadBackProgress.selected{
-    border: 0 solid rgba(255, 255, 255, 0.7);
-}
-.settingsRadioInfoAddition, .settingsSelectInfoAddition, .settingsSelectBigInfoAddition, .settingsInputInfoAddition, .pageSmallTip{
-    color: #999;
-}
-.settingsSelectPart > div:first-child:hover, .settingsSelectPart > div:last-child:hover,
-.settingsSelectBigPart > div:first-child:hover, .settingsSelectBigPart > div:last-child:hover{
-    background: #555;
-}
-.settingsSelectPartLeft.closed, .settingsSelectPartRight.closed,
-.settingsSelectBigPartLeft.closed, .settingsSelectBigPartRight.closed{
-    color: #666;
-    cursor: default;
-}
-.settingsInputPartContent{
-    background: rgb(36, 41, 46);
-    border: 0;
-    border-bottom: 1px solid #888;
-    color: white;
-    outline: none;
-}
-.submissionDisplayer > div:first-child > div:first-child{
-    background: rgb(35, 40, 45);
-}
-.submissionCodeDisplayer, .eventDisplayer, .userInfoDisplayer{
-    background: rgb(35, 40, 45);
-}
-.eventCloseButton, .userInfoCloseButton{
-    background: #555;
-}
-.eventCloseButton:hover, .userInfoCloseButton:hover{
-    background: #666;
-}
-.settingsLoginButton, .settingsLoginType{
-    color: white;
-    
-}
-.settingsSelectBigPartContent{
-    background: rgb(36, 41, 46);;
-}
-.searchPageTop, .searchPageTip{
-    background: rgb(45, 50, 55);
-}
-.searchArgumentsChoser{
-    background: #444;
-}
-.searchArgumentsItem{
-    background: #555;
-}
-.searchArgumentsItem.chosen{
-    background: #777;
-}
-.searchPagesButton:hover
-, .multiPagePrev:hover, .multiPageNext:hover
-, .multiPageSelecter > .number:hover, .multiPageSelecter > .number.chosen
-, .multiUnofficialSelecter > span:hover, .multiUnofficialSelecter > span.chosen{
-    background: #666;
-}
-.contestInfoCard:hover{
-    border-left-color: rgb(255, 204, 102);
-}
-.highlightedContestList{
-    background: #444;
-}
-.multiSettingsBar{
-    background: rgb(46, 51, 56);
-}
-.multiOddLine{
-    background: #333;
-}
-.infoBlock{
-    background: rgb(51, 56, 61);
-}
-.infoBlockTitle{
-    background: rgb(56, 61, 66);
-}
-.modulesBlock{
-    background: rgb(51, 56, 61);
-}
-.profileTagsDisplayer, .profileRatingGraph, .profileProblemSummary, .profileProblemMain{
-    background: rgb(51, 56, 61);
-}
-.profileSelectIf:hover{
-    background: rgb(71, 76, 81);
-}
-.profileSelectIf.selected{
-    background: #777;
-}
+:root{
+    /* MAJOR */
+    --major-font-color: #fff;
+    --major-background-color: rgb(29, 33, 37);
+    --navbar-hover-color: rgb(36, 41, 46);
+    --navbar-chosen-color: rgb(36, 41, 46);
+    --graphs-background-color: #555;
+    --selection-background-color: #666;
+    --topbar-hover-color: #666;
+    --loading-interface-background-color: rgba(0, 0, 0, 0.9);
+    --current-navbar-color: #555;
+    /* SINGLE */
+    --single-divider-line-color: #fff;
+    --single-username-border-bottom-color: #777;
+    --single-progress-bar-background-color: #555;
+    --single-progress-bar-color: #777;
+    --single-memory-used-border-bottom-color: #777;
+    --single-switch-buttons-background-color: #424254;
+    --single-switch-buttons-hover-background-color: #424254;
+    --single-switch-buttons-selected-background-color: #424254;
+    --single-rank-delta-background-color: #455055;
+    --single-progress-bar-poptip-background-color: #111;
+    --single-grid-mode-background-color: #434348;
+    --single-grid-mode-index-background-color: #555;
+    --single-problem-list-infobar-background-color: #333;
+    --single-list-event-mode-block-background-color: #474747;
+    --single-list-event-mode-block-hover-background-color: #373737;
+    --single-list-mode-progress-bar-background-color: #777;
+    --single-long-press-progress-circle-background-color: rgba(255, 255, 255, 0.7);
+    --single-long-press-progress-circle-color: #999;
+    --single-block-background-color: rgb(46, 51, 56);
+    --single-block-title-background-color: rgb(51, 56, 61);
+    --single-block-expand-button-background-color: #666;
+    --single-block-expand-hover-button-background-color: #777;
+    /* MULTI */
+    --multi-info-bar-background-color: rgb(46, 51, 56);
+    --multi-list-highlighted-background-color: #333;
+    /* CONTEST */
+    --contest-info-bar-background-color: rgb(45, 50, 55);
+    --contest-sort-block-background-color: #444;
+    --contest-button-background-color: #555;
+    --contest-button-chosen-background-color: #777;
+    --contest-button-hover-background-color: #666;
+    --contest-list-selection-border-left-color: rgb(255, 204, 102);
+    --contest-list-highlighted-background-color: #444;
+    /* PROBLEM PAGE */
+    --problist-block-background-color: rgb(51, 56, 61);
+    --problist-sort-button-hover-background-color: rgb(71, 76, 81);
+    --problist-sort-button-selected-background-color: #777;
+    /* PROFILE (PROBLEM PAGE REQUIRED) */
+    --profile-page-block-background-color: rgb(51, 56, 61);
+    --profile-page-block-title-background-color: rgb(56, 61, 66);
+    --profile-page-submission-light-background-color: #666;
+    --profile-page-submission-light-color: #36c292;
+    --profile-page-submittion-graph-choser-background-color: #666;
+    --profile-page-submittion-graph-choser-hover-background-color: #777;
+    --profile-page-submittion-graph-choser-chosen-background-color: #888;
+    --profile-page-poptip-background-color: #111;
+    --profile-page-poptip-background-color: #111;
+    --profile-page-submission-graph-selection-background-color: #5286cd;
+    /* MODULES */
+    --modules-block-background-color: rgb(51, 56, 61);
+    /* SETTINGS */
+    --settings-comment-color: #999;
+    --settings-select-button-hover-background-color: #555;
+    --settings-unclickable-button-color: #666;
+    --settings-input-background: rgb(36, 41, 46);
+    --settings-input-border-bottom-color: #888;
+    --settings-select-background-color: rgb(36, 41, 46);
+    /* POPOUTS */
+    --pop-out-block-background-color: rgb(35, 40, 45);
+    --pop-out-block-closer-background-color: #555;
+    --pop-out-block-closer-hover-background-color: #666;
+    /* SCROLL */
+    --scroll-bar-hover-color: #666;
+    --scroll-bar-thumb-color: #888;
+    /* THEME COLOR */
+    --primary-color: rgb(38, 103, 157);
+    --primary-hover-color: rgb(26, 85, 134);
+    --danger-color: rgb(158, 12, 41);
+    --danger-hover-color: rgb(136, 4, 31);
+    --warning-color: rgb(175, 142, 52);
+    --warning-hover-color: rgb(146, 117, 37);
+    --success-color: #0ba570;
+    --success-hover-color: rgb(26, 123, 90);
+    --loading-color: rgb(175, 175, 175);
+    --loading-hover-color: rgb(150, 150, 150);
+    --red-font-color: #ff456b;
+    --green-font-color: #36c292;
+    /* USER COLOR */
+    --user-red-color: rgb(255, 26, 26);
+    --user-orange-color: rgb(255, 152, 26);
+    --user-purple-color: rgb(255, 85, 255);
+    --user-blue-color: rgb(51, 125, 255);
+    --user-cyan-color: rgb(87, 252, 242);
+    --user-green-color: rgb(114, 255, 114);
+    --user-grey-color: rgb(152, 143, 129);
 
+    /* ========== CONTEST WINDOW START ==========*/
 
+    --contest-window-block-background-color: #444;
 
+    /* =========== CONTEST WINDOW END ===========*/
 
-.infoChangeUsernameInterface{
-    background: #302e35;
-}
-.inputButtonSplitter > button{
-    border: 1px solid #777;
-    color: white;
-}
-.inputButtonSplitter > input{
-    border: 0;
-    border-bottom: 1px solid #888;
-    color: white;
-    outline: none;
-}
-.blockManager{
-    background: rgb(46, 51, 56);
-}
-.blockManagerTitle{
-    background: rgb(51, 56, 61);
-}
-.folderButton{
-    background: #666;
-}
-.folderButton:hover{
-    background: #777;
-}
+    /* ========== PROBLEM WINDOW START ==========*/
 
+    --problem-window-side-bar-background-color: #2a2a2a;
+    --problem-window-side-bar-highlight-color: rgb(255, 204, 102);
+    --problem-window-side-bar-hover-background-color: #888;
+    --problem-window-info-bar-background-color: #444;
+    --problem-window-info-bar-items-background-color: #777;
+    --problem-window-info-bar-group-background-color: #555;
+    --problem-window-link-color: #55d015;
+    --problem-window-link-hover-color: #42c100;
+    --problem-window-link-onclick-color: #42c100;
+    --problem-window-link-visited-color: #55d015;
+    --problem-window-table-border-color: #fff;
+    --problem-window-copy-button-background-color: #666;
+    --problem-window-copy-button-hover-background-color: #777;
+    --problem-window-submission-watcher-popout-background-color: rgba(0, 0, 0, 0.85);
 
-.bigInputArea>input{
-    background: transparent;
-    border: 1px solid #777;
-    color: white;
+    /* =========== PROBLEM WINDOW END ===========*/
 }
-.bigButton{
-    background: transparent;
-    border: 1px solid #777;
-    color: white;
-}
-::-webkit-scrollbar:hover{
-    background-color: #666;
-}
-::-webkit-scrollbar-thumb{
-    background-color: #888;
-}
-.primaryColor{
-    background: rgb(38, 103, 157);
-    transition: 0.2s;
-    color: white;
-}
-.primaryColor:hover{
-    background: rgb(26, 85, 134);
-}
-.dangerColor{
-    background: rgb(158, 12, 41);
-    transition: 0.2s;
-    color: white;
-}
-.dangerColor:hover{
-    background: rgb(136, 4, 31);
-}
-.warningColor{
-    background: rgb(175, 142, 52);
-    transition: 0.2s;
-    color: white;
-}
-.warningColor:hover{
-    background: rgb(146, 117, 37);
-}
-.successColor{
-    background: #0ba570;
-    transition: 0.2s;
-    color: white;
-}
-.successColor:hover{
-    background: rgb(26, 123, 90);
-}
-.loadingColor{
-    background: rgb(175, 175, 175);
-    transition: 0.2s;
-    color: white;
-}
-.loadingColor:hover{
-    background: rgb(150, 150, 150);
-}
-.red{
-    color: #ff456b;
-}
-.green{
-    color: #36c292;
-}
-
-.user-legendary, .user-igramdmaster, .user-grandmaster {
-    color: rgb(255, 26, 26);
-    font-weight: 600;
-}
-.user-legendary:first-letter{
-    color: white;
-}
-.user-master, .user-imaster {
-    color: rgb(255, 152, 26);
-    font-weight: 600;
-}
-.user-cmaster {
-    color: rgb(255, 85, 255);
-    font-weight: 600;
-}
-.user-expert {
-    color: rgb(51, 125, 255);
-    font-weight: 600;
-}
-.user-specialist {
-    color: rgb(87, 252, 242);
-    font-weight: 600;
-}
-.user-pupil {
-    color: rgb(114, 255, 114);
-    font-weight: 600;
-}
-.user-newbie {
-    color: rgb(152, 143, 129);
-    font-weight: 600;
-}
-.user-unrated {
-    color: white;
-}
-
-.highcharts-background{
-    background: #555 !important;
-}
-::selection { background:#666; }  
 pre code.hljs{display:block;overflow-x:auto;padding:1em}code.hljs{padding:3px 5px}.hljs{color:#abb2bf;background:inherit}.hljs-comment,.hljs-quote{color:#8b919c;font-style:italic}.hljs-doctag,.hljs-formula,.hljs-keyword{color:#c678dd}.hljs-deletion,.hljs-name,.hljs-section,.hljs-selector-tag,.hljs-subst{color:#e06c75}.hljs-literal{color:#56b6c2}.hljs-addition,.hljs-attribute,.hljs-meta .hljs-string,.hljs-regexp,.hljs-string{color:#98c379}.hljs-attr,.hljs-number,.hljs-selector-attr,.hljs-selector-class,.hljs-selector-pseudo,.hljs-template-variable,.hljs-type,.hljs-variable{color:#d19a66}.hljs-bullet,.hljs-link,.hljs-meta,.hljs-selector-id,.hljs-symbol,.hljs-title{color:#61aeee}.hljs-built_in,.hljs-class .hljs-title,.hljs-title.class_{color:#e6c07b}.hljs-emphasis{font-style:italic}.hljs-strong{font-weight:700}.hljs-link{text-decoration:underline}

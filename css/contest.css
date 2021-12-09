@@ -1,0 +1,247 @@
+@font-face {
+	font-family: 'Consolas';
+	src: url('../../fonts/Consolas.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'Verdana';
+	src: url('../../fonts/Verdana.ttf') format('truetype');
+}
+@font-face {
+	font-family: 'VerdanaBold';
+	src: url('../../fonts/VerdanaBold.ttf') format('truetype');
+}
+body{
+	transition: background-color 0.3s, color 0.3s;
+	overflow: hidden;
+	margin: 0px;
+	color: var(--major-font-color);
+}
+:root{
+	--font-family: 'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif;
+}
+.HtmlContainer{
+	margin: 0px;
+	user-select:none;
+	font-size: 14px;
+	font-family: var(--font-family);
+	-webkit-app-region: drag;
+	transition: background-color 0.3s, color 0.3s;
+	border-radius: 5px;
+	display: inline-flex;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	flex-direction: column;
+	padding: 10px;
+	border-radius: 10px;
+	width: 320px;
+	background: var(--major-background-color);
+}
+.mainWrapper{
+	display: flex;
+	flex:  1;
+	flex-direction: row;
+}
+.innerContent{
+	flex: 1;
+	margin: 0px 10px;
+}
+.singleContestProgressBackground{
+	transition: 0.2s;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	height: 100%;
+	border-radius: 3px;
+	background: var(--single-progress-bar-color);
+}
+.singleContestProgressInfo{
+	width: 100%;
+	height: 100%;
+	position: relative;
+	overflow-x: hidden;
+	z-index: 3;
+}
+.singleContestProgressPart{
+	position: absolute;
+	top: 0px;
+	width: 4px;
+	height: 100%;
+	left: 0px;
+	transform: translate(-50%, 0%);
+}
+.styleBlock{
+	position: relative;
+	font-size: 15px;
+	margin-top: 10px;
+	border-radius: 10px;
+	height: 69px;
+	padding: 8px;
+	background: var(--contest-window-block-background-color);
+}
+.rankDisplayer{
+	text-align: center;
+}
+.rankDisplayer > div{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: 90%;
+}
+.currentRank{
+	font-size: 24px;
+}
+.currentRankDelta{
+	font-size: 16px;
+	margin-left: 5px;
+}
+.currentRankDelta > i{
+	margin-right: 5px;
+}
+.smallSubmissionInfo{
+	font-size: 14px;
+	width: 22px;
+	height: 22px;
+	border-radius: 11px;
+	position: relative !important;
+	display: inline-block;
+	margin: 1px;
+}
+.smallSubmissionInfo > *{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+.idleColor{
+	width: 20px !important;
+	height: 20px !important;
+	border: 1px solid grey;
+}
+
+
+
+
+
+
+
+
+img[src=""],img:not([src]){opacity:0;}
+.singleUserAvatar{
+	margin-right: 10px;
+	width: 45px;
+	height: 45px;
+	border-radius: 10px;
+}
+.singleContestProgressBarDisplayer{
+	position: relative;
+	border-radius: 3px;
+	width: 100%;
+	height: 18px;
+	margin-bottom: 10px;
+	background: var(--single-progress-bar-background-color);
+}
+.singleContestProgressRatingChangesDisplayer{
+	font-size: 16px;
+	width: 100%;
+	height: 22px;
+	padding-top: 4px;
+}
+.singleContestProgressRatingChangesDisplayer > span{
+	display: block;
+}
+
+::-webkit-scrollbar:hover{
+    background-color: var(--scroll-bar-hover-color);
+}
+::-webkit-scrollbar-thumb{
+    background-color: var(--scroll-bar-thumb-color);
+}
+.primaryColor{
+    background: var(--primary-color);
+    transition: 0.2s;
+    color: white;
+}
+.primaryColor:hover{
+    background: var(--primary-hover-color);
+}
+.dangerColor{
+    background: var(--danger-color);
+    transition: 0.2s;
+    color: white;
+}
+.dangerColor:hover{
+    background: var(--danger-hover-color);
+}
+.warningColor{
+    background: var(--warning-color);
+    transition: 0.2s;
+    color: white;
+}
+.warningColor:hover{
+    background: var(--warning-hover-color);
+}
+.successColor{
+    background: var(--success-color);
+    transition: 0.2s;
+    color: white;
+}
+.successColor:hover{
+    background: var(--success-hover-color);
+}
+.loadingColor{
+    background: var(--loading-color);
+    transition: 0.2s;
+    color: white;
+}
+.loadingColor:hover{
+    background: var(--loading-hover-color);
+}
+.red{
+    color: var(--red-font-color);
+}
+.green{
+    color: var(--green-font-color);
+}
+
+.user-legendary, .user-igramdmaster, .user-grandmaster {
+    color: var(--user-red-color);
+    font-weight: 600;
+}
+.user-legendary:first-letter{
+    color: var(--major-font-color);
+}
+.user-master, .user-imaster {
+    color: var(--user-orange-color);
+    font-weight: 600;
+}
+.user-cmaster {
+    color: var(--user-purple-color);
+    font-weight: 600;
+}
+.user-expert {
+    color: var(--user-blue-color);
+    font-weight: 600;
+}
+.user-specialist {
+    color: var(--user-cyan-color);
+    font-weight: 600;
+}
+.user-pupil {
+    color: var(--user-green-color);
+    font-weight: 600;
+}
+.user-newbie {
+    color: var(--user-grey-color);
+    font-weight: 600;
+}
+.user-unrated {
+    color: var(--major-font-color);
+}
+
+.highcharts-background{
+    background: var(--graphs-background-color) !important;
+}
+::selection { background: var(--selection-background-color); }  

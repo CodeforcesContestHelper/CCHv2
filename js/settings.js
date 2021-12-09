@@ -9,6 +9,58 @@ var styleSelectionList = ["System", "Light", "Dark"];
 var currentLoginHandle = "";
 var contestRatingChangesHook = null;
 var contestEnterInPage = false;
+var ratingRanges = [
+{
+	color: '#BBBBBB',
+	from: -9999,
+	to: 1200
+},
+{
+	color: '#77FF77',
+	from: 1200,
+	to: 1400
+},
+{
+	color: '#77DDBB',
+	from: 1400,
+	to: 1600
+},
+{
+	color: '#AAAAFF',
+	from: 1600,
+	to: 1900
+},
+{
+	color: '#FF88FF',
+	from: 1900,
+	to: 2100
+},
+{
+	color: '#FFCC88',
+	from: 2100,
+	to: 2300
+},
+{
+	color: '#FFBB55',
+	from: 2300,
+	to: 2400
+},
+{
+	color: '#FF7777',
+	from: 2400,
+	to: 2600
+},
+{
+	color: '#FF3333',
+	from: 2600,
+	to: 3000
+},
+{
+	color: '#AA0000',
+	from: 3000,
+	to: 9999
+},
+];
 
 var getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
 
@@ -315,32 +367,32 @@ var settingsFunctions = {
 	},
 	editorFontSize: {
 		initial: function(){
-			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
+			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 32];
 		},
 		previous: function(){
 			--settings.editorFontSize;
 			initStyle(); saveSettings();
-			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
+			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 32];
 		},
 		next: function(){
 			++settings.editorFontSize;
 			initStyle(); saveSettings();
-			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 24];
+			return [settings.editorFontSize, settings.editorFontSize != 8, settings.editorFontSize != 32];
 		},
 	},
 	statementFontSize: {
 		initial: function(){
-			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 24];
+			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 32];
 		},
 		previous: function(){
 			--settings.statementFontSize;
 			initStyle(); saveSettings();
-			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 24];
+			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 32];
 		},
 		next: function(){
 			++settings.statementFontSize;
 			initStyle(); saveSettings();
-			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 24];
+			return [settings.statementFontSize, settings.statementFontSize != 8, settings.statementFontSize != 32];
 		},
 	},
 	styleSelection: {
@@ -647,10 +699,9 @@ function initStyle(){
 		}
 	}
 	if(contestNewWinLoaded)
-		contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
-	if(problemNewWinLoaded){
-		problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/problem/dark.css" : "./css/problem/default.css");
-	}
+		contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/dark.css" : "./css/default.css");
+	if(problemNewWinLoaded)
+		problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/dark.css" : "./css/default.css");
 	if(contestRankInfo == undefined || contestRankInfo[contestRankChosen].length == 0)	return;
 	if(contestCalculatingRank[contestRankChosen])
 		$("#singleRankGraphContainer").html(`<div class="loadingInterface"><div><i class="fas fa-calculator"></i><span class="popTip" info="tipCalculatingRankGraph">${languageOption.tip.tipCalculatingRankGraph}</span></div></div>`);
@@ -704,11 +755,11 @@ function initFonts(){
 	if(settings.fontFamily != "")
 		document.documentElement.style.setProperty("--font-family", settings.fontFamily);
 	else
-		document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+		document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif");
 	if(settings.editorFontFamily != "")
 		document.documentElement.style.setProperty("--editor-font-family", settings.editorFontFamily);
 	else
-		document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
+		document.documentElement.style.setProperty("--editor-font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif");
 	if(settings.statementFontFamily != "")
 		document.documentElement.style.setProperty("--statement-font-family", settings.statementFontFamily);
 	else
@@ -926,26 +977,6 @@ function judgeToClass(x){
 	if(x == "PARTIAL")	return "warningColor";
 	return "dangerColor";
 }
-function getSubmissionIcon(x){
-	if(x == undefined || x == "")	return `<span class="fa fa-hourglass-start"></span>`;
-	if(x == "OK")	return `<span class="fa fa-check"></span>`;
-	if(x == "FAILED")	return `<span class="fa fa-server"></span>`;
-	if(x == "PARTIAL")	return `<span class="fa fa-percent"></span>`;
-	if(x == "COMPILATION_ERROR")	return `<span class="fa fa-code"></span>`;
-	if(x == "RUNTIME_ERROR")	return `<span class="fa fa-bomb"></span>`;
-	if(x == "WRONG_ANSWER")	return `<span class="fa fa-times"></span>`;
-	if(x == "PRESENTATION_ERROR")	return `<span class="fa fa-print"></span>`;
-	if(x == "TIME_LIMIT_EXCEEDED")	return `<span class="fa fa-clock"></span>`;
-	if(x == "MEMORY_LIMIT_EXCEEDED")	return `<span class="fa fa-microchip"></span>`;
-	if(x == "IDLENESS_LIMIT_EXCEEDED")	return `<span class="fa fa-align-left"></span>`;
-	if(x == "SECURITY_VIOLATED")	return `<span class="fa fa-ban style_error"></span>`;
-	if(x == "CRASHED")	return `<span class="fa fa-chain-broken"></span>`;
-	if(x == "INPUT_PREPARATION_CRASHED")	return `<span class="fa fa-sign-in"></span>`;
-	if(x == "CHALLENGED")	return `<span class="fa fa-user-secret"></span>`;
-	if(x == "SKIPPED")	return `<span class="fa fa-forward"></span>`;
-	if(x == "TESTING")	return `<span class="fa fa-pulse fa-spinner"></span>`;
-	if(x == "REJECTED")	return `<span class="fa fa-exclamation-triangle"></span>`;
-}
 function toSmallTestset(x){
 	if(x == "SAMPLES")	return "SAMP";
 	if(x == "PRETESTS")	return "PRET";
@@ -1084,4 +1115,42 @@ function ratingToGrade(x){
 	if(x < 2600)	return "Grandmaster";
 	if(x < 3000)	return "International Grandmaster";
 	return "Legendary Grandmaster";
+}
+function getSubmissionIcon(x){
+	if(x == "OK")	return `<span class="fa fa-check green"></span>`;
+	if(x == "FAILED")	return `<span class="fa fa-server" style="color:rgb(175, 168, 158)"></span>`;
+	if(x == "PARTIAL")	return `<span class="fa fa-percent" style="color:rgb(74, 254, 246)"></span>`;
+	if(x == "COMPILATION_ERROR")	return `<span class="fa fa-code" style="color:#a1a54f"></span>`;
+	if(x == "RUNTIME_ERROR")	return `<span class="fa fa-bomb" style="color:rgb(191, 63, 255);"></span>`;
+	if(x == "WRONG_ANSWER")	return `<span class="fa fa-times red"></span>`;
+	if(x == "PRESENTATION_ERROR")	return `<span class="fa fa-print" style="color:#ca7d3c;"></span>`;
+	if(x == "TIME_LIMIT_EXCEEDED")	return `<span class="fa fa-clock" style="color:#ca7d3c;"></span>`;
+	if(x == "MEMORY_LIMIT_EXCEEDED")	return `<span class="fa fa-microchip" style="color:#ca7d3c;"></span>`;
+	if(x == "IDLENESS_LIMIT_EXCEEDED")	return `<span class="fa fa-align-left" style="color:#ca7d3c;"></span>`;
+	if(x == "SECURITY_VIOLATED")	return `<span class="fa fa-ban red"></span>`;
+	if(x == "CRASHED")	return `<span class="fa fa-chain-broken" style="color:#ca7d3c;"></span>`;
+	if(x == "INPUT_PREPARATION_CRASHED")	return `<span class="fa fa-sign-in" style="color:#ca7d3c;"></span>`;
+	if(x == "CHALLENGED")	return `<span class="fa fa-user-secret" style="color:rgb(175, 168, 158)"></span>`;
+	if(x == "SKIPPED")	return `<span class="fa fa-forward" style="color:rgb(110, 149, 210);"></span>`;
+	if(x == "TESTING")	return `<span class="fa fa-hourglass-2" style="color:rgb(110, 149, 210)"></span>`;
+	if(x == "REJECTED")	return `<span class="fa fa-exclamation-triangle" style="color:#decb29"></span>`;
+}
+function toColoredSubmissionInfo(x){
+	if(x == "OK")	return `<span class="green" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "FAILED")	return `<span style="color:rgb(175, 168, 158)" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "PARTIAL")	return `<span style="color:rgb(74, 254, 246)" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "COMPILATION_ERROR")	return `<span style="color:#a1a54f" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "RUNTIME_ERROR")	return `<span style="color:rgb(191, 63, 255);" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "WRONG_ANSWER")	return `<span class="red" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "PRESENTATION_ERROR")	return `<span style="color:#ca7d3c;" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "TIME_LIMIT_EXCEEDED")	return `<span style="color:#ca7d3c;" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "MEMORY_LIMIT_EXCEEDED")	return `<span style="color:#ca7d3c;" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "IDLENESS_LIMIT_EXCEEDED")	return `<span style="color:#ca7d3c;" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "SECURITY_VIOLATED")	return `<span class="red" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "CRASHED")	return `<span style="color:#ca7d3c;" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "INPUT_PREPARATION_CRASHED")	return `<span style="color:#ca7d3c;" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "CHALLENGED")	return `<span style="color:rgb(175, 168, 158)" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "SKIPPED")	return `<span style="color:rgb(110, 149, 210);" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "TESTING")	return `<span style="color:rgb(110, 149, 210)" title="${x}">${toSmallInfo(x)}</span>`;
+	if(x == "REJECTED")	return `<span style="color:#decb29" title="${x}">${toSmallInfo(x)}</span>`;
 }

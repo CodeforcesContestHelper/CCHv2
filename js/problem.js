@@ -377,8 +377,7 @@ function loadContestProblemset(cid, chk, S, E){
 			url: settings.mainURL + `/${cid >= 100000 ? "gym" : "contest"}/` + cid + '/',
 			success: function(data){
 				q = $(data).find("#sidebar").find(".rtable").find("a").attr("href");
-				console.log(q);
-				if(q != `/contest/${cid}`){
+				if(q != `/${cid >= 100000 ? "gym" : "contest"}/${cid}`){
 					E(); return;
 				}
 				$.ajax({
@@ -569,7 +568,7 @@ function sampleWrapper(x, y){
 }
 function initProblemNewWin(){
 	problemNewWinJQ.find(".ToolListTitle").html("Codeforces Problems");
-	problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/problem/dark.css" : "./css/problem/default.css");
+	problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/dark.css" : "./css/default.css");
 	if(currentLoginHandle == ""){
 		if(problemNewWinJQ.find(".submitWindow").css("opacity") != 0){
 			problemNewWinJQ.find(".submitWindow").css("opacity", "0");
@@ -689,6 +688,8 @@ function initProblemNewWin(){
 function openProblemWin(xx, gid){
 	if(!RunInNwjs)	return;
 	if(problemNewWinOpened){
+		problemNewWin.setAlwaysOnTop(true);
+		problemNewWin.setAlwaysOnTop(false);
 		addProblems(xx, gid);
 		return;
 	}
@@ -742,6 +743,8 @@ function addContest(ci){
 function openContestProblems(xx){
 	if(!RunInNwjs)	return;
 	if(problemNewWinOpened){
+		problemNewWin.setAlwaysOnTop(true);
+		problemNewWin.setAlwaysOnTop(false);
 		addContest(xx);
 		return;
 	}

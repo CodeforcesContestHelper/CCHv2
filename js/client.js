@@ -259,7 +259,7 @@ function generateRankGraph(rankData){
 	var tooltip = {
 		borderRadius: 5,
 		formatter: function () {
-		return `<b><span info="Rank">${languageOption.general.Rank}</span>: ` + Highcharts.numberFormat(this.y, 0) + '</b><br/>' +
+		return `<b><span info="Rank">${languageOption.general.Rank}</span>: ` + this.y + '</b><br/>' +
 			Highcharts.dateFormat('%Y-%m-%d %H:%M', this.x);
 		}
 	};
@@ -399,8 +399,8 @@ function initContestNewWinPage(){
 	if(settings.fontFamily != "")
 		contestNewWin.window.document.documentElement.style.setProperty("--font-family", settings.fontFamily);
 	else
-		contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono','Monospace', sans-serif");
-	contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/contest/dark.css" : "./css/contest/default.css");
+		contestNewWin.window.document.documentElement.style.setProperty("--font-family", "'Consolas','Fira Code','Source Code Pro','Lucida Console','Cascadia Code','Ubuntu Mono',monospace, sans-serif");
+	contestNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/dark.css" : "./css/default.css");
 	function loadAvatar(){
 		$.ajax({
 			url: generateAuthorizeURL(settings.codeforcesApiUrl + "/user.info", {handles: contestUsername}),
