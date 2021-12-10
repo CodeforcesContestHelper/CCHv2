@@ -83,6 +83,21 @@
 							</div>
 							<div>
 								<span class="submissionCloser"><i class="fas fa-angle-left"></i> <span info='back'></span></span>
+								<span class="submissionDataLister" style="float: right">
+									<i class='fas fa-database'></i> <span info='showData'></span>
+								</span>
+							</div>
+						</div>
+						<div style="display: flex; flex-direction: column; height: calc(100% - 10px)">
+							<div style="flex: 1; display: flex; flex-direction: row; overflow: hidden;">
+								<div style="width: 200px; overflow-y: auto; margin-right: 10px; background: var(--pop-out-block-background-color); border-radius: 5px" class="submissionDataList"></div>
+								<div style="flex: 1; background: var(--pop-out-block-background-color); border-radius: 5px; overflow-y: auto;" class="submissionDataDetail"></div>
+							</div>
+							<div style="margin-top: 10px">
+								<span class="submissionCloser"><i class="fas fa-angle-left"></i> <span info='back'></span></span>
+								<span class="submissionCodeLister" style="float: right">
+									<i class='fas fa-code'></i> <span info='showCode'></span>
+								</span>
 							</div>
 						</div>
 					</div>
@@ -485,6 +500,17 @@
 					<div class="contentWrapper contestContent">
 						<div class="contentRowInfo">
 							<div class="contentPage">
+								<div class="loadingInterface contestInsertTimeWindow" style="display: none; opacity: 0"><div style="height: 90px; width: 450px; padding: 10px; border-radius: 5px; display: flex; flex-direction: column; overflow: hidden" class="contestInsertTimeInterface">
+									<div class="contestInsertTimeWindow" style="height: 30px; width: 100%; font-size: 16px;display: flex; flex-direction: row; overflow: hidden; position: relative;">
+										<div style="overflow: hidden; flex: 1;">
+											<span info="contestInsertTime" style="user-select: none"></span>
+										</div><div style="position: absolute; width: 24px; top: 0px; right: 0px;"><i class="fas fa-times red closeContestInsertTime" style="cursor: pointer"></i></div>
+									</div>
+									<div class="inputButtonSplitter contestInsertTimeInputArea">
+										<input info="contestTimeInput"></input>
+										<button class="primaryColor"><i class="fas fa-paper-plane"></i></button>
+									</div>
+								</div></div>
 								<div class="loadingInterface contestLoadingInterface" style="display: none; opacity: 0; z-index: 999">
 									<div>
 										<i class='fas fa-clock'></i>

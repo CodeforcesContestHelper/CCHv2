@@ -806,7 +806,7 @@ img[src=""],img:not([src]){opacity:0;}
 	width: calc(100% - 10px);
 	height: calc(100% - 10px);
 }
-.submissionDisplayer > div:first-child{
+.submissionDisplayer > div{
 	padding: 5px 10px;
 	height: calc(100% - 10px);
 	width: calc(100% - 20px);
@@ -895,7 +895,7 @@ pre code{
 pre{
 	font-family: inherit !important;
 }
-.submissionCloser{
+.submissionCloser, .submissionDataLister, .submissionCodeLister{
 	cursor: pointer;
 }
 
@@ -1754,7 +1754,16 @@ pre{
 
 
 /* CSS */
-
+.submissionDataDetail{
+	user-select: text;
+}
+.submissionDataListItem{
+	cursor: pointer;
+	transition: 0.3s;
+}
+.submissionDataListItem:hover, .submissionDataListItem.selected{
+	background: var(--pop-out-block-background-color-1);
+}
 .searchPageTop, .searchPageTip{
     background: var(--contest-info-bar-background-color);
 }
@@ -1812,7 +1821,7 @@ pre{
 .probpageSelectIf.selected{
     background: var(--problist-sort-button-selected-background-color);
 }
-.infoChangeUsernameInterface{
+.infoChangeUsernameInterface, .contestInsertTimeInterface{
     background: var(--pop-out-block-background-color);
 }
 .inputButtonSplitter > button{

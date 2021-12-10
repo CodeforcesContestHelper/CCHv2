@@ -16,8 +16,8 @@
     --single-progress-bar-color: #777;
     --single-memory-used-border-bottom-color: #777;
     --single-switch-buttons-background-color: #424254;
-    --single-switch-buttons-hover-background-color: #424254;
-    --single-switch-buttons-selected-background-color: #424254;
+    --single-switch-buttons-hover-background-color: #48485a;
+    --single-switch-buttons-selected-background-color: #55556a;
     --single-rank-delta-background-color: #455055;
     --single-progress-bar-poptip-background-color: #111;
     --single-grid-mode-background-color: #434348;
@@ -69,6 +69,7 @@
     --settings-select-background-color: rgb(36, 41, 46);
     /* POPOUTS */
     --pop-out-block-background-color: rgb(35, 40, 45);
+    --pop-out-block-background-color-1: rgb(45, 50, 55);
     --pop-out-block-closer-background-color: #555;
     --pop-out-block-closer-hover-background-color: #666;
     /* SCROLL */

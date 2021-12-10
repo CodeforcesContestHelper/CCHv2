@@ -749,9 +749,9 @@ function profileRefreshSubmissionListPages(){
 		var tm = new Date(t.creationTimeSeconds * 1000);
 		p.append(`<div style="font-size: 14px; text-align: center">${tm.pattern("yyyy-MM-dd")}<br/>${tm.pattern("hh:mm:ss")}</div>`);
 		p.append(`<div style="flex: 1; text-align: center"><span style="cursor: pointer" onclick='openProblemWin(["${t.problem.contestId}${t.problem.index}"])'>${t.problem.contestId}${t.problem.index} - ${t.problem.name}</span></div>`)
-		p.append(`<div style="cursor: pointer" onclick='openSubmission(${t.contestId}, ${t.id})'><div style='display: inline-block; width: 20px; text-align: center'>${getSubmissionIcon(t.verdict)}</div><div style='width: 50px; text-align: center; display: inline-block'> ${toColoredSubmissionInfo(t.verdict)}</div></div>`);
+		p.append(`<div><span style="cursor: pointer" onclick='openSubmission(${t.contestId}, ${t.id})'><div style='display: inline-block; width: 20px; text-align: center'>${getSubmissionIcon(t.verdict)}</div><div style='width: 50px; text-align: center; display: inline-block'> ${toColoredSubmissionInfo(t.verdict)}</div></span></div>`);
 		p.append(`<div style="width: 55px">${toSmallTestset(t.testset)}${t.verdict == "OK" ? "" : `<span style='font-size: 12px'>#${t.passedTestCount + 1}</span>`}</div>`);
-		p.append(`<div style="font-size: 14px; width: 90px; text-align: center">${t.timeConsumedMillis}ms<br/>${Math.floor(t.memoryConsumedBytes / 1000)}KB</div>`)
+		p.append(`<div style="font-size: 14px; width: 90px; text-align: center">${t.timeConsumedMillis}ms<br/>${Math.floor(t.memoryConsumedBytes / 1024)}KB</div>`)
 		$(".profileSubmissionsList").append(p);
 	}
 }
