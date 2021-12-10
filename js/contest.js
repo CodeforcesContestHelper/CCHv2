@@ -88,6 +88,66 @@ function contestListSort(useTime, incIf){
 	contestListSortResult.sort(compareFunc);
 }
 
+$(".contestInsertTimeInputArea > input").bind('keydown', function(event){
+	if(event.keyCode == "13")
+		$(".contestInsertTimeInputArea > button").click();
+})
+function contestStartVirtualIf(x){
+	$(".contestInsertTimeWindow").css("display", "grid");
+	setTimeout(function(){
+		$(".contestInsertTimeWindow").css("opacity", 1);
+	}, 50);
+	$(".contestInsertTimeInputArea > input").val("");
+	$(".contestInsertTimeInputArea > button").unbind("click").click(function(){
+		if(!$(this).find("i").hasClass("fa-paper-plane"))
+			return;
+		var q1 = $(".contestInsertTimeInputArea > input").val();
+		q1 = queryTime.exec(q1);
+		if(q1 == null){
+			$(".contestInsertTimeInputArea > button").html(`<i class='fas fa-clock'></i>`);
+			$(".contestInsertTimeInputArea > button").removeClass("primaryColor").addClass("dangerColor").attr("disabled", true);
+			setTimeout(function(){
+				$(".contestInsertTimeInputArea > button").html(`<i class="fas fa-paper-plane"></i>`);
+				$(".contestInsertTimeInputArea > button").addClass("primaryColor").removeClass("dangerColor").attr("disabled", false);
+			}, 1000);
+			return;
+		}
+		var q = [parseInt(q1[1], 10), parseInt(q1[2], 10), parseInt(q1[3], 10), parseInt(q1[4], 10), parseInt(q1[5], 10)];
+		var d = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+		if(isLoopYear(q[0]))	++d[2];
+		var flg = true;
+		if(q[1] < 1 || q[1] > 12 || d[q[1]] < q[2] || q[2] < 1)
+			flg = false;
+		if(q[3] == 24 && q[4] != 0)	flg = false;
+		if(q[3] != 24 && (q[3] < 0 || q[4] < 0 || q[4] >= 60))	flg = false;
+		if(!flg){
+			$(".contestInsertTimeInputArea > button").html(`<i class='fas fa-clock'></i>`);
+			$(".contestInsertTimeInputArea > button").removeClass("primaryColor").addClass("dangerColor").attr("disabled", true);
+			setTimeout(function(){
+				$(".contestInsertTimeInputArea > button").html(`<i class="fas fa-paper-plane"></i>`);
+				$(".contestInsertTimeInputArea > button").addClass("primaryColor").removeClass("dangerColor").attr("disabled", false);
+			}, 1000);
+			return;
+		}
+		$(".contestInsertTimeInputArea > button").html(`<i class='fas fa-sync-alt fa-spin'></i>`);
+		$(".contestInsertTimeInputArea > button").attr("disabled", true);
+		registerVirtualRound(x, new Date(q[0], q[1]-1, q[2], q[3], q[4]), function(){
+			$(".closeContestInsertTime").click();
+			$("[for=singleContent]").click();
+			loadSingleInformation(true, currentLoginHandle, x, new Date(q[0], q[1]-1, q[2], q[3], q[4]), (new Date(q[0], q[1]-1, q[2], q[3], q[4])).getTime() <= (new Date()).getTime());
+			$(".contestInsertTimeInputArea > button").html(`<i class="fas fa-paper-plane"></i>`);
+			$(".contestInsertTimeInputArea > button").attr("disabled", false);
+		}, function(x){
+			$(".contestInsertTimeInputArea > button").html(`<i class='fas ${x}'></i>`);
+			$(".contestInsertTimeInputArea > button").removeClass("primaryColor").addClass("dangerColor").attr("disabled", true);
+			setTimeout(function(){
+				$(".contestInsertTimeInputArea > button").html(`<i class="fas fa-paper-plane"></i>`);
+				$(".contestInsertTimeInputArea > button").addClass("primaryColor").removeClass("dangerColor").attr("disabled", false);
+			}, 1000);
+		});
+	})
+}
+
 function displayContestListPage(){
 	$(".contestListMatchedCount").html(String(contestListSortResult.length) + ' / ' + String(contestAllList.length));
 	if(contestListSortResult.length == 0){
@@ -130,7 +190,7 @@ function displayContestListPage(){
 		rep[5] = `<span class="fas fa-clock"></span> ${(new Date(x[3] * 1000)).pattern("yyyy-MM-dd hh:mm")} >>> ${(new Date((x[3] + x[4]) * 1000)).pattern("yyyy-MM-dd hh:mm")}`;
 		var rtList = [`<span><span class="fas fa-clock"></span> ${localize('contestListStart')}</span>`
 					, `<span class="red"><span class="fas fa-running"></span> ${localize('contestListRun')}</span>`
-					, `<span class="green"><span class="fas fa-check"></span> ${localize('contestListEnd')}</span>`];
+					, `<span class="green"><span class="fas fa-check"></span> ${localize('contestListEnd')}</span> | <span style="cursor: pointer; color: grey" onclick='contestStartVirtualIf(${x[1]})'><span class="fas fa-user-secret"></span> ${localize('contestListVirtual')}</span>`];
 		if((new Date()).getTime() <= x[3] * 1000)
 			rep[6] = 0, rep[5] += ` | <span class='dangerColor' style="padding: 0px 5px">${localize('contestPageBeforeStart')}<span class="contestPageCountdown" time="${x[3] * 1000}" style="padding-left: 10px"></span></span>`;
 		else if((new Date()).getTime() <= (x[3] + x[4]) * 1000)
@@ -251,6 +311,12 @@ $(".contestSearch .searchPagesButton").eq(3).click(function(){
 	var l = 1, r = Math.max(1, Math.ceil(contestListSortResult.length / contestPerPage));
 	contestListCurrentPage = r;
 	displayContestListPage();
+})
+$(".closeContestInsertTime").click(function(){
+	$(".contestInsertTimeWindow").css("opacity", 0);
+	setTimeout(function(){
+		$(".contestInsertTimeWindow").css("display", "none");
+	}, 500)
 })
 
 function reloadContestPageCountdown(){

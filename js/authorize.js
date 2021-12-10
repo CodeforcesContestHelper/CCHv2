@@ -347,6 +347,64 @@ function registerContest(ci, S, E){
 	});
 }
 
+function registerVirtualRound(ci, tm, S, E){
+	var months = [
+	    "January", "February", "March", "April", "May", "June", 
+	    "July", "August", "September", "October", "November", "December"
+    ];
+    var offsetTime = new Date(tm.getTime() + tm.getTimezoneOffset() * 60 * 1000);
+	$.ajax({
+		url: settings.mainURL,
+		success: function(data){
+			var csrf = queryCsrf.exec(data);
+			if(csrf == null){
+				E("fa-unlink");
+				return;
+			}
+			csrf = csrf[1];
+			$.ajax({
+				url: settings.mainURL + '/contestRegistration/' + ci + '/virtual/true',
+				type: "POST",
+				data: {
+					csrf_token: csrf,
+					action: "formSubmitted",
+					ftaa: getFtaa(),
+					bfaa: "f1b3f18c715565b589b7823cda7448ce",
+					_tta: 292,
+					virtual: "true",
+					backUrl: "",
+					takePartAs: "personal",
+					initialDatetime: `${months[offsetTime.getMonth()].substring(0, 3)}/${offsetTime.getDate()}/${offsetTime.getFullYear()} ${offsetTime.pattern("hh:mm")}`,
+					clientTimezoneOffset: (- tm.getTimezoneOffset()),
+					startDay: `${months[tm.getMonth()].substring(0, 3)}/${tm.getDate()}/${tm.getFullYear()}`,
+					startTime: tm.pattern("hh:mm"),
+					teamId: -1,
+					requiredConfirmation: "true"
+				},
+				success: function(d){
+					var q = $(d).find(".lang-chooser > div").eq(1);
+					if(q.children("a").eq(1).html() == "Register"){
+						currentLoginHandle = "";
+						getSolvedProblemsByContest = {problemCountsByContestId: {}, solvedProblemCountsByContestId: {}};
+						E("fa-unlink");
+						return;
+					}
+					if(d.indexOf("You have been successfully registered") == -1){
+						E("fa-exclamation-triangle"); return;
+					}
+					S();
+				},
+				error: function(){
+					E("fa-unlink");
+				}
+			})
+		},
+		error: function(){
+			E("fa-unlink");
+		}
+	});
+}
+
 function generateAuthorizeURL(url, data){
 	function parseObject(x){
 		var ret = [];

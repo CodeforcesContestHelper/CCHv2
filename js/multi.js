@@ -355,6 +355,7 @@ function multiRenderList(data){
 			setTimeout(calcStandingList, 2000);
 		})
 	}
+	delete(data);
 	calcStandingList();
 }
 
