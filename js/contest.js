@@ -40,7 +40,7 @@ function contestListFilter(args){
 	args = args.split(" ");
 	var contentFilter = [], tagFilter = [];
 	for(var x in args){
-		x = args[x];
+		x = args[x].toLowerCase();
 		if(x == "")	continue;
 		var isContentMatch = true;
 		for(var i=0; i<contestListFilterRegex.length; i++)
