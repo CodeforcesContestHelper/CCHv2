@@ -2455,7 +2455,6 @@ function reinitSingleButton(){
 	else{
 		$(".singleHeadBack > span").click(function(){
 			if(settings.headBackOption == 1){
-				console.log("!");
 				if(singleHeadBackClkd == 1){
 					singleHeadBackClkd = 0;
 					$(".singleHeadBack > span").css("font-weight", "normal");

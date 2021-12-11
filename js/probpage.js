@@ -89,7 +89,7 @@ function probpageProblemFilter(d, mn, mx, ft){
 	var namT = [], tagT = [];
 	var rnd = false;
 	for(var i=0; i<ft.length; i++){
-		var q = $.trim(ft[i]);
+		var q = $.trim(ft[i]).toLowerCase();
 		if(q == "")
 			continue;
 		if(q == ":random"){

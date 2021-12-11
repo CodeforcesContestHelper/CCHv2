@@ -220,7 +220,7 @@ function profileProblemFilter(d, mn, mx, ft){
 	var namT = [], tagT = [];
 	var rnd = false;
 	for(var i=0; i<ft.length; i++){
-		var q = $.trim(ft[i]);
+		var q = $.trim(ft[i]).toLowerCase();
 		if(q == "")
 			continue;
 		if(q == ":random"){
@@ -708,7 +708,7 @@ function problemSubmissionFilter(q, st, fi){
 	st = st.split(" ");
 	var norFilter = [], tagFilter = [];
 	for(var i=0; i<st.length; i++){
-		var s = $.trim(st[i]);
+		var s = $.trim(st[i]).toLowerCase();
 		if(s == "")
 			continue;
 		var flg = false;
@@ -745,13 +745,14 @@ function profileRefreshSubmissionListPages(){
 	$(".profileSubmissionsList").html("");
 	for(var i=l; i<=r; i++){
 		var t = profileFilteredSubmission[i];
-		var p = $(`<div class="profileSubmissionBlock"></div>`);
+		var p = `<div class="profileSubmissionBlock">`;
 		var tm = new Date(t.creationTimeSeconds * 1000);
-		p.append(`<div style="font-size: 14px; text-align: center">${tm.pattern("yyyy-MM-dd")}<br/>${tm.pattern("hh:mm:ss")}</div>`);
-		p.append(`<div style="flex: 1; text-align: center"><span style="cursor: pointer" onclick='openProblemWin(["${t.problem.contestId}${t.problem.index}"])'>${t.problem.contestId}${t.problem.index} - ${t.problem.name}</span></div>`)
-		p.append(`<div><span style="cursor: pointer" onclick='openSubmission(${t.contestId}, ${t.id})'><div style='display: inline-block; width: 20px; text-align: center'>${getSubmissionIcon(t.verdict)}</div><div style='width: 50px; text-align: center; display: inline-block'> ${toColoredSubmissionInfo(t.verdict)}</div></span></div>`);
-		p.append(`<div style="width: 55px">${toSmallTestset(t.testset)}${t.verdict == "OK" ? "" : `<span style='font-size: 12px'>#${t.passedTestCount + 1}</span>`}</div>`);
-		p.append(`<div style="font-size: 14px; width: 90px; text-align: center">${t.timeConsumedMillis}ms<br/>${Math.floor(t.memoryConsumedBytes / 1024)}KB</div>`)
+		p += (`<div style="font-size: 14px; text-align: center">${tm.pattern("yyyy-MM-dd")}<br/>${tm.pattern("hh:mm:ss")}</div>`);
+		p += (`<div style="flex: 1; text-align: center"><span style="cursor: pointer" onclick='openProblemWin(["${t.problem.contestId}${t.problem.index}"])'>${t.problem.contestId}${t.problem.index} - ${t.problem.name}</span></div>`)
+		p += (`<div><span style="cursor: pointer" onclick='openSubmission(${t.contestId}, ${t.id})'><div style='display: inline-block; width: 20px; text-align: center'>${getSubmissionIcon(t.verdict)}</div><div style='width: 50px; text-align: center; display: inline-block'> ${toColoredSubmissionInfo(t.verdict)}</div></span></div>`);
+		p += (`<div style="min-width: 70px">${toSmallTestset(t.testset)}${t.verdict == "OK" ? "" : `<span style='font-size: 12px'>#${t.passedTestCount + 1}</span>`}</div>`);
+		p +=(`<div style="font-size: 14px; min-width: 100px; text-align: center">${t.timeConsumedMillis}ms<br/>${Math.floor(t.memoryConsumedBytes / 1024)}KB</div>`)
+		p += "</div>";
 		$(".profileSubmissionsList").append(p);
 	}
 }
@@ -778,9 +779,7 @@ function profileRefreshSubmissionListEnter(){
 
 function profileDrawSubmissionFrame(q){
 	var l = q[1], r = q[2], d = q[3];
-	console.log(l, r, d);
 	var tm = (new Date(l * miliSecondsPerDay + ((new Date().getTimezoneOffset() * 60 * 1000))));
-	console.log(tm);
 	var dt = tm.getDay();
 	var DT = dt;
 	var col = 0;
@@ -821,7 +820,6 @@ function profileDrawSubmissionFrame(q){
 			var t = months[x];
 			if(t[2] - t[1] <= 1)
 				continue;
-			console.log(x, t);
 			var L = t[1] * 16 + 15 + 20 + 2;
 			var R = (t[2]+1) * 16 + 15 + 20 + 2;
 			$(".profileSubmissionGraph").append(`<span style="transform: translate(-50%, -100%); position: absolute; top: ${10 + 18}px; left: ${(L + R) / 2}px; color: grey">${localize("month"+t[0])}</span>`)
@@ -977,9 +975,7 @@ function profileReloadSubmissionsPageInfo(d, day=0){
 	for(var i=maxD; i>=minD; i--) if(appYearIf[i] != undefined)
 		profileSubmissionTimeList.push([String(i), getDateFirst(i), getDateLast(i), getStatistics(getDateFirst(i), getDateLast(i), appYearIf[i])]),
 		$(".profileSubmissionGraphSelection").append(`<span class='profileSubmissionGraphSelectionBlock' sid="${profileSubmissionTimeList.length - 1}">${i}<span style='font-size: 9px'>:${appYearIf[i].length}</span></span>`);
-	delete(appYearIf);
-	console.log(JSON.parse(JSON.stringify(appYearIf)));
-	console.log(profileSubmissionTimeList);
+	delete(appYearIf); appYearIf = {};
 	$(".profileSubmissionGraphSelectionBlock").unbind("click").click(function(){
 		var t = $(this).attr("sid");
 		$(".profileSubmissionGraphSelectionBlock.selected").removeClass("selected");
