@@ -6,11 +6,11 @@
 		<script src="./js/jquery.min.js"></script>
 		<meta name="referrer" content="never">
 		<script src="./js/highlight.min.js"></script>
-		<script src="./js/copy-tex.js"></script>
+		<!-- <script src="./js/copy-tex.js"></script> -->
 		<script src="./js/highlightjs-line-numbers.js"></script>
 		<link rel="stylesheet" href="./css/problem.css">
 		<link rel="stylesheet" href="./css/all.min.css">
-		<link rel="stylesheet" href="./KaTeX/katex.min.css">
+		<!-- <link rel="stylesheet" href="./KaTeX/katex.min.css"> -->
 		<script>
 			var RunInNwjs = true;
 			try{
@@ -29,6 +29,22 @@
 				}
 			}
 		</script>
+		<script>
+			MathJax = {
+			  options: {
+			  	enableMenu: false,
+			  },
+			  tex: {
+			    inlineMath: [              // start/end delimiter pairs for in-line math
+			      ['$$$', '$$$']
+			    ],
+			    displayMath: [             // start/end delimiter pairs for display math
+			      ['$$$$$$', '$$$$$$'],
+			    ],
+			  }
+			};
+		</script>
+		<script src="./mathjax3.2/tex-mml-chtml.js"></script>
 	</head>
 	<body>
 		<link class="ThemeTypeIf" rel="stylesheet" href="./css/dark.css">
@@ -216,6 +232,11 @@
 			}
 			function announcementDisplay(x){
 				alert(x);
+			}
+			function reloadMath() {
+				MathJax.startup.document.state(0);
+				MathJax.texReset();
+				MathJax.typeset();
 			}
 		</script>
 	</footer>

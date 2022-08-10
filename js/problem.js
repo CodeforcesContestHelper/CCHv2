@@ -91,10 +91,9 @@ function initProblemPageInfo(page, data, id){
 			var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
 			for(var j=0; j<18; j++)
 				rnd += str[Math.floor(Math.random()*str.length)];
-			var pqp = $(`<div class="blockManager"><div class="blockManagerTitle">${l}<span class='copyInfo'><span info='copyInfo'>${languageOption.general.copyInfo}</span></span></div><div class="blockManagerContent" id="${rnd}">${qq.eq(i).html().replace(/\$\$\$/g, "$")}</div></div>`);
-			pqp.attr("statement-info", $('<div>' + qq.eq(i).html().replace(/\$\$\$/g, "$") + "</div>").text());
+			var pqp = $(`<div class="blockManager"><div class="blockManagerTitle">${l}<span class='copyInfo'><span info='copyInfo'>${languageOption.general.copyInfo}</span></span></div><div class="blockManagerContent" id="${rnd}">${qq.eq(i).html()}</div></div>`);
+			pqp.attr("statement-info", $('<div>' + qq.eq(i).html().replace(/\$\$\$/g, '$').replace(/<\/p>/g, "</p>\n\n") + "</div>").text());
 			page.append(pqp);
-			renderMathInElement(problemNewWin.window.document.getElementById(rnd), katex_config);
 			problemNewWinJQ.find("#"+rnd).find("a").click(function(){
 				event.stopPropagation();
 				openURL($(this).attr("href"));
@@ -108,8 +107,8 @@ function initProblemPageInfo(page, data, id){
 		}
 		else if(qq.eq(i).attr("class") == "sample-tests"){
 			var inp = [], oup = [];
-			qq.eq(i).find(".input pre").each(function(){inp.push($(this).html().replace(/<br>/g, '\n'));});
-			qq.eq(i).find(".output pre").each(function(){oup.push($(this).html().replace(/<br>/g, '\n'));});
+			qq.eq(i).find(".input pre").each(function(){inp.push($(this).html().replace(/<br>/g, '\n').replace(/<\/div>/g, '</div>\n'))});
+			qq.eq(i).find(".output pre").each(function(){oup.push($(this).html().replace(/<br>/g, '\n').replace(/<\/div>/g, '</div>\n'))});
 			for(var O=0; O<inp.length; O++){
 				inp[O] = $(`<span>${inp[O]}</span>`).text();
 				oup[O] = $(`<span>${oup[O]}</span>`).text();
@@ -147,6 +146,7 @@ function initProblemPageInfo(page, data, id){
 		}
 		problemNewWinJQ.append(`<script>loadCopyOption()</script>`)
 	}
+	problemNewWinJQ.append(`<script>reloadMath()</script>`)
 }
 function loadProblem(x, info){
 	if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;

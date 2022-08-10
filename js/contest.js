@@ -218,6 +218,14 @@ function loadContestList(){
 		type: "GET",
 		timeout : settings.largeTimeLimit,
 		success: function(data){
+			if (data.result === undefined) {
+				$(".contestListLoadIf > span").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
+				$(".contestListLoadIf > span").css("cursor", "pointer");
+				$(".contestListLoadIf > span").unbind("click").click(function(){
+					loadContestList();
+				})
+				return;
+			}
 			var _contestAllList = [];
 			data = data.result;
 			$(".contestListLoadIf > span").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loadingAcCount"));

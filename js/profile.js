@@ -8,8 +8,8 @@ var profileProblemToSubmissions = {};
 var profileFilteredInfo, profilePageID;
 var profileFilteredSubmission, profileSubmissonPageID;
 // -- move to settings
-const profilePageCount = 100;
-const profilePageSubmissionCount = 100;
+const profilePageCount = 50;
+const profilePageSubmissionCount = 50;
 const miliSecondsPerDay = 86400 * 1000;
 const secondsPerDay = 86400;
 const profileDelayMiliSeconds = 200;
