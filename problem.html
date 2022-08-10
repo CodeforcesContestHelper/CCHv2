@@ -41,6 +41,9 @@
 			    displayMath: [             // start/end delimiter pairs for display math
 			      ['$$$$$$', '$$$$$$'],
 			    ],
+			  },
+			  startup: {
+			    elements: ".blockManagerContent",
 			  }
 			};
 		</script>
@@ -234,8 +237,8 @@
 				alert(x);
 			}
 			function reloadMath() {
-				MathJax.startup.document.state(0);
-				MathJax.texReset();
+				// MathJax.startup.document.state(0);
+				// MathJax.texReset();
 				MathJax.typeset();
 			}
 		</script>
