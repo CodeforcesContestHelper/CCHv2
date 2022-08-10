@@ -26,7 +26,7 @@ jobs:
     
     - name: Build
       run: |
-        npm install -g nw-builder
+        npm install -g nw-builder@3.6.0
         nwbuild -p win32,win64,osx64,linux32,linux64 .
     
     - name: Pack
