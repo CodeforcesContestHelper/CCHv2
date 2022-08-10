@@ -23,7 +23,7 @@ function loadMultiList(cid, users, room, showUnofficial, from, count, S, E){
 	})
 }
 
-var userColorCache = {};
+var userColorCache = {}, userAvatarCache = {};
 var userColorCacheTime = 10 * 60 * 1000;
 
 function loadUserColors(users, S, E){
@@ -52,6 +52,7 @@ function loadUserColors(users, S, E){
 					var q = json.result[i];
 					ret[q.handle] = ratingToClass(q.rating);
 					userColorCache[q.handle] = [ratingToClass(q.rating), (new Date()).getTime()];
+					userAvatarCache[q.handle] = [q.titlePhoto, q.rating];
 				}
 				S(ret);
 			}
@@ -132,7 +133,6 @@ function getMultiHack(x, y){
 	return `<span class='green'>+${x}</span>:<span class='red'>-${y}</span>`;
 }
 
-var userInfoPopAjax = null;
 function showUserInfoBlock(un, ci, st, tm){
 	$(".userInfoAvatar").attr("src", "");
 	$(".userInfoContainer").css("display", "grid");
@@ -140,45 +140,29 @@ function showUserInfoBlock(un, ci, st, tm){
 		$(".userInfoContainer").css("opacity", "1");
 	}, 100);
 	$(".userInfoMain").css("display", "none");
-	$(".userInfoLoading").css("display", "grid").html(`<i class="fas fa-3x fa-sync-alt fa-spin"></i>`);
-	userInfoPopAjax = $.ajax({
-		url: generateAuthorizeURL(settings.codeforcesApiUrl + '/user.info', {handles: un}),
-		success: function(d){
-			userInfoPopAjax = null;
-			if(d.status != "OK")
-				$(".userInfoLoading").css("display", "grid").html(`<i class="fas fa-3x fa-unlink red"></i>`);
-			else{
-				d = d.result[0];
-				$(".userInfoMain").css("display", "block");
-				$(".userInfoLoading").css("display", "none");
-				$(".userInfoAvatar").attr("src", d.titlePhoto);
-				$(".userInfoName").html(`<div style="display: inline-block" class='${ratingToClass(d.rating)}'>${d.handle}</div> (rating: ${d.rating == undefined ? "?" : d.rating})`);
-				$(".userInfoProfile").unbind('click').click(function(){
-					$(".userInfoCloseButton").click();
-					infoLoadUsername(un);
-				})
-				if(st != "PRACTICE")
-					$(".userInfoObserve").removeClass("disabled"),
-					$(".userInfoObserve").unbind('click').click(function(){
-						$(".userInfoCloseButton").click();
-						$("[for=singleContent]").click();
-						loadSingleInformation(st == "VIRTUAL", un, ci, (new Date(tm * 1000)), true);
-					})
-				else{
-					$(".userInfoObserve").unbind('click');
-					$(".userInfoObserve").addClass("disabled");
-				}
-			}
-		},
-		error: function(){
-			userInfoPopAjax = null;
-			$(".userInfoLoading").css("display", "grid").html(`<i class="fas fa-3x fa-unlink red"></i>`);
+	(function(d){
+		$(".userInfoMain").css("display", "block");
+		$(".userInfoLoading").css("display", "none");
+		$(".userInfoAvatar").attr("src", d.titlePhoto);
+		$(".userInfoName").html(`<div style="display: inline-block" class='${ratingToClass(d.rating)}'>${d.handle}</div> (rating: ${d.rating == undefined ? "?" : d.rating})`);
+		$(".userInfoProfile").unbind('click').click(function(){
+			$(".userInfoCloseButton").click();
+			infoLoadUsername(un);
+		})
+		if(st != "PRACTICE")
+			$(".userInfoObserve").removeClass("disabled"),
+			$(".userInfoObserve").unbind('click').click(function(){
+				$(".userInfoCloseButton").click();
+				$("[for=singleContent]").click();
+				loadSingleInformation(st == "VIRTUAL", un, ci, (new Date(tm * 1000)), true);
+			})
+		else{
+			$(".userInfoObserve").unbind('click');
+			$(".userInfoObserve").addClass("disabled");
 		}
-	})
+	})({titlePhoto: userAvatarCache[un][0], handle: un, rating: Number(userAvatarCache[un][1])});
 }
 $(".userInfoCloseButton").click(function(){
-	if(userInfoPopAjax != null)
-		userInfoPopAjax.abort();
 	$(".userInfoContainer").css("opacity", "0");
 	setTimeout(function(){
 		$(".userInfoContainer").css("display", "none");

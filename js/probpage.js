@@ -5,7 +5,7 @@ var probpageIdToTag = {}, probpageTagToId = {};
 var probpageProblemToSubmissions = {};
 var probpagePassedPersons = {};
 var probpageFilteredInfo = undefined, probpagePageID;
-const probpagePageCount = 100;
+const probpagePageCount = 50;
 // getProblemStatistics(data) -> [tag info, rating info]
 var probpageCalculatedProblemType = {};
 function probpageReadySubmissions(d){

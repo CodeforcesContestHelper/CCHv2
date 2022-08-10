@@ -1134,6 +1134,7 @@ function getSubmissionIcon(x){
 	if(x == "SKIPPED")	return `<span class="fa fa-forward" style="color:rgb(110, 149, 210);"></span>`;
 	if(x == "TESTING")	return `<span class="fa fa-hourglass-2" style="color:rgb(110, 149, 210)"></span>`;
 	if(x == "REJECTED")	return `<span class="fa fa-exclamation-triangle" style="color:#decb29"></span>`;
+	return `<span class="fa fa-hourglass-2" style="color:rgb(110, 149, 210)"></span>`;
 }
 function toColoredSubmissionInfo(x){
 	if(x == "OK")	return `<span class="green" title="${x}">${toSmallInfo(x)}</span>`;
@@ -1153,4 +1154,5 @@ function toColoredSubmissionInfo(x){
 	if(x == "SKIPPED")	return `<span style="color:rgb(110, 149, 210);" title="${x}">${toSmallInfo(x)}</span>`;
 	if(x == "TESTING")	return `<span style="color:rgb(110, 149, 210)" title="${x}">${toSmallInfo(x)}</span>`;
 	if(x == "REJECTED")	return `<span style="color:#decb29" title="${x}">${toSmallInfo(x)}</span>`;
+	return `<span style="color:rgb(110, 149, 210)" title="IN_QUEUE">${toSmallInfo(x)}</span>`;
 }
