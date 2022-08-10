@@ -107,8 +107,8 @@ function initProblemPageInfo(page, data, id){
 		}
 		else if(qq.eq(i).attr("class") == "sample-tests"){
 			var inp = [], oup = [];
-			qq.eq(i).find(".input pre").each(function(){inp.push($(this).html().replace(/<br>/g, '\n').replace(/<\/div>/g, '</div>\n'))});
-			qq.eq(i).find(".output pre").each(function(){oup.push($(this).html().replace(/<br>/g, '\n').replace(/<\/div>/g, '</div>\n'))});
+			qq.eq(i).find(".input pre").each(function(){inp.push($.trim($(this).html().replace(/<br>/g, '\n').replace(/<\/div>/g, '</div>\n')))});
+			qq.eq(i).find(".output pre").each(function(){oup.push($.trim($(this).html().replace(/<br>/g, '\n').replace(/<\/div>/g, '</div>\n')))});
 			for(var O=0; O<inp.length; O++){
 				inp[O] = $(`<span>${inp[O]}</span>`).text();
 				oup[O] = $(`<span>${oup[O]}</span>`).text();
