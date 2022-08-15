@@ -146,7 +146,7 @@ function initProblemPageInfo(page, data, id){
 		}
 		problemNewWinJQ.append(`<script>loadCopyOption()</script>`)
 	}
-	problemNewWinJQ.append(`<script>reloadMath()</script>`)
+	problemNewWinJQ.append(`<script>reloadMath("problem-${problemCurrentPageList[id][0]}")</script>`)
 }
 function loadProblem(x, info){
 	if(problemCurrentPageList.find(function(q){return q[0] == x}) == undefined)	return;
@@ -277,7 +277,7 @@ function addProblems(x, gid, info){
 			if(problemCurrentPageList.find(function(q){return q[0] == x[i]}) != undefined)	continue;
 			problemFocusOn = problemCurrentPageList.length;
 			problemCurrentPageList.push([x[i], null, 1, [[], []], {}]);
-			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
+			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" id="problem-${x[i]}" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
 			loadProblem(x[i], info);
 		}
 		flushProblemNewWin();
@@ -293,7 +293,7 @@ function addProblems(x, gid, info){
 		problemFocusOn = problemGroupRange[gid][0];
 		for(var i=0; i<x.length; i++){
 			problemCurrentPageList.push([x[i], null, 1, [[], []], {}]);
-			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
+			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" id="problem-${x[i]}" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
 			loadProblem(x[i], info);
 		}
 		flushProblemNewWin();
@@ -310,7 +310,7 @@ function addProblems(x, gid, info){
 		for(var i=0; i<x.length; i++){
 			problemCurrentPageList.splice(problemGroupRange[gid][0] + i, 0, [x[i], null, 1, [[], []], {}]);
 			problemNewWinJQ.find(`.innerContent > [problem-id=${x[i]}]`).remove();
-			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
+			problemNewWinJQ.find(".innerContent").append(`<div class="innerContentPage" id="problem-${x[i]}" problem-id="${x[i]}" style="display: none"><div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div></div>`)
 			loadProblem(x[i], info);
 		}
 		flushProblemNewWin();

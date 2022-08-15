@@ -29,25 +29,27 @@
 				}
 			}
 		</script>
-		<script>
-			MathJax = {
-			  options: {
-			  	enableMenu: false,
-			  },
-			  tex: {
-			    inlineMath: [              // start/end delimiter pairs for in-line math
+		<script type="text/x-mathjax-config">
+			MathJax.Hub.Config({
+				showProcessingMessages: false,
+			  showMathMenu: false,
+			  showMathMenuMSIE: false,
+			  tex2jax: {
+			    inlineMath: [
 			      ['$$$', '$$$']
 			    ],
-			    displayMath: [             // start/end delimiter pairs for display math
+			    displayMath: [
 			      ['$$$$$$', '$$$$$$'],
 			    ],
 			  },
-			  startup: {
-			    elements: ".blockManagerContent",
+			  styles: {
+			    "#MathJax_Message": {
+			      "display": "none",
+			    }
 			  }
-			};
+			});
 		</script>
-		<script src="./mathjax3.2/tex-mml-chtml.js"></script>
+		<script src="./mathjax2.7/MathJax.js?config=TeX-AMS_HTML-full"></script>
 	</head>
 	<body>
 		<link class="ThemeTypeIf" rel="stylesheet" href="./css/dark.css">
@@ -236,10 +238,10 @@
 			function announcementDisplay(x){
 				alert(x);
 			}
-			function reloadMath() {
+			function reloadMath(id) {
 				// MathJax.startup.document.state(0);
 				// MathJax.texReset();
-				MathJax.typeset();
+				MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById(id)]);
 			}
 		</script>
 	</footer>
