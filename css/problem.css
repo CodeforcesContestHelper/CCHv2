@@ -686,7 +686,6 @@ input{
     background: var(--pop-out-block-background-color);
 }
 .bigButton{
-    background: transparent;
     border: 1px solid grey;
     color: white;
 }
