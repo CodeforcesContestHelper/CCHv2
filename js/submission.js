@@ -230,6 +230,13 @@ function openSubmission(c, u){
 			submissionInitData();
 		}
 	})
+	$(".submissionCodeCopier").unbind("click").click(function(){
+		var copy_textarea=document.getElementById("copy_textarea");
+		copy_textarea.value=data.find("#program-source-text").text();
+		copy_textarea.select();
+		document.execCommand("copy");
+		alert(languageOption.general.copyCodeSuccessfully);
+	})
 	loader(req);
 }
 function getIdFromProblemName(x){
