@@ -21,7 +21,6 @@ See license [here](https://github.com/CodeforcesContestHelper/CCHv2/blob/main/LI
 ## Donation
 https://afdian.net/@cfcontesthelper
 
-## Chatting
+## Star History
 
-- Discord: [click here](https://discord.gg/natZEphAmS)
-- QQ: group number: 458610798
+[![Star History Chart](https://api.star-history.com/svg?repos=CodeforcesContestHelper/CCHv2&type=Date)](https://star-history.com/#CodeforcesContestHelper/CCHv2)
