@@ -149,18 +149,56 @@ function openSubmission(c, u){
 	function submissionAddList(id){
 		var S = submissionDataStorage[id-1];
 		$(".submissionDataDetail").append(`<div style="width: calc(100% - 10px); font-size: 20px; padding: 5px; margin-bottom: 5px; position: sticky; top: 0px; background: var(--pop-out-block-background-color)">${localize("testcase")} #${id} <span style='font-size: 16px'>/ ${S[4]}ms / ${Math.floor(Number(S[5]) / 1024)}KB</span><span style='float: right'>${getSubmissionIcon(S[6])} ${toColoredSubmissionInfo(S[6])}</span></div>`);
-		$(".submissionDataDetail").append(`<div style="margin-left: 5px; margin-bottom: 10px; font-size: 18px; font-weight: bold">${localize("input")}</div>`);
-		if(S[0] != undefined)
+		$(".submissionDataDetail").append(`
+			<div style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px; font-size: 18px; font-weight: bold">
+				${localize("input")}
+				<span class='copyData' style="float: right" data-data="${encodeURIComponent(S[0])}"><span info='copy'>${languageOption.general.copy}</span></span>
+			</div>`);
+		if(S[0] != undefined){
 			$(".submissionDataDetail").append(`<div style='width: calc(100% - 20px); white-space: pre; padding: 5px; margin-bottom: 10px; margin-left: 5px; margin-right: 5px; font-family: var(--editor-font-family); font-size: var(--editor-font-size); overflow: auto; background: var(--pop-out-block-background-color-1); border-radius: 5px;'>${$.trim(S[0]).replace("\r\n", "<br/>")}</div>`);
-		$(".submissionDataDetail").append(`<div style="margin-left: 5px; margin-bottom: 10px; font-size: 18px; font-weight: bold">${localize("output")}</div>`);
-		if(S[1] != undefined)
+		}
+		$(".submissionDataDetail").append(`
+			<div style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px; font-size: 18px; font-weight: bold">
+				${localize("output")}
+				<span class='copyData' style="float: right" data-data="${encodeURIComponent(S[1])}"><span info='copy'>${languageOption.general.copy}</span></span>
+			</div>`);
+		if(S[1] != undefined){
 			$(".submissionDataDetail").append(`<div style='width: calc(100% - 20px); white-space: pre; padding: 5px; margin-bottom: 10px; margin-left: 5px; margin-right: 5px; font-family: var(--editor-font-family); font-size: var(--editor-font-size); overflow: auto; background: var(--pop-out-block-background-color-1); border-radius: 5px;'>${$.trim(S[1]).replace("\r\n", "<br/>")}</div>`);
-		$(".submissionDataDetail").append(`<div style="margin-left: 5px; margin-bottom: 10px; font-size: 18px; font-weight: bold">${localize("answer")}</div>`);
-		if(S[2] != undefined)
+		}
+		$(".submissionDataDetail").append(`
+			<div style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px; font-size: 18px; font-weight: bold">
+				${localize("answer")}
+				<span class='copyData' style="float: right" data-data="${encodeURIComponent(S[2])}"><span info='copy'>${languageOption.general.copy}</span></span>
+			</div>`);
+		if(S[3] != undefined){
 			$(".submissionDataDetail").append(`<div style='width: calc(100% - 20px); white-space: pre; padding: 5px; margin-bottom: 10px; margin-left: 5px; margin-right: 5px; font-family: var(--editor-font-family); font-size: var(--editor-font-size); overflow: auto; background: var(--pop-out-block-background-color-1); border-radius: 5px;'>${$.trim(S[2]).replace("\r\n", "<br/>")}</div>`);
-		$(".submissionDataDetail").append(`<div style="margin-left: 5px; margin-bottom: 10px; font-size: 18px; font-weight: bold">${localize("result")}</div>`);
-		if(S[3] != undefined)
+		}
+		$(".submissionDataDetail").append(`
+			<div style="margin-left: 5px; margin-right: 5px; margin-bottom: 10px; font-size: 18px; font-weight: bold">
+				${localize("result")}
+				<span class='copyData' style="float: right" data-data="${encodeURIComponent(S[3])}"><span info='copy'>${languageOption.general.copy}</span></span>
+			</div>`);
+		if(S[3] != undefined){
 			$(".submissionDataDetail").append(`<div style='width: calc(100% - 20px); white-space: pre; padding: 5px; margin-bottom: 10px; margin-left: 5px; margin-right: 5px; font-family: var(--editor-font-family); font-size: var(--editor-font-size); overflow: auto; background: var(--pop-out-block-background-color-1); border-radius: 5px;'>${$.trim(S[3]).replace("\r\n", "<br/>")}</div>`);
+		}
+		$(".copyData").unbind("click").click(function(){
+			console.log("Clicked");
+			copy_data=decodeURIComponent(this.getAttribute("data-data"));
+			//alert(copy_data);
+			var q = $("<textarea></textarea>");
+			q.text(copy_data);
+			$("body").append(q);
+			q.select();
+			document.execCommand("copy");
+			q.remove();
+			$(this).html(`<span info='copied'>${languageOption.general.copied}</span>`);
+			var arg=$(this);
+			setTimeout(function(){
+				console.log("Changed.");
+				arg.html(`<span info='copy'>${languageOption.general.copy}</span>`);
+				console.log(arg.html());
+			}, 1000);
+		})
 	}
 	function submissionInitData(){
 		$(".submissionDataDetail").html(`<div style='display: grid; place-items: center; height: 100%; width: 100%'><i class='fas fa-sync-alt fa-spin fa-3x'></i></div>`);

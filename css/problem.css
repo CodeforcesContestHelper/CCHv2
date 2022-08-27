@@ -485,7 +485,7 @@ p{
 		flex-direction: column !important;
 	}
 }
-.copyCode{
+.copyCode, .copyData{
 	transition: 0.2s;
 	user-select: none;
 	cursor: pointer;
@@ -701,10 +701,10 @@ a:hover {color: var(--problem-window-link-hover-color);}
 a:onclick {color: var(--problem-window-link-onclick-color);}
 a:visited {color: var(--problem-window-link-visited-color);}
 table > tr > th, table > tr > td { border-color: var(--problem-window-table-border-color); }
-.copyCode, .copyInfo{
+.copyCode, .copyInfo, .copyData{
     background: var(--problem-window-copy-button-background-color);
 }
-.copyCode:hover, .copyInfo:hover{
+.copyCode:hover, .copyInfo:hover, .copyData:hover{
     background: var(--problem-window-copy-button-hover-background-color);
 }
 .singleWatchContent{
