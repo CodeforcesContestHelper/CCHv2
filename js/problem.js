@@ -563,7 +563,7 @@ function flushProblemNewWin(){
 function sampleWrapper(x, y){
 	var ret = [];
 	for(var i=0; i<x.length; i++)
-		ret.push({"input": x[i], "output": y[i]});
+		ret.push({"input": x[i]+'\n', "output": y[i]+'\n'});
 	return ret;
 }
 function initProblemNewWin(){
