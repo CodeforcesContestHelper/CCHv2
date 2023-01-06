@@ -7,6 +7,7 @@
 		<script src="./js/highcharts.js"></script>
 		<link rel="stylesheet" href="./css/client.css">
 		<link class="ThemeTypeIf" rel="stylesheet" href="./css/default.css">
+		<link rel="stylesheet" href="./css/problem.css">
 		<link rel="stylesheet" href="./css/all.min.css">
 		<script src="./js/highlight.min.js"></script>
 		<script src="./js/sha512.js"></script>
@@ -74,6 +75,9 @@
 								<span class="submissionCloser"><i class="fas fa-angle-left"></i> <span info='back'></span></span>
 								<span class="submissionDataLister" style="float: right">
 									<i class='fas fa-database'></i> <span info='showData'></span>
+								</span>
+								<span class="submissionCodeCopier" style="float: right;margin-right:15px;">
+									<i class='fas fa-clone'></i> <span info='copyCode'></span>
 								</span>
 							</div>
 						</div>
@@ -1258,4 +1262,6 @@
 			initStyle();
 		</script>
 	</footer>
+	<!--以下是专门用于复制的textarea，不可见。-->
+	<textarea id="copy_textarea" style="opacity: 0;position: absolute;bottom:0px;right:0px;width: 1px;height: 1px;"></textarea>
 </html>
