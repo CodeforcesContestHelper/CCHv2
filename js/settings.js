@@ -454,6 +454,16 @@ var settingsFunctions = {
 			return settings.openNotification;
 		}
 	},
+	loadMyInfoWhenLogin: {
+		initial: function(){
+			return settings.loadMyInfoWhenLogin;
+		},
+		change: function(){
+			settings.loadMyInfoWhenLogin = !settings.loadMyInfoWhenLogin;
+			saveSettings();
+			return settings.loadMyInfoWhenLogin;
+		}
+	},
 	useApiKeys: {
 		initial: function(){
 			return settings.useApiKeys;
@@ -530,6 +540,7 @@ var currentDefaultSettings = {
 	statementFontSize: 16,
 	statementDefaultLanguage: 50,
 	openNotification: true,
+	loadMyInfoWhenLogin: false,
 	useApiKeys: false,
 	apiKey: "",
 	apiSecret: "",

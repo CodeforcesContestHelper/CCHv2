@@ -322,6 +322,10 @@ var lang_en = {
 			"<span class='settingsInfoIcon fas fa-bell'></span> Open Notification",
 			"Choose if notifications of hacks, contest notifications or submission results should be sent."
 		],
+		loadMyInfoWhenLogin: [
+			"<span class='settingsInfoIcon fas fa-th-list'></span> Load introduction when logging in",
+			"In order to avoid opening the profile to see a blank, but also click to change the user.<span class='red'>It may consume a little bit of mobile data.</span>"
+		],
 		useApiKeys: [
 			"<span class='settingsInfoIcon fas fa-user-secret'></span> Use API Keys",
 			"Enable to authorize APIs to fetch private informations. You can go to /settings/api to generate API keys. <span class='red'>We will not use your keys for other purposes.</span>"
@@ -707,6 +711,10 @@ var lang_zh = {
 		openNotification: [
 			"<span class='settingsInfoIcon fas fa-bell'></span> 开启提醒",
 			"选择是否发送包含 hack，比赛通知或者提交结果的提醒。"
+		],
+		loadMyInfoWhenLogin: [
+			"<span class='settingsInfoIcon fas fa-th-list'></span> 登录时自动加载个人简介",
+			"免得打开个人简介时看到一片空白，还要点击更换用户。<span class='red'>这可能会需要一点流量。</span>"
 		],
 		useApiKeys: [
 			"<span class='settingsInfoIcon fas fa-user-secret'></span> 使用 API Keys",

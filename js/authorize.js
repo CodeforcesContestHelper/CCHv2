@@ -17,7 +17,10 @@ function loadLoginType(){
 				currentLoginHandle = hdl;
 				if(problemNewWinLoaded)	initProblemNewWin();
 				$(".settingsLoginType").html(`<span info='currentUser' argv=["${hdl}"]>${languageOption.general.currentUser.format([hdl])}</span>`);
-				infoLoadUsername(currentLoginHandle,true);
+				if(settings.loadMyInfoWhenLogin)
+				{
+				    infoLoadUsername(currentLoginHandle,true);
+				}
 			}
 			else{
 				currentLoginHandle = "";
@@ -123,7 +126,10 @@ function submitLogin(){
 					currentLoginHandle = hdl;
 					if(problemNewWinLoaded)	initProblemNewWin();
 					$(".settingsLoginType").html(`<span info='currentUser' argv=["${hdl}"]>${languageOption.general.currentUser.format([hdl])}</span>`);
-					infoLoadUsername(currentLoginHandle,true);
+    				if(settings.loadMyInfoWhenLogin)
+    				{
+    				    infoLoadUsername(currentLoginHandle,true);
+    				}
 				},
 				error: function(){
 					$(".settingsLoginButton").html(`<span info='errorLoginFailed'>${languageOption.error.errorLoginFailed}</span>`);
