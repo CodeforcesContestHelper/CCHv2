@@ -393,7 +393,7 @@ function killProblemListItem(x) {
 				problemGroupRange[t][0]--;
 	if (problemGroupRange[q] != undefined) {
 		var u = problemGroupRange[q];
-		if (u[0] <= x && u[0] + u[1] >= x) {
+		if (u[0] <= x && u[0] + u[1] > x) {
 			--problemGroupRange[q][1];
 			if (problemGroupRange[q][1] == 0)
 				delete problemGroupRange[q];
