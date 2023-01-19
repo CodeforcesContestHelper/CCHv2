@@ -23,9 +23,9 @@ jobs:
       run: |
         zip -r CCHv2.alpha.${{ github.run_id }}.win32.zip . -i "build/CodeForces Contest Helper v2/win32/*"
         zip -r CCHv2.alpha.${{ github.run_id }}.win64.zip . -i "build/CodeForces Contest Helper v2/win64/*"
-        zip -r CCHv2.alpha.${{ github.run_id }}.osx64.zip . -i "build/CodeForces Contest Helper v2/osx64/*"
-        zip -r CCHv2.alpha.${{ github.run_id }}.linux32.zip . -i "build/CodeForces Contest Helper v2/linux32/*"
-        zip -r CCHv2.alpha.${{ github.run_id }}.linux64.zip . -i "build/CodeForces Contest Helper v2/linux64/*"
+        zip -r CCHv2.alpha.${{ github.run_id }}.osx64.tar.gz . -i "build/CodeForces Contest Helper v2/osx64/*"
+        zip -r CCHv2.alpha.${{ github.run_id }}.linux32.tar.gz . -i "build/CodeForces Contest Helper v2/linux32/*"
+        zip -r CCHv2.alpha.${{ github.run_id }}.linux64.tar.gz . -i "build/CodeForces Contest Helper v2/linux64/*"
     
     - uses: actions/upload-artifact@v2
       with:
@@ -37,13 +37,13 @@ jobs:
         path: CCHv2.alpha.${{ github.run_id }}.win64.zip
     - uses: actions/upload-artifact@v2
       with:
-        name: CCHv2.alpha.${{ github.run_id }}.osx64.zip
-        path: CCHv2.alpha.${{ github.run_id }}.osx64.zip
+        name: CCHv2.alpha.${{ github.run_id }}.osx64.tar.gz
+        path: CCHv2.alpha.${{ github.run_id }}.osx64.tar.gz
     - uses: actions/upload-artifact@v2
       with:
-        name: CCHv2.alpha.${{ github.run_id }}.linux32.zip
-        path: CCHv2.alpha.${{ github.run_id }}.linux32.zip
+        name: CCHv2.alpha.${{ github.run_id }}.linux32.tar.gz
+        path: CCHv2.alpha.${{ github.run_id }}.linux32.tar.gz
     - uses: actions/upload-artifact@v2
       with:
-        name: CCHv2.alpha.${{ github.run_id }}.linux64.zip
-        path: CCHv2.alpha.${{ github.run_id }}.linux64.zip
+        name: CCHv2.alpha.${{ github.run_id }}.linux64.tar.gz
+        path: CCHv2.alpha.${{ github.run_id }}.linux64.tar.gz
