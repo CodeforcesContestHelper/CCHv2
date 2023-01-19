@@ -111,7 +111,7 @@
 				<div class="sideBar"><div>
 				</div></div>
 				<div style="display: flex; flex-direction: column; width: calc(100% - 35px); height: 100%; position: absolute; top: 0px; left: 35px; overflow: hidden; border-radius: 5px;" class="problemPageRightContent">
-					<div class="starterPage" style="width: 100%; height: 100%; display: grid; place-items: center; position: absolute; right: 0px; bottom: 0px">
+					<div class="starterPage" style="width: 100%; height: 100%; display: grid; place-items: center; position: absolute; right: 0px: bottom: 0px">
 						<div style="text-align: center;">
 							<i class="fas fa-rocket fa-3x" style="margin-bottom: 10px;"></i><br/>
 							<span style="font-size:24px" info="problemWelcome"></span>
@@ -216,7 +216,9 @@
 			function loadCopyOption(){
 				$(".copyCode").unbind("click").click(function(){
 					var q = $("<textarea></textarea>");
-					q.text($(this).parent().parent().find(".codeDisplayer").text());
+					let str = $(this).parent().parent().find(".codeDisplayer").text();
+					str += (str.endsWith("\n") ? "" : "\n");
+					q.text(str);
 					$("body").append(q);
 					q.select();
 					document.execCommand("copy");
@@ -239,8 +241,6 @@
 				alert(x);
 			}
 			function reloadMath(id) {
-				// MathJax.startup.document.state(0);
-				// MathJax.texReset();
 				MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById(id)]);
 			}
 		</script>
