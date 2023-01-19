@@ -21,11 +21,11 @@ jobs:
     
     - name: Pack
       run: |
-        zip -r CCHv2.alpha.${{ github.run_id }}.win32.zip . -i "build/CodeForces Contest Helper v2/win32/*"
-        zip -r CCHv2.alpha.${{ github.run_id }}.win64.zip . -i "build/CodeForces Contest Helper v2/win64/*"
-        zip -r CCHv2.alpha.${{ github.run_id }}.osx64.tar.gz . -i "build/CodeForces Contest Helper v2/osx64/*"
-        zip -r CCHv2.alpha.${{ github.run_id }}.linux32.tar.gz . -i "build/CodeForces Contest Helper v2/linux32/*"
-        zip -r CCHv2.alpha.${{ github.run_id }}.linux64.tar.gz . -i "build/CodeForces Contest Helper v2/linux64/*"
+        zip -r CCHv2.${{ github.run_id }}.win32.zip . -i "build/CodeForces Contest Helper v2/win32/*"
+        zip -r CCHv2.${{ github.run_id }}.win64.zip . -i "build/CodeForces Contest Helper v2/win64/*"
+        tar -zcvf CCHv2.${{ github.run_id }}.osx64.tar.gz "./build/CodeForces Contest Helper v2/osx64/"
+        tar -zcvf CCHv2.${{ github.run_id }}.linux32.tar.gz "./build/CodeForces Contest Helper v2/linux32/"
+        tar -zcvf CCHv2.${{ github.run_id }}.linux64.tar.gz "./build/CodeForces Contest Helper v2/linux64/"
     
     - uses: actions/upload-artifact@v2
       with:
