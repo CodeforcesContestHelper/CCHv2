@@ -1042,7 +1042,7 @@ pre {
 	font-family: inherit !important;
 }
 
-.submissionCloser, .submissionDataLister, .submissionCodeLister {
+.submissionCloser, .submissionDataLister, .submissionCodeLister, .submissionCodeCopier {
 	cursor: pointer;
 }
 
