@@ -33,9 +33,9 @@ jobs:
       run: |
         zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.win32.zip . -i "build/CodeForces Contest Helper v2/win32/*"
         zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.win64.zip . -i "build/CodeForces Contest Helper v2/win64/*"
-        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.osx64.zip . -i "build/CodeForces Contest Helper v2/osx64/*"
-        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.linux32.zip . -i "build/CodeForces Contest Helper v2/linux32/*"
-        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.linux64.zip . -i "build/CodeForces Contest Helper v2/linux64/*"
+        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.osx64.tar.gz . -i "build/CodeForces Contest Helper v2/osx64/*"
+        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.linux32.tar.gz . -i "build/CodeForces Contest Helper v2/linux32/*"
+        zip -r CCHv2.${{ steps.get_version.outputs.VERSION }}.linux64.tar.gz . -i "build/CodeForces Contest Helper v2/linux64/*"
     
     - name: Create Release
       uses: softprops/action-gh-release@v1
@@ -45,9 +45,9 @@ jobs:
         files: |
           CCHv2.${{ steps.get_version.outputs.VERSION }}.win32.zip
           CCHv2.${{ steps.get_version.outputs.VERSION }}.win64.zip
-          CCHv2.${{ steps.get_version.outputs.VERSION }}.osx64.zip
-          CCHv2.${{ steps.get_version.outputs.VERSION }}.linux32.zip
-          CCHv2.${{ steps.get_version.outputs.VERSION }}.linux64.zip
+          CCHv2.${{ steps.get_version.outputs.VERSION }}.osx64.tar.gz
+          CCHv2.${{ steps.get_version.outputs.VERSION }}.linux32.tar.gz
+          CCHv2.${{ steps.get_version.outputs.VERSION }}.linux64.tar.gz
         name: CCHv2 ${{ steps.get_version.outputs.VERSION }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
