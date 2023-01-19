@@ -150,12 +150,12 @@ function openSubmission(c, u) {
 		}
 		$(".submissionDataList").html("");
 		$(".submissionDataDetail").html("");
-		delete(data);
+		delete data;
 	}
 
 	function copyJudge(str) {
 		str = $.trim(str).replace("\r\n", '\n');
-		if (str.length >= 512 && str.endsWith("...")) {
+		if ((str.length >= 512 && str.endsWith("...")) || str.length === 0) {
 			// the data is emitted
 			return "";
 		}
@@ -259,6 +259,18 @@ function openSubmission(c, u) {
 			dataLoadingIf = true;
 			submissionInitData();
 		}
+	})
+	$(".submissionCodeCopier").unbind("click").click(function() {
+		let _copier = $("<textarea></textarea>");
+		$("body").append(_copier);
+		_copier.text(data.find("#program-source-text").text());
+		_copier.select();
+		document.execCommand("copy");
+		_copier.remove();
+		$(this).html(`<i class='fas fa-check green'></i> ${localize("copyCodeSuccess")}`);
+		setTimeout(() => {
+			$(this).html(`<i class='fas fa-clone'></i> ${localize("copyCode")}`);
+		}, 1000);
 	})
 	loader(req);
 }
