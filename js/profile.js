@@ -1013,12 +1013,15 @@ $(".profileSubmissionPageRight").click(function(){
 	profileRefreshSubmissionListPages();
 });
 
-function infoLoadUsername(un){
-	$(".infoContent > .contentRowInfo").css("left", "-920px");
-	$("[for=infoContent]").click();
-	for(var i=0; i<=2; i++)
-		if(profileInfoLoaders[i] != null)
-			profileInfoLoaders[i].abort();
+function infoLoadUsername(un,donot_jump=false){
+	if(!donot_jump)
+	{
+		$(".infoContent > .contentRowInfo").css("left", "-920px");
+		$("[for=infoContent]").click();
+		for(var i=0; i<=2; i++)
+			if(profileInfoLoaders[i] != null)
+				profileInfoLoaders[i].abort();
+	}
 	var hCode = (new Date()).getTime();
 	profileInfoCurrentAsked = un + '#' + hCode;
 	delete(profileInfoDatas[0]);
