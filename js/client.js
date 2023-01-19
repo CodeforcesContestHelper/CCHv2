@@ -447,7 +447,9 @@ function initContestNewWinPage() {
 			}),
 			type: "GET",
 			success: function(json) {
-				contestNewWinJQ.find(".singleUserAvatar").attr("src", json.result[0].titlePhoto);
+				contestNewWinJQ.find(".singleUserAvatar").attr("src", 
+					((json.result[0].titlePhoto.startsWith("https:")) ? "" : "https:")
+					+ json.result[0].titlePhoto);
 			},
 			error: function() {
 				setTimeout(loadAvatar, 10000);

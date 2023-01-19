@@ -1125,7 +1125,9 @@ function infoLoadUsername(un) {
 		d = d[0];
 		profileInfoDatas[0] = d;
 		$(".infoUserBlock").css("opacity", 1);
-		$(".infoUserAvatar").attr("src", d.titlePhoto);
+		$(".infoUserAvatar").attr("src",
+			((d.titlePhoto.startsWith("https:")) ? "" : "https:")
+			+ d.titlePhoto);
 		$(".infoSmallUserRanks").html(`<div class='${ratingToClass(d.rating)}'>${ratingToGrade(d.rating)}</div>`);
 		$(".infoUsername").html(`<div class='${ratingToClass(d.rating)}'>${d.handle}</div>`);
 		$(".infoUserRanksValue").html(`<div style='display: inline-block' class='${ratingToClass(d.rating)}'>${ratingToSmalln(d.rating)} ${d.rating == undefined ? "0" : d.rating}</div> (max. <div style='display: inline-block' class='${ratingToClass(d.maxRating)}'>${ratingToSmalln(d.maxRating)} ${d.maxRating == undefined ? "0" : d.maxRating}</div>)`);
