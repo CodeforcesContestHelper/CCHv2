@@ -119,7 +119,7 @@ function submitLogin() {
 					},
 					success: function(d) {
 						var q = $(d).find(".lang-chooser > div").eq(1);
-						if (q.children("a").eq(1).html() == "Register") {
+						if (q.children("a").eq(1).html() !== "Logout") {
 							currentLoginHandle = "";
 							getSolvedProblemsByContest = {
 								problemCountsByContestId: {},
