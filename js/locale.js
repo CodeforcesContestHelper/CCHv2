@@ -287,7 +287,7 @@ var lang_en = {
 			"Choose how history rank calculator deal with virtual information. Open this to remove them."
 		],
 		codeforcesApiUrl: [
-			"<span class='settingsInfoIcon fas fa-exchange-alt'></span> Codeforces API URL", 
+			"<span class='settingsInfoIcon fas fa-exchange-alt'></span> Codeforces API URL",
 			"Set the address of Codeforces APIs."
 		],
 		showProblemStatus: [
@@ -671,7 +671,7 @@ var lang_zh = {
 			"选择历史排名计算器如何处理虚拟赛数据。打开此设置以去除它们。"
 		],
 		codeforcesApiUrl: [
-			"<span class='settingsInfoIcon fas fa-exchange-alt'></span> Codeforces API 地址", 
+			"<span class='settingsInfoIcon fas fa-exchange-alt'></span> Codeforces API 地址",
 			"设置获取 Codeforces API 的地址。"
 		],
 		showProblemStatus: [
@@ -786,8 +786,9 @@ var lang_zh = {
 };
 var lang_list = ["English", "简体中文"];
 var lang_attr = ["en", "zh_cn"];
-function getLanguage(lang){
-	if(lang == "en")	return lang_en;
-	if(lang == "zh_cn")	return lang_zh;
+
+function getLanguage(lang) {
+	if (lang == "en") return lang_en;
+	if (lang == "zh_cn") return lang_zh;
 	return lang_en;
 }

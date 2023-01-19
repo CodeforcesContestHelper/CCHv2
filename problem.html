@@ -216,7 +216,9 @@
 			function loadCopyOption(){
 				$(".copyCode").unbind("click").click(function(){
 					var q = $("<textarea></textarea>");
-					q.text($(this).parent().parent().find(".codeDisplayer").text());
+					let str = $(this).parent().parent().find(".codeDisplayer").text();
+					str += (str.endsWith("\n") ? "" : "\n");
+					q.text(str);
 					$("body").append(q);
 					q.select();
 					document.execCommand("copy");
@@ -239,8 +241,6 @@
 				alert(x);
 			}
 			function reloadMath(id) {
-				// MathJax.startup.document.state(0);
-				// MathJax.texReset();
 				MathJax.Hub.Queue(["Typeset", MathJax.Hub, document.getElementById(id)]);
 			}
 		</script>
