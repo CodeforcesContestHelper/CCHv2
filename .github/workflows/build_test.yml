@@ -29,21 +29,21 @@ jobs:
     
     - uses: actions/upload-artifact@v2
       with:
-        name: CCHv2.alpha.${{ github.run_id }}.win32.zip
-        path: CCHv2.alpha.${{ github.run_id }}.win32.zip
+        name: CCHv2.${{ github.run_id }}.win32.zip
+        path: CCHv2.${{ github.run_id }}.win32.zip
     - uses: actions/upload-artifact@v2
       with:
-        name: CCHv2.alpha.${{ github.run_id }}.win64.zip
-        path: CCHv2.alpha.${{ github.run_id }}.win64.zip
+        name: CCHv2.${{ github.run_id }}.win64.zip
+        path: CCHv2.${{ github.run_id }}.win64.zip
     - uses: actions/upload-artifact@v2
       with:
-        name: CCHv2.alpha.${{ github.run_id }}.osx64.tar.gz
-        path: CCHv2.alpha.${{ github.run_id }}.osx64.tar.gz
+        name: CCHv2.${{ github.run_id }}.osx64.tar.gz
+        path: CCHv2.${{ github.run_id }}.osx64.tar.gz
     - uses: actions/upload-artifact@v2
       with:
-        name: CCHv2.alpha.${{ github.run_id }}.linux32.tar.gz
-        path: CCHv2.alpha.${{ github.run_id }}.linux32.tar.gz
+        name: CCHv2.${{ github.run_id }}.linux32.tar.gz
+        path: CCHv2.${{ github.run_id }}.linux32.tar.gz
     - uses: actions/upload-artifact@v2
       with:
-        name: CCHv2.alpha.${{ github.run_id }}.linux64.tar.gz
-        path: CCHv2.alpha.${{ github.run_id }}.linux64.tar.gz
+        name: CCHv2.${{ github.run_id }}.linux64.tar.gz
+        path: CCHv2.${{ github.run_id }}.linux64.tar.gz
