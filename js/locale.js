@@ -473,7 +473,7 @@ var lang_zh = {
 		listButton: "列表",
 		eventButton: "事件",
 		loadingAcCount: "加载通过数中",
-		problemWelcome: "添加题目或者比赛以开始！",
+		problemWelcome: "添加题目或者等待比赛开始！",
 		add: "添加...",
 		addIntoProblems: "添加题目或比赛",
 		add_problem: "<i class='fas fa-question-circle'></i> 添加题目",
