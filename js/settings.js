@@ -536,7 +536,7 @@ var currentDefaultSettings = {
 	openRankPredict: 2,
 	openStandings: 1,
 	mainURL: "https://codeforces.com",
-	predictorURL: "https://cf-predictor-frontend.codeforces.ml/GetNextRatingServlet",
+	predictorURL: "https://cf-predictor.wasylf.xyz/GetNextRatingServlet",
 	problemSubmissionDirection: "Descending",
 	problemEventDirection: "Ascending",
 	fontFamily: "",
