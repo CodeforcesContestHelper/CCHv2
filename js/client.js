@@ -582,7 +582,8 @@ function flushsingleProblemlistDisplayList(sub, prob, pb) {
 	for (var i = 0; i < sz; i++)
 		indexToId[pb[i].index] = i;
 	var jq = [],
-		len = [];
+		len = [],
+		wa_on_1_mark = [];
 	for (var i = 0; i < sz; i++) {
 		var typ = "";
 		if (prob[i].points != 0) typ = "green";
@@ -593,6 +594,7 @@ function flushsingleProblemlistDisplayList(sub, prob, pb) {
 		$(".singleProblemlistDisplayList").append(q);
 		jq.push(q);
 		len.push(0);
+		wa_on_1_mark.push(0);
 	}
 	var l = contestEndTime.getTime() - contestStartTime.getTime();
 	for (var i = 0; i < sub.length; i++) {
@@ -605,9 +607,11 @@ function flushsingleProblemlistDisplayList(sub, prob, pb) {
 			jq[indexToId[q.problem.index]].children(".singleProblemlistDisplayListItemStatus").prepend(t);
 		else
 			jq[indexToId[q.problem.index]].children(".singleProblemlistDisplayListItemStatus").append(t);
-		if (!len[indexToId[q.problem.index]])
+		if (!wa_on_1_mark[indexToId[q.problem.index]])
 			jq[indexToId[q.problem.index]].children(".singleProblemlistDisplayListItemInfo").children(".singleProblemlistDisplayListItemInfoTimeAttempt").html(`<div subId="${q.id}" subContestId="${q.contestId}" subLink="true" class="singleProblemlistVerdictBlock ${judgeToClass(q.verdict)}">${toSmallInfo(q.verdict)}</div>`);
 		++len[indexToId[q.problem.index]];
+		if (q.verdict === "OK" || q.passedTestCount !== 0)
+			++wa_on_1_mark[indexToId[q.problem.index]];
 		if (settings.problemEventDirection == "Ascending")
 			$(".singleProblemlistDisplayEvent").prepend(`<div class="singleProblemlistDisplayEventItem"><div class="singleProblemlistDisplayEventItemInfoDetailedTime">${getTimeLength2(qT)}</div><div class="singleProblemlistDisplayEventItemInfoIndex">${q.problem.index}</div><div class="singleProblemlistDisplayEventItemInfoVerdictBlock"><div subId="${q.id}" subLink="true" subContestId="${q.contestId}" class="singleProblemlistVerdictBlock ${judgeToClass(q.verdict)}">${toSmallInfo(q.verdict)} ${toSmallInfo(q.verdict)=="AC"?("("+q.passedTestCount+")"):("on "+(q.passedTestCount+1))}</div></div><div class="singleProblemlistDisplayEventItemInfoTestType">${toSmallTestset(q.testset)}</div></div>`)
 		else
@@ -937,6 +941,7 @@ function flushProblemStatusBar() {
 		$(this).append(`<span class="successColor" style="width:${g / (g + r + m) * 100}%"></span>`);
 		$(this).append(`<span class="dangerColor" style="width:${r / (g + r + m) * 100}%"></span>`);
 		$(this).append(`<span style="width:${m / (g + r + m) * 100}%"></span>`);
+		$(this).attr("title", `AC ${g} / UAC ${r} / NONE ${m}`);
 	})
 }
 
