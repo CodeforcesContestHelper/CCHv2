@@ -1113,7 +1113,7 @@ function infoLoadUsername(un) {
 				xhr.addEventListener('progress', function(e) {
 					if (un + '#' + hCode != profileInfoCurrentAsked)
 						return;
-					$(".infoLoaders" + id).html(toMemoryInfo(e.loaded / 8));
+					$(".infoLoaders" + id).html(toMemoryInfo(e.loaded));
 				});
 				return xhr;
 			}
