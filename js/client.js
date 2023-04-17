@@ -427,9 +427,9 @@ var loadTypeReaction = [
 
 function reloadSingleMemoryUsed() {
 	if (singleLoadType == singleLoadTypeLast)
-		$(".singleMemoryUsed > span > span").html(toMemoryInfo(singleMemoryUsed / 8));
+		$(".singleMemoryUsed > span > span").html(toMemoryInfo(singleMemoryUsed));
 	else
-		$(".singleMemoryUsed").html(`<span><span>` + toMemoryInfo(singleMemoryUsed / 8) + '</span>' + loadTypeReaction[singleLoadType] + `</span>`);
+		$(".singleMemoryUsed").html(`<span><span>` + toMemoryInfo(singleMemoryUsed) + '</span>' + loadTypeReaction[singleLoadType] + `</span>`);
 	singleLoadTypeLast = singleLoadType;
 }
 

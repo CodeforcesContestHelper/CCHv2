@@ -277,7 +277,7 @@ function loadContestList() {
 					$(".contestListLoadIf > span").append(`<span class='contestLoadedInfo'></span>`);
 					fr = true;
 				}
-				$(".contestLoadedInfo").html(` (${toMemoryInfo(e.loaded / 8)})`);
+				$(".contestLoadedInfo").html(` (${toMemoryInfo(e.loaded)})`);
 			});
 			return xhr;
 		}

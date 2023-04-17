@@ -26,7 +26,7 @@ function openSubmission(c, u) {
 				if (T.getTime() != submissionLastOperated.getTime()) return;
 				data = $(j);
 				P = j;
-				if (j.indexOf(`SubmissionDetailsFrameRoundBox-${u}"`) == -1)
+				if (j.indexOf(`SubmissionDetailsFrameRoundBox-${u}`) == -1)
 					data = $("<body></body>");
 				setTimeout(callback, 100);
 			},

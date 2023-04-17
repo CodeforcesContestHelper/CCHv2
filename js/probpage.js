@@ -443,7 +443,7 @@ function probpageLoad(reList) {
 			xhr: function() {
 				var xhr = new XMLHttpRequest();
 				xhr.addEventListener('progress', function(e) {
-					$(".probpageLoader" + id).html(`<span>${toMemoryInfo(e.loaded / 8)}</span>`);
+					$(".probpageLoader" + id).html(`<span>${toMemoryInfo(e.loaded)}</span>`);
 				});
 				return xhr;
 			}
