@@ -9,7 +9,7 @@ function addWatcher(id, idx, gc) {
 	function fadeIn() {
 		if (IN) return;
 		IN = true;
-		$(".watchDisplayer").append(p);
+		$("#watchDisplayer").append(p);
 		setTimeout(function() {
 			p.attr("style", "");
 		}, 100);
