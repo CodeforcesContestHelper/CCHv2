@@ -1,6 +1,71 @@
 var loginTypeLoader = null;
 var CodeforcesUserAPIKey, CodeforcesUserAPISeg;
 
+var queryCsrf = new RegExp(`<meta name="X-Csrf-Token" content="([0-9a-f]*)"`);
+var queryGlobalChannel = new RegExp(`<meta name="gc" content="([0-9a-f]*)"`);
+var queryHandle = new RegExp(`handle = "([\s\S]+?)"`);
+var queryHandle2 = new RegExp(`<title>([0-9a-zA-Z-_.]+?) - Codeforces</title>`);
+
+function getFtaa() {
+	var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
+	var ret = "";
+	for (var i = 0; i < 18; i++)
+		ret += str[Math.floor(Math.random() * str.length)];
+	return ret;
+}
+
+// https://github.com/icpc-scu-community/codeforces-rcpc/blob/master/src/aes.ts
+function encryptAES(c, a, b) {
+  // c => Encrypted Hex String
+  // a => (Key) Number Array
+  // b => (IV) Initiliaztion Vector
+  // When ready to decrypt the hex string, convert it back to bytes
+  const encryptedBytes = aesjs.utils.hex.toBytes(c);
+  const iv = aesjs.utils.hex.toBytes(b);
+  const key = aesjs.utils.hex.toBytes(a);
+  // The cipher-block chaining mode of operation maintains internal
+  // state, so to decrypt a new instance must be instantiated.
+  const aesCbc = new aesjs.ModeOfOperation.cbc(key, iv);
+  const decryptedBytes = aesCbc.decrypt(encryptedBytes);
+  const decryptedHex = aesjs.utils.hex.fromBytes(decryptedBytes);
+  return decryptedHex;
+}
+
+// https://github.com/icpc-scu-community/codeforces-rcpc/blob/master/src/index.ts
+function tryDecodeRCPC(data) {
+	return new Promise((resolve) => {
+		if (data.indexOf(`Redirecting...`) === -1)
+			resolve(data);
+		let params = data.matchAll(/toNumbers\(\"([\d\w]*)\"\)/g)
+		const [a, b, c] = [...params].map((e) => e[1]);
+		if (a && b && c) {
+			let rcpc = encryptAES(c, a, b);
+			console.log(a, b, c, rcpc);
+			if (RunInNwjs) {
+				win.cookies.set({
+					domain: settings.mainURL.split("/")[2],
+					name: "RCPC",
+					value: rcpc,
+					path: '/',
+					url: settings.mainURL
+				}, (cookies) => {
+					$.ajax({
+						url: settings.mainURL, 
+						success: (dt) => {
+							resolve(dt)
+						},
+						error: (err) => {
+							resolve(data)
+						}
+					})
+				})
+			}
+		}
+		else
+			resolve(data);
+	})
+}
+
 function loadLoginType() {
 	currentLoginHandle = "";
 	if (problemNewWinLoaded) initProblemNewWin();
@@ -13,7 +78,16 @@ function loadLoginType() {
 		loginTypeLoader.abort();
 	loginTypeLoader = $.ajax({
 		url: settings.mainURL + '?locale=en',
-		success: function(data) {
+		success: async function(data) {
+			var csrf = queryCsrf.exec(data);
+			if (csrf == null) {
+				data = await tryDecodeRCPC(data);
+				csrf = queryCsrf.exec(data);
+			}
+			if (csrf == null) {
+				$(".settingsLoginType").html(`<span info='loadLoginTypeError' style="cursor: pointer" onclick="loadLoginType()">${languageOption.general.loadLoginTypeError}</span>`);
+				return;
+			}
 			var q = $(data).find(".lang-chooser > div").eq(1);
 			if (q.children("a").eq(1).html() == "Logout") {
 				var hdl = q.children("a").eq(0).html();
@@ -35,18 +109,6 @@ function loadLoginType() {
 		}
 	})
 }
-var queryCsrf = new RegExp(`<meta name="X-Csrf-Token" content="([0-9a-f]*)"`);
-var queryGlobalChannel = new RegExp(`<meta name="gc" content="([0-9a-f]*)"`);
-var queryHandle = new RegExp(`handle = "([\s\S]+?)"`);
-var queryHandle2 = new RegExp(`<title>([0-9a-zA-Z-_.]+?) - Codeforces</title>`);
-
-function getFtaa() {
-	var str = "0123456789qwertyuiopasdfghjklzxcvbnm";
-	var ret = "";
-	for (var i = 0; i < 18; i++)
-		ret += str[Math.floor(Math.random() * str.length)];
-	return ret;
-}
 
 function submitLogout(cb) {
 	if (currentLoginHandle == "") {
@@ -55,7 +117,19 @@ function submitLogout(cb) {
 	}
 	$.ajax({
 		url: settings.mainURL,
-		success: function(data) {
+		success: async function(data) {
+			var csrf = queryCsrf.exec(data);
+			if (csrf == null) {
+				data = await tryDecodeRCPC(data);
+				csrf = queryCsrf.exec(data);
+			}
+			if (csrf == null) {
+				$(".settingsLoginButton").html(`<span info='errorCsrfLoadFailed'>${languageOption.error.errorCsrfLoadFailed}</span>`);
+				setTimeout(function() {
+					$(".settingsLoginButton").html(`<span info='settingsLoginButton' onclick="submitLogin()">${languageOption.general.settingsLoginButton}</span>`);
+				}, 2000)
+				return;
+			}
 			var q = $(data).find(".lang-chooser > div").eq(1);
 			if (q.children("a").eq(1).html() == "Register") {
 				cb();
@@ -94,8 +168,12 @@ function submitLogin() {
 	submitLogout(function() {
 		$.ajax({
 			url: settings.mainURL,
-			success: function(data) {
+			success: async function(data) {
 				var csrf = queryCsrf.exec(data);
+				if (csrf == null) {
+					data = await tryDecodeRCPC(data);
+					csrf = queryCsrf.exec(data);
+				}
 				if (csrf == null) {
 					$(".settingsLoginButton").html(`<span info='errorCsrfLoadFailed'>${languageOption.error.errorCsrfLoadFailed}</span>`);
 					setTimeout(function() {
@@ -162,8 +240,12 @@ function submitLogin() {
 function submitSolution(ci, idx, code, lang, S, E) {
 	$.ajax({
 		url: settings.mainURL,
-		success: function(data) {
+		success: async function(data) {
 			var csrf = queryCsrf.exec(data);
+			if (csrf == null) {
+				data = await tryDecodeRCPC(data);
+				csrf = queryCsrf.exec(data);
+			}
 			if (csrf == null) {
 				E('errorCsrfLoadFailed', languageOption.error.errorCsrfLoadFailed);
 				return;
@@ -274,8 +356,12 @@ function loadContestPassedStatus(S, E) {
 	}
 	$.ajax({
 		url: settings.mainURL + '/contests',
-		success: function(data) {
+		success: async function(data) {
 			var csrf = queryCsrf.exec(data);
+			if (csrf == null) {
+				data = await tryDecodeRCPC(data);
+				csrf = queryCsrf.exec(data);
+			}
 			if (csrf == null) {
 				E();
 				return;
@@ -335,8 +421,12 @@ function checkRegistation(ci, S, E) {
 function registerContest(ci, S, E) {
 	$.ajax({
 		url: settings.mainURL,
-		success: function(data) {
+		success: async function(data) {
 			var csrf = queryCsrf.exec(data);
+			if (csrf == null) {
+				data = await tryDecodeRCPC(data);
+				csrf = queryCsrf.exec(data);
+			}
 			if (csrf == null) {
 				E();
 				return;
@@ -389,8 +479,12 @@ function registerVirtualRound(ci, tm, S, E) {
 	var offsetTime = new Date(tm.getTime() + tm.getTimezoneOffset() * 60 * 1000);
 	$.ajax({
 		url: settings.mainURL,
-		success: function(data) {
+		success: async function(data) {
 			var csrf = queryCsrf.exec(data);
+			if (csrf == null) {
+				data = await tryDecodeRCPC(data);
+				csrf = queryCsrf.exec(data);
+			}
 			if (csrf == null) {
 				E("fa-unlink");
 				return;

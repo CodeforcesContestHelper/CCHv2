@@ -122,13 +122,13 @@ body {
 	z-index: 1;
 }
 
-.ToolList {
+#ToolList {
 	-webkit-app-region: drag;
 	position: relative;
 	height: 30px;
 }
 
-.ToolListTitle {
+#ToolListTitle {
 	margin: 8px 12px;
 	font-size: 14px;
 	user-select: none;
@@ -580,7 +580,7 @@ p {
 	display: inline-block;
 }
 
-.watchDisplayer {
+#watchDisplayer {
 	user-select: none;
 	z-index: 98;
 	width: 370px !important;
