@@ -172,6 +172,7 @@ function initProblemPageInfo(page, data, id) {
 }
 
 function loadProblem(x, info) {
+	let tmpSideBarItem = problemNewWinJQ.find(".sideBarItem");
 	if (problemCurrentPageList.find(function(q) {
 			return q[0] == x
 		}) == undefined) return;
@@ -180,11 +181,11 @@ function loadProblem(x, info) {
 	});
 	problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-sync-alt fa-spin fa-3x"></i></div>`)
 	problemCurrentPageList[p][2] = 1;
-	problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
-	problemNewWinJQ.find(".sideBarItem").unbind("click").click(function() {
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
+	tmpSideBarItem.eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
+	tmpSideBarItem.unbind("click").click(function() {
+		tmpSideBarItem.eq(problemFocusOn).removeClass("chosen");
 		problemFocusOn = Number($(this).attr("id"));
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
+		tmpSideBarItem.eq(problemFocusOn).addClass("chosen");
 		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
 		problemNewWinJQ.find(".innerContent > div").css("display", "none");
 		problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
@@ -211,12 +212,13 @@ function loadProblem(x, info) {
 					return q[0] == x
 				});
 				problemCurrentPageList[p][2] = 3;
-				problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
+				tmpSideBarItem = problemNewWinJQ.find(".sideBarItem");
+				tmpSideBarItem.eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
 				problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-unlink red fa-3x"></i></div>`);
-				problemNewWinJQ.find(".sideBarItem").unbind("click").click(function() {
-					problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
+				tmpSideBarItem.unbind("click").click(function() {
+					tmpSideBarItem.eq(problemFocusOn).removeClass("chosen");
 					problemFocusOn = Number($(this).attr("id"));
-					problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
+					tmpSideBarItem.eq(problemFocusOn).addClass("chosen");
 					problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
 					problemNewWinJQ.find(".innerContent > div").css("display", "none");
 					problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
@@ -237,11 +239,12 @@ function loadProblem(x, info) {
 			problemCurrentPageList[p][4].contestName = $(data).find("#sidebar").eq(0).find("a").eq(0).html();
 			initProblemPageInfo(problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`), $(data).find(".ttypography > .problem-statement"), p);
 			problemCurrentPageList[p][2] = 0;
-			problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
-			problemNewWinJQ.find(".sideBarItem").unbind("click").click(function() {
-				problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
+			tmpSideBarItem = problemNewWinJQ.find(".sideBarItem");
+			tmpSideBarItem.eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
+			tmpSideBarItem.unbind("click").click(function() {
+				tmpSideBarItem.eq(problemFocusOn).removeClass("chosen");
 				problemFocusOn = Number($(this).attr("id"));
-				problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
+				tmpSideBarItem.eq(problemFocusOn).addClass("chosen");
 				problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
 				problemNewWinJQ.find(".innerContent > div").css("display", "none");
 				problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
@@ -260,12 +263,13 @@ function loadProblem(x, info) {
 				return q[0] == x
 			});
 			problemCurrentPageList[p][2] = 3;
-			problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
+			tmpSideBarItem = problemNewWinJQ.find(".sideBarItem");
+			tmpSideBarItem.eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
 			problemNewWinJQ.find(`.innerContent > [problem-id=${x}]`).html(`<div style="display: grid; place-items: center; width: 100%; height: 100%"><i class="fas fa-unlink red fa-3x"></i></div>`);
-			problemNewWinJQ.find(".sideBarItem").unbind("click").click(function() {
-				problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
+			tmpSideBarItem.unbind("click").click(function() {
+				tmpSideBarItem.eq(problemFocusOn).removeClass("chosen");
 				problemFocusOn = Number($(this).attr("id"));
-				problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
+				tmpSideBarItem.eq(problemFocusOn).addClass("chosen");
 				problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
 				problemNewWinJQ.find(".innerContent > div").css("display", "none");
 				problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
@@ -286,11 +290,12 @@ function loadProblem(x, info) {
 					return q[0] == x
 				});
 				problemCurrentPageList[p][2] = 2;
-				problemNewWinJQ.find(".sideBarItem").eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
-				problemNewWinJQ.find(".sideBarItem").unbind("click").click(function() {
-					problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
+				tmpSideBarItem = problemNewWinJQ.find(".sideBarItem");
+				tmpSideBarItem.eq(p).html(`${loadType[problemCurrentPageList[p][2]](x)}${problemCurrentPageList[p][0]}<div class="closeCurrentProblemPage" id=${p}><i class="fas fa-times"></i></div>`);
+				tmpSideBarItem.unbind("click").click(function() {
+					tmpSideBarItem.eq(problemFocusOn).removeClass("chosen");
 					problemFocusOn = Number($(this).attr("id"));
-					problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
+					tmpSideBarItem.eq(problemFocusOn).addClass("chosen");
 					problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
 					problemNewWinJQ.find(".innerContent > div").css("display", "none");
 					problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
@@ -476,13 +481,16 @@ function loadContestProblemset(cid, chk, S, E) {
 }
 
 function flushProblemNewWin() {
+	let tmpButton1 = problemNewWinJQ.find(".contestInfoInputArea button"), 
+      tmpButton2 = problemNewWinJQ.find(".problemInfoInputArea button"),
+      tmpField = problemNewWinJQ.find(".sideBar > div");
 	if (problemCurrentPageList.length == 0)
 		problemNewWinJQ.find(".innerContent").css("display", "none"),
 		problemNewWinJQ.find(".progressBar").css("display", "none");
 	else
 		problemNewWinJQ.find(".innerContent").css("display", "block"),
 		problemNewWinJQ.find(".progressBar").css("display", "flex");
-	problemNewWinJQ.find(".sideBar > div").html("");
+	tmpField.html("");
 	var lastContestFolder = false;
 	for (var i = 0; i < problemCurrentPageList.length; i++) {
 		var cid = getProblemIndexes(problemCurrentPageList[i][0])[0];
@@ -492,22 +500,22 @@ function flushProblemNewWin() {
 				curr.css("padding-bottom", "10px");
 			if (lastContestFolder)
 				curr.css("margin-top", "10px");
-			var T = $(`<div class="sideBarGroup" id="${cid}">${problemGroupRange[cid][2] ? "<i class='fas fa-folder-open'></i>" : "<i class='fas fa-folder'></i>"}${cid}<div class="closeCurrentGroup" id=${cid}><i class="fas fa-times"></i></div></div>`)
+			var T = `<div class="sideBarGroup" id="${cid}">${problemGroupRange[cid][2] ? "<i class='fas fa-folder-open'></i>" : "<i class='fas fa-folder'></i>"}${cid}<div class="closeCurrentGroup" id=${cid}><i class="fas fa-times"></i></div></div>`;
+			for (var j = 0; j < problemGroupRange[cid][1]; j++, i++)
+				T += `<div class="sideBarItem" id="${i}" ${problemGroupRange[cid][2] ? "" : " style='display: none'"}>${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div class="closeCurrentProblemPage" id=${i}><i class="fas fa-times"></i></div></div>`;
 			curr.append(T);
-			for (var j = 0; j < problemGroupRange[cid][1]; j++, i++) {
-				curr.append(`<div class="sideBarItem" id="${i}" ${problemGroupRange[cid][2] ? "" : " style='display: none'"}>${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div class="closeCurrentProblemPage" id=${i}><i class="fas fa-times"></i></div></div>`);
-			}
 			--i;
 			lastContestFolder = true;
-			problemNewWinJQ.find(".sideBar > div").append(curr);
+			tmpField.append(curr);
 			continue;
 		}
 		lastContestFolder = false;
-		problemNewWinJQ.find(".sideBar > div").append(`<div class="sideBarItem" id="${i}">${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div class="closeCurrentProblemPage" id=${i}><i class="fas fa-times"></i></div></div>`);
+		tmpField.append(`<div class="sideBarItem" id="${i}">${loadType[problemCurrentPageList[i][2]](problemCurrentPageList[i][0])}${problemCurrentPageList[i][0]}<div class="closeCurrentProblemPage" id=${i}><i class="fas fa-times"></i></div></div>`);
 	}
-	problemNewWinJQ.find(".sideBar > div").append(`<div class="addProblemSidebar"><i class='fas fa-add'></i><span info='add'>${languageOption.general.add}</span></div>`);
+	tmpField.append(`<div class="addProblemSidebar"><i class='fas fa-add'></i><span info='add'>${languageOption.general.add}</span></div>`);
+	let tmpSideBarItem = problemNewWinJQ.find(".sideBarItem");
 	if (problemFocusOn < problemCurrentPageList.length && problemFocusOn >= 0)
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen"),
+		tmpSideBarItem.eq(problemFocusOn).addClass("chosen"),
 		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
 	problemNewWinJQ.find(".innerContent > div").css("display", "none");
 	if (problemFocusOn < problemCurrentPageList.length)
@@ -517,10 +525,10 @@ function flushProblemNewWin() {
 		problemGroupRange[r][2] ^= 1;
 		flushProblemNewWin();
 	})
-	problemNewWinJQ.find(".sideBarItem").unbind("click").click(function() {
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).removeClass("chosen");
+	tmpSideBarItem.unbind("click").click(function() {
+		tmpSideBarItem.eq(problemFocusOn).removeClass("chosen");
 		problemFocusOn = Number($(this).attr("id"));
-		problemNewWinJQ.find(".sideBarItem").eq(problemFocusOn).addClass("chosen");
+		tmpSideBarItem.eq(problemFocusOn).addClass("chosen");
 		problemNewWinJQ.find(".problemName").html(problemCurrentPageList[problemFocusOn][0]);
 		problemNewWinJQ.find(".innerContent > div").css("display", "none");
 		problemNewWinJQ.find(`.innerContent > [problem-id=${problemCurrentPageList[problemFocusOn][0]}]`).css("display", "block");
@@ -553,82 +561,82 @@ function flushProblemNewWin() {
 			problemNewWinJQ.find(".addProblemWindow").css("opacity", "1");
 		}, 50);
 	})
-	problemNewWinJQ.find(".problemInfoInputArea button").unbind('click').click(function() {
+	tmpButton2.unbind('click').click(function() {
 		if (typeof($(this).attr("disabled")) != "undefined")
 			return;
-		problemNewWinJQ.find(".problemInfoInputArea button").attr("disabled", "true");
-		problemNewWinJQ.find(".contestInfoInputArea button").attr("disabled", "true");
-		problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
-		problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
+		tmpButton2.attr("disabled", "true");
+		tmpButton1.attr("disabled", "true");
+		tmpButton2.html(`<i class="fas fa-sync fa-spin"></i>`);
+		tmpButton1.html(`<i class="fas fa-sync fa-spin"></i>`);
 		var R = problemNewWinJQ.find(".problemInfoInputArea input").val();
 		if (getProblemIndexes(R)[0] != -1 && R.length <= 9) {
-			problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
-			problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
-			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
-			problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+			tmpButton2.removeAttr("disabled");
+			tmpButton1.removeAttr("disabled");
+			tmpButton2.html(`<i class="fas fa-paper-plane"></i>`);
+			tmpButton1.html(`<i class="fas fa-paper-plane"></i>`);
 			problemNewWinJQ.find(".addProblemWindow").css("opacity", "0");
 			setTimeout(function() {
 				problemNewWinJQ.find(".addProblemWindow").css("display", "none");
 			}, 500);
 			addProblems([R]);
 		} else {
-			problemNewWinJQ.find(".problemInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
-			problemNewWinJQ.find(".contestInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
-			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-exclamation-triangle"></i>`);
-			problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-exclamation-triangle"></i>`);
+			tmpButton2.removeClass("primaryColor").addClass("dangerColor");
+			tmpButton1.removeClass("primaryColor").addClass("dangerColor");
+			tmpButton2.html(`<i class="fas fa-exclamation-triangle"></i>`);
+			tmpButton1.html(`<i class="fas fa-exclamation-triangle"></i>`);
 			setTimeout(function() {
-				problemNewWinJQ.find(".problemInfoInputArea button").addClass("primaryColor").removeClass("dangerColor");
-				problemNewWinJQ.find(".contestInfoInputArea button").addClass("primaryColor").removeClass("dangerColor");
-				problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
-				problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
-				problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
-				problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
+				tmpButton2.addClass("primaryColor").removeClass("dangerColor");
+				tmpButton1.addClass("primaryColor").removeClass("dangerColor");
+				tmpButton2.html(`<i class="fas fa-paper-plane"></i>`);
+				tmpButton1.html(`<i class="fas fa-paper-plane"></i>`);
+				tmpButton2.removeAttr("disabled");
+				tmpButton1.removeAttr("disabled");
 			}, 1000)
 		}
 	})
 	problemNewWinJQ.find(".problemInfoInputArea input")
-		.bind('keydown', function(event) {
+		.unbind('keydown').bind('keydown', function(event) {
 			if (event.keyCode == "13") {
-				problemNewWinJQ.find(".problemInfoInputArea button").click();
+				tmpButton2.click();
 			}
 		});
-	problemNewWinJQ.find(".contestInfoInputArea button").unbind('click').click(function() {
+	tmpButton1.unbind('click').click(function() {
 		if (typeof($(this).attr("disabled")) != "undefined")
 			return;
-		problemNewWinJQ.find(".problemInfoInputArea button").attr("disabled", "true");
-		problemNewWinJQ.find(".contestInfoInputArea button").attr("disabled", "true");
-		problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
-		problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-sync fa-spin"></i>`);
+		tmpButton2.attr("disabled", "true");
+		tmpButton1.attr("disabled", "true");
+		tmpButton2.html(`<i class="fas fa-sync fa-spin"></i>`);
+		tmpButton1.html(`<i class="fas fa-sync fa-spin"></i>`);
 		var R = problemNewWinJQ.find(".contestInfoInputArea input").val();
 		loadContestProblemset(R, true, function(data, info) {
-			problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
-			problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
-			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
-			problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
+			tmpButton2.removeAttr("disabled");
+			tmpButton1.removeAttr("disabled");
+			tmpButton2.html(`<i class="fas fa-paper-plane"></i>`);
+			tmpButton1.html(`<i class="fas fa-paper-plane"></i>`);
 			problemNewWinJQ.find(".addProblemWindow").css("opacity", "0");
 			setTimeout(function() {
 				problemNewWinJQ.find(".addProblemWindow").css("display", "none");
 			}, 500);
 			addProblems(data, R, info);
 		}, function() {
-			problemNewWinJQ.find(".problemInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
-			problemNewWinJQ.find(".contestInfoInputArea button").removeClass("primaryColor").addClass("dangerColor");
-			problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-exclamation-triangle"></i>`);
-			problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-exclamation-triangle"></i>`);
+			tmpButton2.removeClass("primaryColor").addClass("dangerColor");
+			tmpButton1.removeClass("primaryColor").addClass("dangerColor");
+			tmpButton2.html(`<i class="fas fa-exclamation-triangle"></i>`);
+			tmpButton1.html(`<i class="fas fa-exclamation-triangle"></i>`);
 			setTimeout(function() {
-				problemNewWinJQ.find(".problemInfoInputArea button").addClass("primaryColor").removeClass("dangerColor");
-				problemNewWinJQ.find(".contestInfoInputArea button").addClass("primaryColor").removeClass("dangerColor");
-				problemNewWinJQ.find(".problemInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
-				problemNewWinJQ.find(".contestInfoInputArea button").html(`<i class="fas fa-paper-plane"></i>`);
-				problemNewWinJQ.find(".problemInfoInputArea button").removeAttr("disabled");
-				problemNewWinJQ.find(".contestInfoInputArea button").removeAttr("disabled");
+				tmpButton2.addClass("primaryColor").removeClass("dangerColor");
+				tmpButton1.addClass("primaryColor").removeClass("dangerColor");
+				tmpButton2.html(`<i class="fas fa-paper-plane"></i>`);
+				tmpButton1.html(`<i class="fas fa-paper-plane"></i>`);
+				tmpButton2.removeAttr("disabled");
+				tmpButton1.removeAttr("disabled");
 			}, 1000)
 		});
 	})
 	problemNewWinJQ.find(".contestInfoInputArea input")
-		.bind('keydown', function(event) {
+		.unbind('keydown').bind('keydown', function(event) {
 			if (event.keyCode == "13") {
-				problemNewWinJQ.find(".contestInfoInputArea button").click();
+				tmpButton1.click();
 			}
 		});
 }
@@ -644,8 +652,8 @@ function sampleWrapper(x, y) {
 }
 
 function initProblemNewWin() {
-	problemNewWinJQ.find(".ToolListTitle").html("Codeforces Problems");
-	problemNewWinJQ.find(".ThemeTypeIf").attr("href", DarkMode ? "./css/dark.css" : "./css/default.css");
+	problemNewWinJQ.find("#ToolListTitle").html("Codeforces Problems");
+	problemNewWinJQ.find("#ThemeTypeIf").attr("href", DarkMode ? "./css/dark.css" : "./css/default.css");
 	if (currentLoginHandle == "") {
 		if (problemNewWinJQ.find(".submitWindow").css("opacity") != 0) {
 			problemNewWinJQ.find(".submitWindow").css("opacity", "0");
@@ -731,16 +739,17 @@ function initProblemNewWin() {
 			++curr;
 		}
 	})
+	let tmpButton = problemNewWinJQ.find(".submitButton > button");
 	problemNewWinJQ.find(".submitButton > button").click(function() {
-		problemNewWinJQ.find(".submitButton > button").html("<i class='fas fa-spin fa-spinner'></i>");
-		problemNewWinJQ.find(".submitButton > button").attr("disabled", "true");
+		tmpButton.html("<i class='fas fa-spin fa-spinner'></i>");
+		tmpButton.attr("disabled", "true");
 		submitSolution(getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[0], getProblemIndexes(problemCurrentPageList[problemFocusOn][0])[1], problemNewWinJQ.find("#submitCodeArea").val(), problemNewWinJQ.find(".submitLanguageChoser").val(), function(id, cid, gc) {
-			problemNewWinJQ.find(".submitButton > button").removeClass("primaryColor").addClass("successColor");
-			problemNewWinJQ.find(".submitButton > button").html(`<span info="submitSuccess">${languageOption.general.submitSuccess}</span>`);
+			tmpButton.removeClass("primaryColor").addClass("successColor");
+			tmpButton.html(`<span info="submitSuccess">${languageOption.general.submitSuccess}</span>`);
 			setTimeout(function() {
-				problemNewWinJQ.find(".submitButton > button").addClass("primaryColor").removeClass("successColor");
-				problemNewWinJQ.find(".submitButton > button").html(`<i class="fas fa-paper-plane"></i><span info="sendAnswer">${languageOption.general.sendAnswer}</span>`);
-				problemNewWinJQ.find(".submitButton > button").removeAttr("disabled");
+				tmpButton.addClass("primaryColor").removeClass("successColor");
+				tmpButton.html(`<i class="fas fa-paper-plane"></i><span info="sendAnswer">${languageOption.general.sendAnswer}</span>`);
+				tmpButton.removeAttr("disabled");
 				problemNewWinJQ.find(".submitWindow").css("opacity", "0");
 				setTimeout(function() {
 					problemNewWinJQ.find(".submitWindow").css("display", "none");
@@ -749,12 +758,12 @@ function initProblemNewWin() {
 					problemNewWinJQ.append(`<script>addWatcher('${id}', '${cid}', '${gc}')</script>`)
 			}, 1000);
 		}, function(x, y) {
-			problemNewWinJQ.find(".submitButton > button").removeClass("primaryColor").addClass("dangerColor");
-			problemNewWinJQ.find(".submitButton > button").html(`<span info="${x}">${y}</span>`);
+			tmpButton.removeClass("primaryColor").addClass("dangerColor");
+			tmpButton.html(`<span info="${x}">${y}</span>`);
 			setTimeout(function() {
-				problemNewWinJQ.find(".submitButton > button").addClass("primaryColor").removeClass("dangerColor");
-				problemNewWinJQ.find(".submitButton > button").html(`<i class="fas fa-paper-plane"></i><span info="sendAnswer">${languageOption.general.sendAnswer}</span>`);
-				problemNewWinJQ.find(".submitButton > button").removeAttr("disabled");
+				tmpButton.addClass("primaryColor").removeClass("dangerColor");
+				tmpButton.html(`<i class="fas fa-paper-plane"></i><span info="sendAnswer">${languageOption.general.sendAnswer}</span>`);
+				tmpButton.removeAttr("disabled");
 			}, 1000)
 		})
 	})

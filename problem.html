@@ -52,11 +52,11 @@
 		<script src="./mathjax2.7/MathJax.js?config=TeX-AMS_HTML-full"></script>
 	</head>
 	<body>
-		<link class="ThemeTypeIf" rel="stylesheet" href="./css/dark.css">
+		<link id="ThemeTypeIf" rel="stylesheet" href="./css/dark.css">
 		<script class="cssController"></script>
 		<div class="HtmlContainer">
-			<div class="ToolList">
-				<div class="ToolListTitle" info="problemTitle"></div>
+			<div id="ToolList">
+				<div id="ToolListTitle" info="problemTitle"></div>
 				<div style="position: absolute; top: 0px; right: 0px; display: flex; flex-direction: row">
 					<div class="ToolListButton ToolListMinimize">
 						<i class="fas fa-minus"></i>
@@ -70,7 +70,7 @@
 				</div>
 			</div>
 			<div style="position: relative">
-				<div class="watchDisplayer">
+				<div id="watchDisplayer">
 				</div>
 				<div class="loadingInterface submitWindow" style="display: none; opacity: 0"><div style="height: calc(100% - 50px); width: calc(100% - 100px); padding: 10px; display: flex; flex-direction: column; overflow: hidden" class="submitInterface">
 					<div class="submitInterfaceTitle" style="height: 30px; width: calc(100% - 10px); display: flex; flex-direction: row; padding: 5px; overflow-x: hidden">

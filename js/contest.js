@@ -237,24 +237,31 @@ function loadContestList() {
 			}
 			var _contestAllList = [];
 			data = data.result;
-			$(".contestListLoadIf > span").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loadingAcCount"));
-			loadContestPassedStatus(function() {
+			let display = (ref = false) => {
+				_contestAllList = [];
 				for (var i = 0; i < data.length; i++)
 					_contestAllList.push([data[i].name, data[i].id, data[i].type, data[i].startTimeSeconds, data[i].durationSeconds]);
 				contestAllList = _contestAllList;
-				contestListCurrentPage = 1;
+				if (ref)
+					contestListCurrentPage = 1;
 				var q = $(".contestListSearchArea > input").val();
 				contestListFilter(q);
 				var x = $(".contestSortOption").children().eq(0).hasClass("chosen");
 				var y = $(".contestDirectionOption").children().eq(1).hasClass("chosen");
 				contestListSort(x, y);
 				displayContestListPage();
+			}
+			display(true)
+			$(".contestListLoadIf > span").html(`<span class='fas fa-hourglass-half'></span> ` + localize("loadingAcCount"));
+			loadContestPassedStatus(function() {
+				display()
 				$(".contestListLoadIf > span").html(`<span class='fas fa-check green'></span> ` + localize("success"));
 				$(".contestListLoadIf > span").css("cursor", "pointer");
 				$(".contestListLoadIf > span").unbind("click").click(function() {
 					loadContestList();
 				})
 			}, function() {
+				display()
 				$(".contestListLoadIf > span").html(`<span class='fas fa-times red'></span> ` + localize("failed"));
 				$(".contestListLoadIf > span").css("cursor", "pointer");
 				$(".contestListLoadIf > span").unbind("click").click(function() {
