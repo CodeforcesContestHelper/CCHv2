@@ -1099,7 +1099,7 @@ $(".settingsUI[for=accountPassword] input")
 	});
 
 function ratingToClass(x) {
-	if (x == undefined) return "user-unrated";
+	if (x == undefined || isNaN(x)) return "user-unrated";
 	if (x <= 0) return "user-unrated";
 	if (x < 1200) return "user-newbie";
 	if (x < 1400) return "user-pupil";
@@ -1114,7 +1114,7 @@ function ratingToClass(x) {
 }
 
 function ratingToSmalln(x) {
-	if (x == undefined) return "U";
+	if (x == undefined || isNaN(x)) return "U";
 	if (x <= 0) return "U";
 	if (x < 1200) return "N";
 	if (x < 1400) return "P";
@@ -1129,7 +1129,7 @@ function ratingToSmalln(x) {
 }
 
 function ratingToGrade(x) {
-	if (x == undefined) return "Unrated";
+	if (x == undefined || isNaN(x)) return "Unrated";
 	if (x <= 0) return "Unrated";
 	if (x < 1200) return "Newbie";
 	if (x < 1400) return "Pupil";
