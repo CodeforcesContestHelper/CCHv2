@@ -14,6 +14,8 @@
 }
 
 body {
+	width: 340px;
+	height: 160px;
 	transition: background-color 0.3s, color 0.3s;
 	overflow: hidden;
 	margin: 0px;
@@ -22,6 +24,9 @@ body {
 
 :root {
 	--font-family: 'Consolas', 'Fira Code', 'Source Code Pro', 'Lucida Console', 'Cascadia Code', 'Ubuntu Mono', monospace, sans-serif;
+	width: 356px;
+	height: 176px;
+	border-radius: 8px;
 }
 
 .HtmlContainer {
@@ -31,7 +36,8 @@ body {
 	font-family: var(--font-family);
 	-webkit-app-region: drag;
 	transition: background-color 0.3s, color 0.3s;
-	border-radius: 5px;
+	border-radius: 8px;
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 	display: inline-flex;
 	position: absolute;
 	top: 50%;
@@ -39,7 +45,6 @@ body {
 	transform: translate(-50%, -50%);
 	flex-direction: column;
 	padding: 10px;
-	border-radius: 10px;
 	width: 320px;
 	background: var(--major-background-color);
 }

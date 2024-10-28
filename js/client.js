@@ -2675,8 +2675,8 @@ $(".singleOpenSmallWindow").click(function() {
 		nw.Window.open("contest.html", {
 			"title": "Codeforces Contest Helper",
 			"icon": "favicon.png",
-			"width": 340,
-			"height": 160,
+			"width": 356,
+			"height": 176,
 			"position": "center",
 			"resizable": false,
 			"fullscreen": false,

@@ -3,11 +3,19 @@
 	--editor-font-family: 'Consolas', 'Fira Code', 'Source Code Pro', 'Lucida Console', 'Cascadia Code', 'Ubuntu Mono', monospace, sans-serif;
 }
 
+html {
+	width: 1016px;
+	height: 674px;
+	border-radius: 8px;
+}
+
 body {
+	width: 1000px;
+	height: 658px;
 	transition: background-color 0.3s, color 0.3s;
 	overflow: hidden;
-	margin: 0px;
 	color: var(--major-font-color);
+	border-radius: 8px;
 }
 
 .HtmlContainer {
@@ -20,7 +28,8 @@ body {
 	font-family: var(--font-family);
 	-webkit-app-region: drag;
 	transition: background-color 0.3s, color 0.3s;
-	border-radius: 5px;
+	box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+	border-radius: 8px;
 	display: flex;
 	flex-direction: column;
 	background: var(--major-background-color);
